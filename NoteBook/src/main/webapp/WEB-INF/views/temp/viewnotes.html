@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Note Name</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/themes/prism.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+  <style>
+    
+    #b{
+      padding-bottom: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .view{
+        padding: 20px;
+    }
+
+
+    .navbar-toggler {
+  display: block;
+  background-color: yellow;
+  color: black;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+
+.navbar-nav li a {
+  margin: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.navbar {
+
+  background-color: black;
+  color: white;
+ 
+
+} 
+nav ul li a {
+
+ color: white;
+
+}
+
+nav ul li a:hover{
+
+ color: black;
+
+}
+
+.navbar-item{
+
+  color: white;
+}
+
+
+.navbar-brand {
+  font-size: 24px;
+  font-family: 'Fantasy', Papyrus;
+  color: white;
+}
+
+
+
+
+.my_li:hover {
+  background-color:  yellow;
+  color: black;
+  border-radius: 3px;
+}
+
+#heading{
+
+    text-shadow: 0px 10px 10px gray;
+}
+
+
+
+  </style>
+</head>
+<body id="b">
+
+
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">NoteBook</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i> <!-- Custom toggle icon using Font Awesome -->
+
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">My Notes</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Public Notes</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Chat</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Log In</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Register</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <br><br>
+
+  <div class="view container-fluid">
+
+    <div class="row">
+        <div class="col-md-1 offset-md-11">
+            <button class="btn btn-success">Edit</button>
+        </div>
+
+    </div>
+    <br>
+<!--         
+        <h1 id="helloworld">Hello World</h1>
+            <h3 id="howareyoudoing">How are you doing ??</h3>
+            <p><font color="red">Dangerous</font></p>
+            <pre class="language-java 0" tabindex="0"><code class="java language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Scanner</span><span class="token punctuation">;</span>
+            <span class="token keyword">class</span> <span class="token class-name">A</span>
+            <span class="token punctuation">{</span>
+            <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span> argc<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+            </code></pre><button class="btn btn-primary run-button i0 " onclick="runCode(event,0)">Run</button><button class="btn btn-primary run-button input-button" onclick="showInput(event,0)">Input</button><div class="input-block i0">  <label class="code-labels" for="inputValue">Input:</label>  <textarea rows="4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea></div><div class="output-block i0" id="outputBlock">  <label class="code-labels" for="output">Output:</label><br>  compiled successfully ....</div>
+            <p><br></p>
+            <h5 id="cppcode">Cpp Code</h5>
+            <pre class="language-cpp 1" tabindex="0"><code class="cpp language-cpp">#include&lt;iostream&gt;
+            using namespace std;
+            int main()
+            {
+            cout&lt;&lt;" Hello World\n";
+            }
+            </code></pre><button class="btn btn-primary run-button i1 " onclick="runCode(event,1)">Run</button><button class="btn btn-primary run-button input-button" onclick="showInput(event,1)">Input</button><div class="input-block i1">  <label class="code-labels" for="inputValue">Input:</label>  <textarea rows="4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea></div><div class="output-block i1" id="outputBlock">  <label class="code-labels" for="output">Output:</label><br>  compiled successfully ....</div>
+            <p></p><hr>
+            <strong><em>Contributed By: <font color="blue">Aniket Rajput</font></em></strong><p></p> -->
+
+
+            <pre><code class="java language-java">
+                import java.util.Scanner;
+                class A
+                {
+                public static void main(String argc[])
+                {
+                System.out.println("Hello World\n");
+                }
+                }
+                </code></pre>
+
+
+    </div>
+    
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    
+
+   
+      
+
+    function addStyle(){
+
+      let styleString = '<style>' +
+                  '  .code-block {' +
+                  '    background-color: #f1f1f1;' +
+                  '    padding: 10px;' +
+                  '  }' +
+                  '  .input-block,' +
+                  '  .output-block {' +
+                  '    display: none;' +
+                  '    margin-top: 2%;' +
+                  '  }' +
+                  '  .input-block.show,' +
+                  '  .output-block.show {' +
+                  '    display: block;' +
+            
+                  '  }' +
+  
+                  '  .output-block {' +
+                  '    background-color: black;' +
+                  '    color: white;' +
+                  '    padding: 10px;' +
+                  '    font-weight: bold;' +
+                  '    margin-top: 10px;' +
+                  '    overflow-x: scroll;' +
+                  '    overflow-y: scroll;' +
+                  '    height: 30%;' +
+                  '  }' +
+                  '  .run-button {' +
+                  '    margin-top: 10px;' +
+                  '  }' +
+                  '  .input-button {' +
+                  '    margin-left: 10%;' +
+                  '  }' +
+                  '  .code-labels {' +
+                  '    font-weight: bold;' +
+                  '  }' +
+                  '</style>';
+
+     document.head.insertAdjacentHTML("beforeend",styleString);
+
+    }
+
+    function addJavascript(){
+      
+      var scriptElement = document.createElement("script");
+  scriptElement.innerHTML = `
+    function runCode(event,index) {
+      event.preventDefault();
+      var outputBlock = document.querySelector(".output-block.i" + index );
+      outputBlock.classList.add("show");
+    }
+    
+    function showInput(event,index) {
+      event.preventDefault();
+      var inputBlock = document.querySelector(".input-block.i"+index);
+      if (inputBlock.classList.contains("show")) {
+        inputBlock.classList.remove("show");
+      } else {
+        inputBlock.classList.add("show");
+      }
+    }
+  `;
+  document.head.appendChild(scriptElement);
+    }
+
+   
+      addStyle();
+      
+      addJavascript();
+    
+      Prism.highlightAll();
+    
+  </script>
+</body>
+</html>

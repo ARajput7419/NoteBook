@@ -1,4 +1,4 @@
-package configuration.authentication;
+package configuration.security.authentication;
 
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;

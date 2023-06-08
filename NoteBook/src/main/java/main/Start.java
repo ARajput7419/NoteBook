@@ -18,7 +18,8 @@ public class Start implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/codes/**","/WEB-INF/static/**");
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("file:/home/aniket/IdeaProjects/NoteBook/NoteBook/src/main/webapp/WEB-INF/static");
     }
 
     public static void main(String[] args) {

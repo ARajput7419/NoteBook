@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <!-- Add your CSS styling here -->
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .user-list {
+      flex: 0 0 200px;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+
+    .user-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-list li {
+      margin-bottom: 10px;
+    }
+
+    .user-list li a {
+      display: block;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .user-list li a:hover {
+      text-decoration: underline;
+    }
+
+    .chat-container {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .chat-messages {
+      max-height: 400px;
+      overflow-y: scroll;
+    }
+
+    .chat-input {
+      margin-top: 20px;
+    }
+
+    .chat-input textarea {
+      width: 100%;
+      resize: none;
+    }
+
+    .chat-input button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="user-list">
+    <ul id="user-list">
+      <!-- User names will be added dynamically here -->
+    </ul>
+  </div>
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <!-- Chat messages will be added dynamically here -->
+    </div>
+    <div class="chat-input">
+      <textarea id="message" rows="3" placeholder="Type your message..."></textarea>
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <!-- Add your JavaScript code here -->
+  <script>
+    // Sample user names
+    const users = ['John', 'Alice', 'Bob'];
+
+    // Get user list element
+    const userList = document.getElementById('user-list');
+
+    // Create list items for each user
+    users.forEach(user => {
+      const listItem = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = '#';
+      link.textContent = user;
+      listItem.appendChild(link);
+      userList.appendChild(listItem);
+    });
+
+    // Get chat messages container
+    const chatMessages = document.getElementById('chat-messages');
+
+    // Function to append a new message to the chat container
+    function appendMessage(sender, message) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+      messageElement.innerHTML = `
+        <strong>${sender}:</strong> ${message}
+      `;
+      chatMessages.appendChild(messageElement);
+    }
+
+    // Event listener for send button click
+    document.getElementById('send-button').addEventListener('click', function() {
+      const messageInput = document.getElementById('message');
+      const message = messageInput.value;
+      appendMessage('Me', message);
+      messageInput.value = '';
+    });
+  </script>
+</body>
+</html>

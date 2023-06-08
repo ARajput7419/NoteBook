@@ -1,6 +1,7 @@
-package configuration;
+package configuration.security;
 
-import configuration.authentication.DatabaseAuthenticationProvider;
+import configuration.security.authentication.DatabaseAuthenticationProvider;
+import configuration.security.authentication.DatabaseUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-
 import java.util.List;
 
 @Configuration
@@ -67,13 +67,29 @@ public class SecurityConfiguration {
 
                             savedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request,
                                     response,authentication);
-                        }));
+                        }))
+                                .loginPage("/user/login");
 
-        httpSecurity.logout();
+        httpSecurity.formLogin()
+                        .loginPage("/user/login")
+                                .loginProcessingUrl("/login_processing")
+                                        .failureForwardUrl("/user/login/failure")
+                                                .successForwardUrl("/notes");
+
+        httpSecurity.httpBasic();
+
+        httpSecurity.logout()
+                        .logoutUrl("/user/logout")
+                                .logoutSuccessUrl("/");
 
         httpSecurity.authorizeHttpRequests((customizer)->{
-            customizer.mvcMatchers("/api/**").permitAll();
-            customizer.mvcMatchers("/**").authenticated();
+            customizer.mvcMatchers("/execution/api/**").permitAll();
+            customizer.mvcMatchers("/notes").authenticated();
+            customizer.mvcMatchers("/notes/private/search").authenticated();
+            customizer.mvcMatchers("/notes/public/search").permitAll();
+            customizer.mvcMatchers("/notes/view/{id}").permitAll();
+            customizer.mvcMatchers("/resources/api/**").authenticated();
+            customizer.mvcMatchers("/").authenticated();
         });
 
         httpSecurity.authenticationProvider(authenticationProvider);
@@ -96,13 +112,7 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService detailsService(){
-        InMemoryUserDetailsManager detailsManager = new InMemoryUserDetailsManager();
-        UserDetails user1 = User.withUsername("aniket")
-                .password(passwordEncoder().encode("rana"))
-                .roles("admin")
-                .build();
-        detailsManager.createUser(user1);
-        return detailsManager;
+        return new DatabaseUserDetailService();
     }
 
     @Bean

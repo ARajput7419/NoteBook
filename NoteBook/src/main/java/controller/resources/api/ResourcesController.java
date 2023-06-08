@@ -1,5 +1,6 @@
 package controller.resources.api;
 import beans.DirectoryHandler;
+import database.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -10,17 +11,26 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import responses.resources.DeleteStatus;
 import responses.resources.UploadStatus;
-import java.io.IOException;
+import service.web.ResourceService;
 
-@RequestMapping("/resources/api")
+import java.io.IOException;
+import java.util.List;
+
+@RequestMapping("/api/resources")
 @RestController
 public class ResourcesController {
 
     @Autowired
-    DirectoryHandler directoryHandler;
+    private DirectoryHandler directoryHandler;
 
     @Value("${resources}")
-    String resourceDirectory;
+    private String resourceDirectory;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private int page_size;
 
     private String getUrl(String fileName){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -83,6 +93,47 @@ public class ResourcesController {
             return new ResponseEntity<>(uploadStatus,HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    private class Page{
+        private int total_pages;
+        private List<Resource> resources;
+
+        public Page(int total_pages, List<Resource> resources) {
+            this.total_pages = total_pages;
+            this.resources = resources;
+        }
+
+        public Page() {
+        }
+
+        public int getTotal_pages() {
+            return total_pages;
+        }
+
+        public void setTotal_pages(int total_pages) {
+            this.total_pages = total_pages;
+        }
+
+        public List<Resource> getResources() {
+            return resources;
+        }
+
+        public void setResources(List<Resource> resources) {
+            this.resources = resources;
+        }
+    }
+
+    @GetMapping("/{page_number}")
+    public Page get(@PathVariable int page_number) throws Exception {
+        if (page_number <= 0 ) throw new Exception("Page Number Invalid");
+        List<Resource> resources = resourceService.getAll(page_size,(page_number-1)*page_size);
+        int total_resources = resourceService.totalResource();
+        int total_pages = total_resources/page_size + (total_resources%page_size==0?0:1);
+        Page page = new Page();
+        page.setResources(resources);
+        page.setTotal_pages(total_pages);
+        return page;
     }
 
 }

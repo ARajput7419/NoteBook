@@ -1,17 +1,12 @@
-package configuration;
+package configuration.aop;
 
 import beans.DirectoryHandler;
-import controller.API;
-import main.Start;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +24,7 @@ public class AOPConfiguration {
     @Value("#{(servletContext.getRealPath('/'))+'${resources}'}")
     private String resourcesDirectory;
 
-    @Before("execution(* controller.API.*(..) )")
+    @Before("execution(* controller.execution.api.API.*(..) )")
     private void setCmd(){
         directoryHandler.setCwd(apiDirectory);
     }
@@ -38,7 +33,7 @@ public class AOPConfiguration {
         directoryHandler.setCwd(resourcesDirectory);
     }
 
-    @After("execution(* controller.API.*(..))")
+    @After("execution(* controller.execution.api.API.*(..))")
     private void cleanUp(JoinPoint joinPoint){
 
         Object objects [] = joinPoint.getArgs();

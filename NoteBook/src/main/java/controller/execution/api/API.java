@@ -1,4 +1,4 @@
-package controller;
+package controller.execution.api;
 
 import beans.DirectoryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
 
-@RequestMapping("/api")
+@RequestMapping("/api/execution")
 @RestController
 public class API {
 
