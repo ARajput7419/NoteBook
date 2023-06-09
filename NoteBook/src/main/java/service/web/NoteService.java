@@ -14,35 +14,35 @@ public class NoteService {
      @Autowired
      private NoteDAO noteDAO;
 
-     public List<Note> searchNotes(String keyword){
-         return noteDAO.searchByKeyword(keyword);
+     public List<Note> searchByKeywordPublic(String keyword,int count,int offset){
+         return noteDAO.searchByKeywordPublic(keyword,count,offset);
      }
 
-     public List<Note> privateSearch(String keyword){
+     public List<Note> searchByKeywordPrivate(String keyword,int count,int offset){
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
          String username = (String) authentication.getPrincipal();
-         return noteDAO.searchByKeywordPrivate(keyword,username);
+         return noteDAO.searchByKeywordPrivate(keyword,username,count,offset);
      }
 
-    public List<Note> getAll(int count,int offset){
+    public List<Note> getNotesPrivate(int count,int offset){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
-        return noteDAO.getAll(username,count,offset);
+        return noteDAO.getNotesPrivate(username,count,offset);
     }
 
-    public int totalNotes(){
+    public int getNotesPrivateCount(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
-        return noteDAO.totalNotes(username);
+        return noteDAO.getNotesPrivateCount(username);
     }
 
 
-    public List<Note> getAllPublic(int count,int offset){
-        return noteDAO.getAllPublic(count,offset);
+    public List<Note> getNotesPublic(int count,int offset){
+        return noteDAO.getNotesPublic(count,offset);
     }
 
-    public int totalPublicNotes(){
-        return noteDAO.totalPublicNotes();
+    public int getNotesPublicCount(){
+        return noteDAO.getNotesPublicCount();
     }
 
      public Note getNote(int id) throws Exception {

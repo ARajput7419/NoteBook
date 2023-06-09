@@ -2,6 +2,7 @@ package controller.web;
 
 import database.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String login(){
@@ -32,6 +36,7 @@ public class UserController {
         boolean status =userService.exists(user.getUsername());
         if (!status){
             try {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userService.registerUser(user);
                 model.addAttribute("login",false);
                 return "home";

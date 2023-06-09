@@ -3,7 +3,6 @@ package controller.web;
 
 import database.entity.Note;
 import database.entity.Resource;
-import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import service.web.NoteService;
 import service.web.ResourceService;
 import service.web.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -38,31 +35,31 @@ public class NoteController {
     private UserService userService;
 
 
-    @RequestMapping(value = "/public/search",method = RequestMethod.GET)
-    public String noteSearch(@RequestParam("keyword") String keyword, Model model){
-        if (keyword == null){
-            model.addAttribute("message","Bad Request");
-            return "error";
-        }
-        else {
-            List<Note> noteList = service.searchNotes(keyword);
-            model.addAttribute("note_list",noteList);
-            return "notes";
-        }
-    }
+//    @RequestMapping(value = "/public/search",method = RequestMethod.GET)
+//    public String noteSearch(@RequestParam("keyword") String keyword, Model model){
+//        if (keyword == null){
+//            model.addAttribute("message","Bad Request");
+//            return "error";
+//        }
+//        else {
+//            List<Note> noteList = service.searchNotes(keyword);
+//            model.addAttribute("note_list",noteList);
+//            return "notes";
+//        }
+//    }
 
-    @GetMapping("/private/search")
-    public String privateSearch(@RequestParam("Keyword") String keyword,Model model){
-        if (keyword == null){
-            model.addAttribute("message","Bad Request");
-            return "error";
-        }
-        else{
-            List<Note> noteList = service.privateSearch(keyword);
-            model.addAttribute("note_list",noteList);
-            return "notes";
-        }
-    }
+//    @GetMapping("/private/search")
+//    public String privateSearch(@RequestParam("Keyword") String keyword,Model model){
+//        if (keyword == null){
+//            model.addAttribute("message","Bad Request");
+//            return "error";
+//        }
+//        else{
+//            List<Note> noteList = service.privateSearch(keyword);
+//            model.addAttribute("note_list",noteList);
+//            return "notes";
+//        }
+//    }
 
     @GetMapping("/create")
     public String create(Model model){
@@ -112,15 +109,10 @@ public class NoteController {
             }
         }
     }
-
-
-
-
-
     @GetMapping("/")
     public String myNotes(Model model){
-        int total_notes = service.totalNotes();
-        List<Note> notes = service.getAll(page_size,0);
+        int total_notes = service.getNotesPrivateCount();
+        List<Note> notes = service.getNotesPrivate(page_size,0);
         int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
         int total_resources = resourceService.totalResource();
         List<Resource> resources = resourceService.getAll(page_size,0);

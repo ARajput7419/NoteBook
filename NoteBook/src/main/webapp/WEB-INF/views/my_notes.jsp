@@ -6,166 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="/static/css/my_notes.css">
     <title>Notes Page</title>
-    <style>
-        .card-columns {
-            column-count: 1;
-        }
 
-        @media (min-width: 576px) {
-            .card-columns {
-                column-count: 2;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .card-columns {
-                column-count: 3;
-            }
-        }
-
-        .card-text {
-            margin-bottom: 0.5rem;
-        }
-
-        .card-title {
-            margin-bottom: 1rem;
-        }
-
-        .card-body {
-            flex: 1 1 auto;
-            padding: 1.25rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-buttons {
-            margin-top: auto;
-        }
-
-        .card-spacing {
-            margin-bottom: 1.5rem;
-        }
-
-        
-
-        .resource-card ,.notes-card{
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-        }
-
-        .resource-card .card-title {
-            font-weight: bold;
-            margin-bottom: 0.75rem;
-        }
-
-        .notes-card .card-title {
-            font-weight: bold;
-            margin-bottom: 0.75rem;
-        }
-
-
-
-        .resource-card .card-buttons {
-            margin-top: auto;
-        }
-
-        .notes-card .card-buttons {
-            margin-top: auto;
-        }
-
-        .resource-card .card-timestamp {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-top: 0.5rem;
-        }
-
-        .notes-card .card-timestamp {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-top: 0.5rem;
-        }
-
-        span{
-            font-weight: bold;
-        }
-
-        @media  only screen and (max-width:576px) {
-            
-
-            .searchbar{
-               padding-top: 3%;
-            }
-
-            .vis{
-                margin-top: 3%;
-            }
-            
-
-        }
-
-        .navbar-toggler {
-  display: block;
-  background-color: yellow;
-  color: black;
-  font-size: 18px;
-  border-radius: 5px;
-}
-
-
-.navbar-nav li a {
-  margin: 0 10px;
-  transition: all 0.3s ease;
-}
-
-.navbar {
-
-  background-color: black;
-  color: white;
-
-} 
-nav ul li a {
-
- color: white;
-
-}
-
-nav ul li a:hover{
-
- color: black;
-
-}
-
-.navbar-item{
-
-  color: white;
-}
-
-
-.navbar-brand {
-  font-size: 24px;
-  font-family: 'Fantasy', Papyrus;
-  color: white;
-}
-
-
-
-
-.my_li:hover {
-  background-color:  yellow;
-  color: black;
-  border-radius: 3px;
-}
-
-#heading{
-
-    text-shadow: 0px 10px 10px gray;
-}
-
-
-    </style>
 </head>
 
 <body>
@@ -208,14 +51,14 @@ nav ul li a:hover{
             
             <div class="col-md-4 offset-md-6">
 
-                <form>
+
+                <form method="get" method="/notes/private/search">
                 <div class="input-group mb-3 searchbar">
-                   
+                    
                     <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your notes" aria-label="Search public notes" aria-describedby="button-addon2">
                     <div class="input-group-append" style="margin-left: 1%;">
                       <button class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
                     </div>
-                
                   </div>
                   </form>
 
@@ -347,12 +190,14 @@ nav ul li a:hover{
                 
                 <div class="col-md-4 offset-md-6">
     
+                    <form method="get" action="/resources/private/search">
                     <div class="input-group mb-3 searchbar">
                         <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your resources" aria-label="Search public notes" aria-describedby="button-addon2">
                         <div class="input-group-append" style="margin-left: 1%;">
                           <button class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
                         </div>
                       </div>
+                      </form>
     
                 </div>
             </div>
@@ -430,32 +275,8 @@ nav ul li a:hover{
         
     </div>
 
-    <script>
 
-
-        const switchButton = document.querySelector('.switch-button');
-        const notesButton = document.querySelector('.notes_button');
-        const noteCards = document.querySelector('.notes-container');
-        const resourceCards = document.querySelector('.resource-container');
-
-
-        noteCards.style.display="block";
-        resourceCards.style.display="none";
-
-        switchButton.addEventListener('click', () => {
-            noteCards.style.display="none";
-            resourceCards.style.display="block";
-        });
-
-        notesButton.addEventListener('click', () => {
-            resourceCards.style.display="none";
-            noteCards.style.display="block";
-        });
-
-
-
-
-    </script>
+  <script src="/static/js/my_notes.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>

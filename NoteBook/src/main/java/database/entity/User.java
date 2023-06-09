@@ -1,5 +1,6 @@
 package database.entity;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,8 +16,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String password;
+
+    @Column
+    @ColumnDefault("0")
+    private boolean oauth2;
 
     @Transient
     @OneToMany(mappedBy = "user")
@@ -33,6 +38,14 @@ public class User implements UserDetails {
     @Transient
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     List<Resource> resources;
+
+    public boolean isOauth2() {
+        return oauth2;
+    }
+
+    public void setOauth2(boolean oauth2) {
+        this.oauth2 = oauth2;
+    }
 
     public String getEmail() {
         return email;
