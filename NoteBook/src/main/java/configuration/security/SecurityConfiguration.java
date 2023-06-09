@@ -16,9 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import service.web.UserService;
+
 import java.util.List;
 
 @Configuration
@@ -40,6 +45,9 @@ public class SecurityConfiguration {
     @Autowired
     private DatabaseAuthenticationProvider authenticationProvider;
 
+    @Autowired
+    private UserService userService;
+
 
      private List<ClientRegistration> registration(){
 
@@ -51,6 +59,7 @@ public class SecurityConfiguration {
 
 
     private ClientRegistrationRepository registrationRepository (){
+
         return new InMemoryClientRegistrationRepository(registration());
     }
 
@@ -58,13 +67,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-
         httpSecurity.oauth2Login().
                 clientRegistrationRepository(registrationRepository())
                         .successHandler(((request, response, authentication) -> {
-
-                            // my code
-
+                            userService.loginThroughOauth2(request,response,authentication);
                             savedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request,
                                     response,authentication);
                         }))

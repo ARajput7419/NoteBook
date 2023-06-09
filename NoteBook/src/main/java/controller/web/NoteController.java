@@ -13,7 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import service.web.NoteService;
 import service.web.ResourceService;
+import service.web.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Controller
@@ -28,6 +33,9 @@ public class NoteController {
 
     @Value("${page_size}")
     private int page_size;
+
+    @Autowired
+    private UserService userService;
 
 
     @RequestMapping(value = "/public/search",method = RequestMethod.GET)
@@ -57,17 +65,56 @@ public class NoteController {
     }
 
     @GetMapping("/create")
-    public String create(){
+    public String create(Model model){
+        model.addAttribute("note",new Note());
+        return "creates";
+    }
+
+    private String getUserName(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (String) authentication.getPrincipal();
+    }
+
+    @GetMapping("/submit")
+    public String submit(@ModelAttribute("note") Note note,Model model){
+        note.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        note.setUser(userService.getByUsername(getUserName()));
+        try{
+            service.createNote(note);
+            model.addAttribute("message","Created Successfully");
+        }
+        catch (Exception e){
+           model.addAttribute("message","Failed");
+        }
         return "creates";
     }
 
     @GetMapping("/view/{id}")
-    public String view(@PathVariable int id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = (String) authentication.getPrincipal();
+    public String view(@PathVariable int id , HttpServletResponse response,Model model) throws IOException {
+        try {
+            Note note = service.getNote(id);
+            if (note == null){
+                model.addAttribute("message","Not Available");
+                return "error";
+            }
+            model.addAttribute("note",note);
+            return "view";
+        }
+        catch (Exception e){
 
-        return "view";
+            if (e.getMessage().equals("Not Authenticated")){
+                response.sendRedirect("/user/login");
+                return null;
+            }
+            else{
+                model.addAttribute("message","Not Authorized ");
+                return "error";
+            }
+        }
     }
+
+
+
 
 
     @GetMapping("/")

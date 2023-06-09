@@ -24,22 +24,44 @@ public class NoteService {
          return noteDAO.searchByKeywordPrivate(keyword,username);
      }
 
-     public List<Note> getAll(int count,int offset){
-         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public List<Note> getAll(int count,int offset){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        return noteDAO.getAll(username,count,offset);
+    }
+
+    public int totalNotes(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        return noteDAO.totalNotes(username);
+    }
+
+
+    public List<Note> getAllPublic(int count,int offset){
+        return noteDAO.getAllPublic(count,offset);
+    }
+
+    public int totalPublicNotes(){
+        return noteDAO.totalPublicNotes();
+    }
+
+     public Note getNote(int id) throws Exception {
+         Note note = noteDAO.get(id);
+         if (note == null) return null;
+         if (note.getVisibility().equals("Public")) return note;
+         Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();
+         if (authentication == null) throw new Exception("Note Authenticated");
          String username = (String) authentication.getPrincipal();
-         return noteDAO.getAll(username,count,offset);
+         if (note.getUser().getEmail().equals(username)){
+             return note;
+         }
+         throw  new Exception("Not Authorized");
      }
 
-     public int totalNotes(){
-         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-         String username = (String) authentication.getPrincipal();
-         return noteDAO.totalNotes(username);
+     public void createNote(Note note){
+         noteDAO.insert(note);
      }
-     public Note getNote(int id){
-         Note note = noteDAO.get(id);
-        // if (note.getUser().getEmail().equals())
-         return note;
-     }
+
 
 
 }

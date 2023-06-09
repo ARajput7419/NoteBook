@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,11 +40,11 @@
   <br><br>
 
   <div class="container-fluid">
-    <form>
+    <form:form method="post" action="/notes/submit" modelAttribute="note">
       <div class="row">
         <div class="col">
         <label id="label_" for="note-name">Note Name:</label>
-        <input type="text" class="form-control" id="note-name" placeholder="Enter note name">
+        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name">
         </div>
       </div>
       
@@ -51,10 +52,10 @@
         <div class="col-md">
           <br>
         <label id="label_" for="visibility">Visibility:</label>
-        <select class="form-control" id="visibility">
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-        </select>
+        <form:select class="form-control" id="visibility" path="visibility">
+          <form:option value="Public" label="Public"/>
+          <form:option value="Private" label="Private"/>
+        </form:select>
         </div>
         <div class="col-md">
           <br>
@@ -78,7 +79,7 @@
       </div>
       <br>
       <div class="markdown-container">
-        <textarea class="form-control" id="markdown-textarea" rows="10"></textarea>
+        <form:textarea class="form-control" id="markdown-textarea" rows="10" path="content"></form:textarea>
         <div class="note-preview" id="preview-section" style="display: none;"></div>
       </div>
       <div class="buttons-container">
@@ -86,7 +87,7 @@
         <button type="button" class="btn btn-primary" id="original-button">Original</button>
         <button type="submit" class="btn btn-success">Create</button>
       </div>
-    </form>
+    </form:form>
     </div>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

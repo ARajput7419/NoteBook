@@ -62,6 +62,23 @@ public class NoteDAO {
     }
 
     @Transactional
+    public List<Note> getAllPublic(int count,int offset){
+
+        TypedQuery<Note> query = entityManager.createQuery("Select n from Note n  where n.visibility = 'Public' limit :count offset :offset ",Note.class);
+        query.setParameter("count",count);
+        query.setParameter("offset",offset);
+        return query.getResultList();
+
+    }
+
+    @Transactional
+    public int totalPublicNotes(){
+        TypedQuery<Integer> query = entityManager.createQuery("Select count(*) from Note n  where visibility = 'Public' ",Integer.class);
+        return query.getSingleResult();
+    }
+
+
+    @Transactional
     public void insert(Note note){
         entityManager.persist(note);
     }
