@@ -1,5 +1,7 @@
 package beans;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -9,6 +11,7 @@ import java.nio.file.Paths;
 
 
 @Component
+@Scope("session")
 public class DirectoryHandler {
 
 

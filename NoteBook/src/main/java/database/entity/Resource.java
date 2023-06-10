@@ -19,6 +19,9 @@ public class Resource {
     @ColumnDefault("")
     private String location;
 
+    @Column(nullable = false)
+    private String name;
+
     @ColumnDefault("0")
     private int count;
 
@@ -67,6 +70,14 @@ public class Resource {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public User getUser() {

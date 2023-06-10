@@ -13,7 +13,9 @@ import responses.resources.DeleteStatus;
 import responses.resources.UploadStatus;
 import service.web.ResourceService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RequestMapping("/api/resources")
@@ -39,7 +41,7 @@ public class ResourcesController {
 
     }
 
-    @ExceptionHandler(IOException.class)
+    @ExceptionHandler({IOException.class,RuntimeException.class})
     public ResponseEntity<UploadStatus> ioExceptionHandler(){
         UploadStatus status = new UploadStatus();
         status.setMessage("Internal Server Error");
@@ -48,43 +50,81 @@ public class ResourcesController {
 
     @ExceptionHandler
     public ResponseEntity<String> genericException(Exception e){
+
+        if (e.getMessage().equals("Bad Request")) return new ResponseEntity<>("Bad Request",HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity<>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<DeleteStatus> delete(@RequestParam("filename") String filename){
+    public ResponseEntity<DeleteStatus> delete(@RequestParam("id") int id){
         DeleteStatus deleteStatus = new DeleteStatus();
-        if (filename == null){
-            deleteStatus.setMessage("Invalid Request");
-            return new ResponseEntity<>(deleteStatus,HttpStatus.BAD_REQUEST);
-        }
-        boolean status = directoryHandler.delete(filename);
+
+
+//        if (filename == null){
+//            deleteStatus.setMessage("Invalid Request");
+//            return new ResponseEntity<>(deleteStatus,HttpStatus.BAD_REQUEST);
+//        }
+//        boolean status = directoryHandler.delete(filename);
+//        if (status){
+//            deleteStatus.setMessage("Deleted Successfully");
+//            return new ResponseEntity<>(deleteStatus,HttpStatus.OK);
+//        }
+//        else{
+//            deleteStatus.setMessage("Internal Server Error");
+//            return new ResponseEntity<>(deleteStatus,HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+        return null;
+    }
+
+    public String createUserDirectoryIfNotExists(){
+        String username = getUsername();
+        boolean status = directoryHandler.createDirectory(username);
         if (status){
-            deleteStatus.setMessage("Deleted Successfully");
-            return new ResponseEntity<>(deleteStatus,HttpStatus.OK);
+            return directoryHandler.getCwd()+"/"+username;
         }
-        else{
-            deleteStatus.setMessage("Internal Server Error");
-            return new ResponseEntity<>(deleteStatus,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        //return null;
+        else
+            return null;
+    }
+
+    public String getUsername(){
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 
     @PostMapping("/")
-    public ResponseEntity<UploadStatus> upload(@RequestParam("file")MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<UploadStatus> upload(@RequestParam("file")MultipartFile multipartFile, @RequestParam("visibility") String visibility,HttpServletRequest request) throws IOException {
         UploadStatus uploadStatus = new UploadStatus();
+        Resource new_resource = new Resource();
+        new_resource.setVisibility(visibility);
+        new_resource.setTimestamp(new Timestamp(System.currentTimeMillis()));
+
         if (multipartFile != null){
             String fileName = multipartFile.getOriginalFilename();
-            boolean status = directoryHandler.write(fileName,multipartFile);
-            if (!status) {
-                uploadStatus.setMessage("Unable to  upload the resource");
-                return new ResponseEntity<>(uploadStatus,HttpStatus.INTERNAL_SERVER_ERROR);
+            String url = getUrl(fileName);
+            String link = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getServletContext().getContextPath()+"/"+url;
+            new_resource.setLocation(url);
+            uploadStatus.setUrl(link);
+            String directory = createUserDirectoryIfNotExists();
+            if (directory != null){
+                directoryHandler.setCwd(directory);
+                ResourceService.Status status = resourceService.upload(multipartFile,fileName,directoryHandler,new_resource);
+                if (status == ResourceService.Status.OK){
+                    uploadStatus.setMessage("Uploaded Successfully");
+                    return new ResponseEntity<>(uploadStatus,HttpStatus.OK);
+                }
+                else if (status== ResourceService.Status.ALREADY_EXISTS){
+                    uploadStatus.setMessage("Resource Already Exists");
+                    return new ResponseEntity<>(uploadStatus,HttpStatus.OK);
+                }
+                else{
+                    uploadStatus.setMessage("Internal Server Error");
+                    return new ResponseEntity<>(uploadStatus,HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             }
             else{
-                uploadStatus.setMessage("Uploaded Successfully");
-                uploadStatus.setUrl(getUrl(fileName));
-                return new ResponseEntity<>(uploadStatus,HttpStatus.OK);
+                uploadStatus.setMessage("Internal Server Error");
+                return new ResponseEntity<>(uploadStatus,HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
         }
@@ -125,10 +165,23 @@ public class ResourcesController {
     }
 
     @GetMapping("/{page_number}")
-    public Page get(@PathVariable int page_number) throws Exception {
+    public Page getResourcesPrivate(@PathVariable int page_number,@RequestParam("keyword") String keyword) throws Exception {
         if (page_number <= 0 ) throw new Exception("Page Number Invalid");
-        List<Resource> resources = resourceService.getAll(page_size,(page_number-1)*page_size);
-        int total_resources = resourceService.totalResource();
+
+        if (keyword == null || keyword.trim().length() == 0) return getResourcesPrivateWithoutKeyword(page_number);
+
+        List<Resource> resources = resourceService.searchByKeywordPrivate(keyword,page_size,(page_number-1)*page_size);
+        int total_resources = resourceService.searchByKeywordPrivateCount(keyword);
+        int total_pages = total_resources/page_size + (total_resources%page_size==0?0:1);
+        Page page = new Page();
+        page.setResources(resources);
+        page.setTotal_pages(total_pages);
+        return page;
+    }
+
+    public Page getResourcesPrivateWithoutKeyword(int page_number){
+        List<Resource> resources = resourceService.getResourcesPrivate(page_size,(page_number-1)*page_size);
+        int total_resources = resourceService.getResourcesPrivateCount();
         int total_pages = total_resources/page_size + (total_resources%page_size==0?0:1);
         Page page = new Page();
         page.setResources(resources);

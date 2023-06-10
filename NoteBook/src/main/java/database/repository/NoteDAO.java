@@ -47,6 +47,22 @@ public class NoteDAO {
     }
 
     @Transactional
+    public int searchByKeywordPublicCount(String keyword){
+        TypedQuery<Integer> query = entityManager.createQuery("select count(n) from Note n where n.name like :key and visibility = 'Public'",Integer.class);
+        query.setParameter("key","%"+keyword+"%");
+        return query.getSingleResult();
+    }
+
+    @Transactional
+    public int searchByKeywordPrivateCount(String keyword,String username){
+        TypedQuery<Integer> query = entityManager.createQuery("select count(n) from Note n join n.user u where n.name like :key and u.email = :username",Integer.class);
+        query.setParameter("key","%"+keyword+"%");
+        query.setParameter("username",username);
+        return query.getSingleResult();
+    }
+
+
+    @Transactional
     public List<Note> getNotesPrivate(String username,int count,int offset){
 
         TypedQuery<Note> query = entityManager.createQuery("Select n from Note n join n.user u where u.email = :username limit :count offset :offset ",Note.class);
@@ -59,7 +75,7 @@ public class NoteDAO {
 
     @Transactional
     public int getNotesPrivateCount(String username){
-        TypedQuery<Integer> query = entityManager.createQuery("Select count(*) from Note n  where u.email = :username ",Integer.class);
+        TypedQuery<Integer> query = entityManager.createQuery("Select count(n) from Note n  where u.email = :username ",Integer.class);
         query.setParameter("username",username);
         return query.getSingleResult();
     }
@@ -76,7 +92,7 @@ public class NoteDAO {
 
     @Transactional
     public int getNotesPublicCount(){
-        TypedQuery<Integer> query = entityManager.createQuery("Select count(*) from Note n  where visibility = 'Public' ",Integer.class);
+        TypedQuery<Integer> query = entityManager.createQuery("Select count(n) from Note n  where visibility = 'Public' ",Integer.class);
         return query.getSingleResult();
     }
 

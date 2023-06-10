@@ -1,12 +1,11 @@
 package controller.notes.api;
-
 import database.entity.Note;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.web.NoteService;
-
 import java.util.List;
 
 @RestController
@@ -16,6 +15,10 @@ public class NoteController {
 
     @Autowired
     private NoteService noteService;
+
+    @Value("${page_size}")
+    private int page_size;
+
 
     private class Page{
 
@@ -47,14 +50,60 @@ public class NoteController {
         return new ResponseEntity<>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/{page_number}")
-    public Page getNotes(@PathVariable int page_number , @RequestParam("keyword") String keyword,@RequestParam("search")String searchType) throws Exception {
-        if (searchType == null || (!searchType.equals("Public") &&  !searchType.equals("Private"))){
-            throw new Exception("Bad Request");
+    @GetMapping("/private/{page_number}")
+    public Page getNotesPrivate(@PathVariable int page_number , @RequestParam("keyword") String keyword) throws Exception {
+
+        if (page_number <= 0 ) {
+            throw  new Exception("Bad Request");
         }
-        if (searchType.equals("Public")){
-            //noteService.searchNotes(keyword)
+
+        if (keyword == null || keyword.trim().length() == 0) return getNotesPrivateWithoutKeyword(page_number);
+
+        int total_notes = noteService.searchByKeywordPrivateCount(keyword);
+        int total_pages = total_notes/page_size + (total_notes%page_size==0?0:1);
+        List<Note> noteList = noteService.searchByKeywordPrivate(keyword,page_size,(page_number-1)*page_size);
+        Page page = new Page();
+        page.setTotal_pages(total_pages);
+        page.setNotes(noteList);
+        return page;
+    }
+
+    public Page getNotesPrivateWithoutKeyword(int page_number){
+
+        int total_notes = noteService.getNotesPrivateCount();
+        int total_pages = total_notes/page_size + (total_notes%page_size==0?0:1);
+        List<Note> noteList = noteService.getNotesPrivate(page_size,(page_number-1)*page_size);
+        Page page = new Page();
+        page.setTotal_pages(total_pages);
+        page.setNotes(noteList);
+        return page;
+    }
+
+    public Page getNotesPublicWithoutKeyword(int page_number){
+        int total_notes = noteService.getNotesPublicCount();
+        int total_pages = total_notes/page_size + (total_notes%page_size==0?0:1);
+        List<Note> noteList = noteService.getNotesPublic(page_size,(page_number-1)*page_size);
+        Page page = new Page();
+        page.setTotal_pages(total_pages);
+        page.setNotes(noteList);
+        return page;
+    }
+
+    @GetMapping("/public/{page_number}")
+    public Page getNotesPublic(@PathVariable int page_number , @RequestParam("keyword") String keyword) throws Exception {
+
+        if (page_number <= 0 ){
+            throw  new Exception("Bad Request");
         }
-        return null;
+
+        if (keyword== null || keyword.trim().length() == 0) return getNotesPublicWithoutKeyword(page_number);
+
+        int total_notes = noteService.searchByKeywordPublicCount(keyword);
+        int total_pages = total_notes/page_size + (total_notes%page_size==0?0:1);
+        List<Note> noteList = noteService.searchByKeywordPublic(keyword,page_size,(page_number-1)*page_size);
+        Page page = new Page();
+        page.setTotal_pages(total_pages);
+        page.setNotes(noteList);
+        return page;
     }
 }

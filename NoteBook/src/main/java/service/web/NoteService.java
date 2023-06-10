@@ -24,6 +24,16 @@ public class NoteService {
          return noteDAO.searchByKeywordPrivate(keyword,username,count,offset);
      }
 
+    public int searchByKeywordPublicCount(String keyword){
+        return noteDAO.searchByKeywordPublicCount(keyword);
+    }
+
+    public int searchByKeywordPrivateCount(String keyword){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        return noteDAO.searchByKeywordPrivateCount(keyword,username);
+    }
+
     public List<Note> getNotesPrivate(int count,int offset){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
