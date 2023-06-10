@@ -6,7 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class NoteService {
@@ -68,9 +74,27 @@ public class NoteService {
          throw  new Exception("Not Authorized");
      }
 
-     public void createNote(Note note){
+     private List<String> extractUrls(String content,HttpServletRequest request){
+         List<String> result = new ArrayList<>();
+         String regex = "\\W"+request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"(.+)"+"\\W";
+         Pattern p = Pattern.compile(regex);
+         Matcher matcher = p.matcher(content);
+         while (matcher.find()){
+             String url = matcher.group(1);
+             result.add(url);
+         }
+         return result;
+     }
+
+
+     @Transactional
+     public void createNote(Note note, HttpServletRequest request){
+
+         String content  = note.getContent();
+         List<String> locations = extractUrls(content,request);
          noteDAO.insert(note);
      }
+
 
 
 

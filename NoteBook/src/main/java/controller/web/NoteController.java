@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import service.web.NoteService;
 import service.web.ResourceService;
 import service.web.UserService;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -34,33 +36,6 @@ public class NoteController {
     @Autowired
     private UserService userService;
 
-
-//    @RequestMapping(value = "/public/search",method = RequestMethod.GET)
-//    public String noteSearch(@RequestParam("keyword") String keyword, Model model){
-//        if (keyword == null){
-//            model.addAttribute("message","Bad Request");
-//            return "error";
-//        }
-//        else {
-//            List<Note> noteList = service.searchNotes(keyword);
-//            model.addAttribute("note_list",noteList);
-//            return "notes";
-//        }
-//    }
-
-//    @GetMapping("/private/search")
-//    public String privateSearch(@RequestParam("Keyword") String keyword,Model model){
-//        if (keyword == null){
-//            model.addAttribute("message","Bad Request");
-//            return "error";
-//        }
-//        else{
-//            List<Note> noteList = service.privateSearch(keyword);
-//            model.addAttribute("note_list",noteList);
-//            return "notes";
-//        }
-//    }
-
     @GetMapping("/create")
     public String create(Model model){
         model.addAttribute("note",new Note());
@@ -73,11 +48,11 @@ public class NoteController {
     }
 
     @GetMapping("/submit")
-    public String submit(@ModelAttribute("note") Note note,Model model){
+    public String submit(@ModelAttribute("note") Note note, Model model, HttpServletRequest request){
         note.setTimestamp(new Timestamp(System.currentTimeMillis()));
         note.setUser(userService.getByUsername(getUserName()));
         try{
-            service.createNote(note);
+            service.createNote(note,request);
             model.addAttribute("message","Created Successfully");
         }
         catch (Exception e){

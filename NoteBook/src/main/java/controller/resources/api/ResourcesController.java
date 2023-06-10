@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import responses.resources.DeleteStatus;
+import responses.resources.UpdateStatus;
 import responses.resources.UploadStatus;
 import service.web.ResourceService;
 
@@ -56,25 +57,47 @@ public class ResourcesController {
         return new ResponseEntity<>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<DeleteStatus> delete(@RequestParam("id") int id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeleteStatus> delete(@PathVariable int id){
         DeleteStatus deleteStatus = new DeleteStatus();
+        ResourceService.Status status = resourceService.delete(id,directoryHandler);
+        if (status == ResourceService.Status.NOT_AUTHORIZED){
+            deleteStatus.setMessage("Not Authorized");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.UNAUTHORIZED);
+        }
+        else if(status == ResourceService.Status.RESOURCE_DOES_NOT_EXISTS){
+            deleteStatus.setMessage("Resource Does Not Exists");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.NOT_FOUND);
+        }
+        else{
+            deleteStatus.setMessage("Resource Deleted Successfully");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.OK);
+        }
 
+    }
 
-//        if (filename == null){
-//            deleteStatus.setMessage("Invalid Request");
-//            return new ResponseEntity<>(deleteStatus,HttpStatus.BAD_REQUEST);
-//        }
-//        boolean status = directoryHandler.delete(filename);
-//        if (status){
-//            deleteStatus.setMessage("Deleted Successfully");
-//            return new ResponseEntity<>(deleteStatus,HttpStatus.OK);
-//        }
-//        else{
-//            deleteStatus.setMessage("Internal Server Error");
-//            return new ResponseEntity<>(deleteStatus,HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-        return null;
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateStatus> updateVisibility(@RequestParam("visibility") String visibility, int id){
+        UpdateStatus updateStatus = new UpdateStatus();
+        Resource resource = new Resource();
+        ResourceService.Status status = resourceService.updateVisibility(resource,id,visibility);
+        if (status == ResourceService.Status.RESOURCE_DOES_NOT_EXISTS){
+            updateStatus.setMessage("Resource Does Not Exists");
+            return new ResponseEntity<>(updateStatus,HttpStatus.NOT_FOUND);
+        }
+        else if (status == ResourceService.Status.NOT_AUTHORIZED){
+            updateStatus.setMessage("Not Authorized");
+            return new ResponseEntity<>(updateStatus,HttpStatus.UNAUTHORIZED);
+        }
+        else if (status == ResourceService.Status.BAD_REQUEST){
+            updateStatus.setMessage("Bad Request");
+            return new ResponseEntity<>(updateStatus,HttpStatus.BAD_REQUEST);
+        }
+        else{
+            updateStatus.setCurrent_visibility(resource.getVisibility());
+            updateStatus.setMessage("Visibility Updated Successfully");
+            return new ResponseEntity<>(updateStatus,HttpStatus.OK);
+        }
     }
 
     public String createUserDirectoryIfNotExists(){

@@ -48,7 +48,7 @@ public class ResourceService {
     }
 
     public enum Status{
-        ALREADY_EXISTS,OK,FAILED,NOT_AUTHORIZED
+        ALREADY_EXISTS,OK,FAILED,NOT_AUTHORIZED,BAD_REQUEST,RESOURCE_DOES_NOT_EXISTS
     }
 
     @Transactional(rollbackOn = {IOException.class})
@@ -69,18 +69,48 @@ public class ResourceService {
         }
     }
 
-    public Status delete(int id){
+    @Transactional(rollbackOn = RuntimeException.class)
+    public Status delete(int id,DirectoryHandler directoryHandler){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
         Resource resource = resourceDAO.get(id);
+        if (resource == null) return Status.RESOURCE_DOES_NOT_EXISTS;
         if (!resource.getUser().getEmail().equals(username)){
             return Status.NOT_AUTHORIZED;
         }
         else{
+            resourceDAO.delete(id);
             String filename = "../"+resource.getLocation();
-
+            boolean status = directoryHandler.delete(filename);
+            if (!status){
+                throw new RuntimeException("Not able to delete");
+            }
+            else{
+                return Status.OK;
+            }
         }
-        return null;
+    }
+
+    @Transactional
+    public Status updateVisibility(Resource resource,int id,String visibility){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        if (visibility == null || (!visibility.equals("Public") && !visibility.equals("Private"))) return Status.BAD_REQUEST;
+        Resource actual_resource = resourceDAO.get(id);
+        if (actual_resource == null){
+            return Status.RESOURCE_DOES_NOT_EXISTS;
+        }
+        else{
+            if (actual_resource.getUser().getEmail().equals(username)){
+                actual_resource.setVisibility(visibility);
+                resourceDAO.update(actual_resource);
+                resource.setVisibility(actual_resource.getVisibility());
+                return Status.OK;
+            }
+            else{
+                return Status.NOT_AUTHORIZED;
+            }
+        }
     }
 
 
