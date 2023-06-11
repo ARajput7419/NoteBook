@@ -10,8 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import responses.resources.UploadStatus;
-
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
@@ -24,23 +22,27 @@ public class ResourceService {
     @Autowired
     private UserDAO userDAO;
 
+    @Transactional
     public int getResourcesPrivateCount(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
         return resourceDAO.getResourcesPrivateCount(username);
     }
 
+    @Transactional
     public List<Resource> getResourcesPrivate(int page_size,int offset){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
         return resourceDAO.getResourcesPrivate(username,page_size,offset);
     }
 
+    @Transactional
     public List<Resource> searchByKeywordPrivate(String keyword,int page_size , int offset){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
         return resourceDAO.searchByKeywordPrivate(username,keyword,page_size,offset);
     }
+    @Transactional
     public int searchByKeywordPrivateCount(String keyword){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) authentication.getPrincipal();
@@ -48,7 +50,7 @@ public class ResourceService {
     }
 
     public enum Status{
-        ALREADY_EXISTS,OK,FAILED,NOT_AUTHORIZED,BAD_REQUEST,RESOURCE_DOES_NOT_EXISTS
+        ALREADY_EXISTS,OK,NOT_AUTHORIZED,BAD_REQUEST,RESOURCE_DOES_NOT_EXISTS
     }
 
     @Transactional(rollbackOn = {IOException.class})

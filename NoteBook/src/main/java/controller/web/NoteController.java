@@ -5,6 +5,7 @@ import database.entity.Note;
 import database.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import service.web.NoteService;
 import service.web.ResourceService;
 import service.web.UserService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,6 +41,22 @@ public class NoteController {
         model.addAttribute("note",new Note());
         return "creates";
     }
+
+
+
+    @GetMapping("/edit")
+    public String edit(@RequestParam("id") int id,Model model) {
+
+        return service.requestForEdit(id, model);
+
+    }
+
+    @PutMapping("/edit")
+    public String edit(@ModelAttribute("note") Note note){
+
+        return null;
+    }
+
 
     private String getUserName(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import responses.resources.DeleteStatus;
 import service.web.NoteService;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -105,5 +108,24 @@ public class NoteController {
         page.setTotal_pages(total_pages);
         page.setNotes(noteList);
         return page;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeleteStatus> deleteNote(@PathVariable int id, HttpServletRequest request){
+        DeleteStatus deleteStatus = new DeleteStatus();
+        NoteService.Status status = noteService.delete(id,request);
+        if (status == NoteService.Status.NOT_AUTHORIZED){
+            deleteStatus.setMessage("Not Authorized");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.UNAUTHORIZED);
+        }
+        else if (status == NoteService.Status.RESOURCE_DOES_NOT_EXISTS){
+            deleteStatus.setMessage("Resource Does Not Exists");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.NOT_FOUND);
+        }
+        else{
+            deleteStatus.setMessage("Resource is  Deleted Successfully");
+            return new ResponseEntity<>(deleteStatus,HttpStatus.OK);
+        }
+
     }
 }
