@@ -29,7 +29,7 @@
                   <a class="nav-link" href="#">Chat</a>
                 </li>
                 <li class="nav-item my_li">
-                  <a class="nav-link" href="#">Register</a>
+                  <a class="nav-link" href="/user/register">Register</a>
                 </li>
               </ul>
             </div>

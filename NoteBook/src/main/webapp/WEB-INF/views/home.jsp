@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/static/css/home.css">
-
+    <script src="/static/js/home.js"></script>
 
   </head>
   <body>
@@ -31,7 +31,7 @@
           </li>
           <c:if test="${login}">
           <li class="nav-item my_li">
-            <a class="nav-link" href="/logout">Log Out</a>
+            <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>
           </li>
           </c:if>
           <c:if test="${!login}">

@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  
 <html>
     <head>
 
@@ -27,7 +28,7 @@
                   <a class="nav-link" href="#">Chat</a>
                 </li>
                 <li class="nav-item my_li">
-                  <a class="nav-link" href="#">Log In</a>
+                  <a class="nav-link" href="/user/login">Log In</a>
                 </li>
               </ul>
             </div>
@@ -44,27 +45,27 @@
                       <h3 class="mb-5">Register</h3>
                     <form:form method="post" action="/user/register" modelAttribute="user">
                       
+                      <input type="hidden" name="_csrf"  value="${_csrf.token}">
+
                         <div class="form-outline mb-4">
-                        <input type="text" id="typeNameX-2" class="form-control form-control-lg" path="name" placeholder="Full Name" />
+                        <form:input type="text" id="typeNameX-2" class="form-control form-control-lg" path="name" placeholder="Full Name" />
                       </div>
 
                       <div class="form-outline mb-4">
-                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg" path="email" placeholder="Email" />
+                        <form:input type="email" id="typeEmailX-2" class="form-control form-control-lg" path="email" placeholder="Email" />
                       </div>
           
                       <div class="form-outline mb-4">
-                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg" path="password" placeholder="Password"/>
+                        <form:input type="password" id="typePasswordX-2" class="form-control form-control-lg" path="password" placeholder="Password"/>
                       </div>
           
                       <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
           
                       <hr class="my-4">
           
-                      <a href="/oauth2/authorization/google" style="text-decoration: none; color:white;"><button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"
-                        type="submit"><i class="fab fa-google me-2"></i> Sign Up with Google</button></a>
-                      <a href="/oauth2/authorization/github" style="text-decoration:none; color:black;"><button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #b1b6c0;"
-                        type="submit"><i class="fab fa-github me-2"></i> Sign Up with Github</button></a>
-          
+                      <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"
+                        type="submit"><a href="/oauth2/authorization/google" style="text-decoration: none; color:white;"><i class="fab fa-google me-2"></i> Sign Up with Google</a></button>
+                      
                     </form:form>
 
                     </div>

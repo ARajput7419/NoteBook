@@ -27,12 +27,14 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String register(){
+    public String register(Model model){
+        model.addAttribute("user",new User());
         return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user,Model model){
+
         boolean status =userService.exists(user.getUsername());
         if (!status){
             try {
