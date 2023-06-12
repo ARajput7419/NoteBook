@@ -21,7 +21,7 @@ import java.util.List;
 
 @RequestMapping("/api/resources")
 @RestController
-public class ResourcesController {
+public class RestResourcesController {
 
     @Autowired
     private DirectoryHandler directoryHandler;
@@ -32,7 +32,7 @@ public class ResourcesController {
     @Autowired
     private ResourceService resourceService;
 
-    @Autowired
+    @Value("${page_size}")
     private int page_size;
 
     private String getUrl(String fileName){

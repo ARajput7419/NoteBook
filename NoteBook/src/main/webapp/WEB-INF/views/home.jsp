@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+
 <html>
   <head>
     <title>NoteBook</title>
@@ -27,11 +29,18 @@
           <li class="nav-item my_li">
             <a class="nav-link" href="#">Chat</a>
           </li>
+          <c:if test="${login}">
           <li class="nav-item my_li">
-            <a class="nav-link" href="#">Log In</a>
+            <a class="nav-link" href="/logout">Log Out</a>
           </li>
+          </c:if>
+          <c:if test="${!login}">
+            <li class="nav-item my_li">
+              <a class="nav-link" href="/user/login">Log In</a>
+            </li>
+            </c:if>
           <li class="nav-item my_li">
-            <a class="nav-link" href="#">Register</a>
+            <a class="nav-link" href="/user/register">Register</a>
           </li>
         </ul>
       </div>

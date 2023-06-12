@@ -3,7 +3,6 @@ package database.entity;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
@@ -21,21 +20,20 @@ public class User implements UserDetails {
 
     @Column
     @ColumnDefault("0")
-    private boolean oauth2;
+    private boolean oauth2 = false;
 
-    @Transient
     @OneToMany(mappedBy = "user")
     List<Note> notes;
 
-    @Transient
+
     @OneToMany(mappedBy = "from",fetch = FetchType.LAZY)
     List<Chat> chatsAsSender;
 
-    @Transient
+
     @OneToMany(mappedBy = "to",fetch=FetchType.LAZY)
     List<Chat> chatAsReceiver;
 
-    @Transient
+
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     List<Resource> resources;
 

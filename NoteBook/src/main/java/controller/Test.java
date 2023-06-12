@@ -1,11 +1,16 @@
 package controller;
 
 import org.apache.catalina.servlets.DefaultServlet;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,6 +45,14 @@ public class Test {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
 //        return "<img src=\""+token.getPrincipal().getAttribute("picture")+"\">";
+
+        UsernamePasswordAuthenticationFilter filter;
+        CsrfFilter webl;
+        DefaultLoginPageGeneratingFilter f;
+
+        OAuth2AuthorizationRequestRedirectFilter f1;
+
+        LogoutConfigurer configurer;
 
         return "Okay";
     }

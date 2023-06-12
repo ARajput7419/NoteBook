@@ -5,7 +5,6 @@ import database.entity.Note;
 import database.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Controller
+
 @RequestMapping("/notes")
 public class NoteController {
 
@@ -52,9 +51,11 @@ public class NoteController {
     }
 
     @PutMapping("/edit")
-    public String edit(@ModelAttribute("note") Note note){
-
-        return null;
+    public String edit(@ModelAttribute("note") Note note,Model model,HttpServletRequest request){
+        note.setUser(userService.getByUsername(getUserName()));
+        service.update(note,request);
+        model.addAttribute("message","Note is Updated Successfully");
+        return "edit";
     }
 
 

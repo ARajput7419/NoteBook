@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 public class ChatDAO {
 
     @Autowired
-    EntityManager entityManager;
+    private  EntityManager entityManager;
 
 
     public Chat get(int id){

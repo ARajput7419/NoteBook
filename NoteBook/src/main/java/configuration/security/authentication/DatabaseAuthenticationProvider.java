@@ -26,7 +26,7 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
         if (user == null){
             throw  new BadCredentialsException("Bad Credentials");
         }
-        if(user.getPassword().equals(passwordEncoder.encode(password))) {
+        if(passwordEncoder.matches(password,user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(username,password,null);
         }
         else{

@@ -30,7 +30,7 @@ public class AOPConfiguration {
     private void setCmd(){
         directoryHandler.setCwd(apiDirectory);
     }
-    @Before("execution(* controller.resources.api.ResourcesController.*(..))")
+    @Before("execution(* controller.resources.api.RestResourcesController.*(..))")
     private void setResourcesCwd(){
         directoryHandler.setCwd(resourcesDirectory);
     }

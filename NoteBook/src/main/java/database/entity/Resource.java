@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 @Entity
 public class Resource {
 
@@ -23,13 +24,15 @@ public class Resource {
     private String name;
 
     @ColumnDefault("0")
+    @Column(name = "count_")
     private int count;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name="timestamp_")
     private Timestamp timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false,name="user_id")
     private User user;
 
     public int getId() {

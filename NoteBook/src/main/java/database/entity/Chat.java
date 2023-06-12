@@ -12,14 +12,15 @@ public class Chat {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false,name="from_userid")
     private User from;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false,name="to_userid")
     private User to;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "timestamp_")
     private Timestamp timestamp;
 
     @Column(nullable = false)

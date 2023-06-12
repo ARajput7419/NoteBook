@@ -172,6 +172,14 @@ public class NoteService {
          }
      }
 
+     @Transactional
+    public void update(Note note , HttpServletRequest request) {
+
+         delete(note.getId(),request);
+         createNote(note,request);
+
+     }
+
 
 
 

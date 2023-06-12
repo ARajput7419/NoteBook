@@ -1,3 +1,4 @@
+
 <html>
     <head>
 
@@ -35,6 +36,7 @@
           </nav>
 
 
+        
         <section class="vh-100" style="background-color: #508bfc;">
             <div class="container py-5 h-100">
               <div class="row d-flex justify-content-center align-items-center h-100">
@@ -44,23 +46,26 @@
           
                       <h3 class="mb-5">Sign in</h3>
           
-                      <div class="form-outline mb-4">
-                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email" />
+                      <form action="/login_processing" method="POST">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}">
+                        <div class="form-outline mb-4">
+                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg" name="username" placeholder="Email" />
                       </div>
           
                       <div class="form-outline mb-4">
-                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg"  placeholder="Password"/>
+                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg"  name="password" placeholder="Password"/>
                       </div>
           
                       <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
           
                       <hr class="my-4">
-          
-                      <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"
-                        type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
-                      <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;"
-                        type="submit"><i class="fab fa-facebook-f me-2"></i> Sign in with facebook</button>
-          
+                        </form>
+
+                        <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"
+                          ><a href="/oauth2/authorization/google" style="text-decoration:none;color:white;"><i class="fab fa-google me-2"></i> Sign in with google</a></button>
+                
+                  
+
                     </div>
                   </div>
                 </div>

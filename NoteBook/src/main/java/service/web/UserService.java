@@ -4,6 +4,7 @@ import database.entity.User;
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,8 @@ public class UserService {
     @Transactional
     public void loginThroughOauth2(HttpServletRequest request , HttpServletResponse response, Authentication authentication){
 
-        OAuth2User oAuth2User = (OAuth2User) authentication;
+        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
+        OAuth2User oAuth2User = token.getPrincipal();
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
         User user = userDAO.get(email);

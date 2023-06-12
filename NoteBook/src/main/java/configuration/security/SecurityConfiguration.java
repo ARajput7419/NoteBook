@@ -16,12 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import service.web.UserService;
 
 import java.util.List;
@@ -51,8 +48,7 @@ public class SecurityConfiguration {
 
      private List<ClientRegistration> registration(){
 
-        return List.of(CommonOAuth2Provider.GOOGLE.getBuilder("google").clientId(googleClientId).clientSecret(googleSecret).build()
-                , CommonOAuth2Provider.GITHUB.getBuilder("github").clientId(githubClientId).clientSecret(githubSecret).build());
+        return List.of(CommonOAuth2Provider.GOOGLE.getBuilder("google").clientId(googleClientId).clientSecret(googleSecret).build());
 
     }
 
@@ -67,6 +63,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
+
         httpSecurity.oauth2Login().
                 clientRegistrationRepository(registrationRepository())
                         .successHandler(((request, response, authentication) -> {
@@ -74,28 +71,30 @@ public class SecurityConfiguration {
                             savedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request,
                                     response,authentication);
                         }))
-                                .loginPage("/user/login");
+                .loginPage("/user/login");
 
         httpSecurity.formLogin()
                         .loginPage("/user/login")
                                 .loginProcessingUrl("/login_processing")
                                         .failureForwardUrl("/user/login/failure")
-                                                .successForwardUrl("/notes");
+                                                .defaultSuccessUrl("/",true)
+                                                        .usernameParameter("username")
+                                                                .passwordParameter("password");
 
         httpSecurity.httpBasic();
 
-        httpSecurity.logout()
-                        .logoutUrl("/user/logout")
-                                .logoutSuccessUrl("/");
+        httpSecurity.logout();
+
 
         httpSecurity.authorizeHttpRequests((customizer)->{
             customizer.mvcMatchers("/execution/api/**").permitAll();
+            customizer.mvcMatchers("/login_processing").permitAll();
             customizer.mvcMatchers("/notes").authenticated();
             customizer.mvcMatchers("/notes/private/search").authenticated();
             customizer.mvcMatchers("/notes/public/search").permitAll();
             customizer.mvcMatchers("/notes/view/{id}").permitAll();
             customizer.mvcMatchers("/resources/api/**").authenticated();
-            customizer.mvcMatchers("/").authenticated();
+            customizer.mvcMatchers("/").permitAll();
         });
 
         httpSecurity.authenticationProvider(authenticationProvider);
@@ -105,6 +104,8 @@ public class SecurityConfiguration {
         return httpSecurity.build();
 
      }
+
+
 
      @Bean
      public SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler(){

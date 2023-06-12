@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 @Entity
 public class Note {
 
@@ -19,12 +20,14 @@ public class Note {
     private String visibility;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name="timestamp_")
     private Timestamp timestamp;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false,name="user_id")
     private User user;
 
     public int getId() {
