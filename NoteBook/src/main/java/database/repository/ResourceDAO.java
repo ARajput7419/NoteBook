@@ -39,41 +39,41 @@ public class ResourceDAO {
 
 
     public  int getResourcesPrivateCount(String username){
-        TypedQuery<Integer> query = entityManager.createQuery("select count(r) from Resource r join r.user u where u.email = :username",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("select count(r) from Resource r join r.user u where u.email = :username",Long.class);
         query.setParameter("username",username);
-        return query.getSingleResult();
+        return (int)(long)query.getSingleResult();
     }
 
 
     public List<Resource> getResourcesPrivate(String username , int count , int offset){
-        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r join r.user u where u.email= :username limit :count offset :offset",Resource.class);
+        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r join r.user u where u.email= :username ",Resource.class);
         query.setParameter("username",username);
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
         return query.getResultList();
     }
 
 
     public  int searchByKeywordPrivateCount(String username,String keyword){
-        TypedQuery<Integer> query = entityManager.createQuery("select count(r) from Resource r join r.user u where u.email = :username and r.name like :keyword",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("select count(r) from Resource r join r.user u where u.email = :username and r.name like :keyword",Long.class);
         query.setParameter("username",username);
         query.setParameter("keyword","%"+keyword+"%");
-        return query.getSingleResult();
+        return (int)(long)query.getSingleResult();
     }
 
 
     public List<Resource> searchByKeywordPrivate(String username , String keyword,int count , int offset){
-        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r join r.user u where u.email= :username and r.name like :keyword limit :count offset :offset",Resource.class);
+        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r join r.user u where u.email= :username and r.name like :keyword ",Resource.class);
         query.setParameter("username",username);
         query.setParameter("keyword",keyword);
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        query.setMaxResults(count);
+        query.setFirstResult(offset);
         return query.getResultList();
     }
 
 
     public boolean checkIfAlreadyExists(String location){
-        TypedQuery<Integer> query = entityManager.createQuery("select count(r) from Resource r where r.location = :location",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("select count(r) from Resource r where r.location = :location",Long.class);
         query.setParameter("location",location);
         return query.getSingleResult()==1;
     }

@@ -7,23 +7,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/my_notes.css">
-    <title>Notes Page</title>
+    <title>Notes</title>
 
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">NoteBook</a>
+        <a class="navbar-brand" href="/">NoteBook</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars"></i> <!-- Custom toggle icon using Font Awesome -->
+          <i class="fas fa-bars"></i> 
   
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item my_li">
-              <a class="nav-link" href="#">My Notes</a>
-            </li>
             <li class="nav-item my_li">
               <a class="nav-link" href="#">Public Notes</a>
             </li>
@@ -31,11 +28,9 @@
               <a class="nav-link" href="#">Chat</a>
             </li>
             <li class="nav-item my_li">
-              <a class="nav-link" href="#">Log In</a>
+              <a class="nav-link" href="#">Log Out</a>
             </li>
-            <li class="nav-item my_li">
-              <a class="nav-link" href="#">Register</a>
-            </li>
+            
           </ul>
         </div>
       </nav>

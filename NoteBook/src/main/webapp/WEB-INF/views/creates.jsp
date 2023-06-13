@@ -41,10 +41,11 @@
 
   <div class="container-fluid">
     <form:form method="post" action="/notes/submit" modelAttribute="note">
+      <input type="hidden" name="_csrf" value="${_csrf.token}" >
       <div class="row">
         <div class="col">
         <label id="label_" for="note-name">Note Name:</label>
-        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name">
+        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name"/>
         </div>
       </div>
       

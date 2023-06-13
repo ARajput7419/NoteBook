@@ -34,3 +34,10 @@ create table Chat (
                      foreign key(to_userid) references User(email)
 
  )
+
+ create table otp (
+
+                    email varchar(50) primary key,
+                    otp varchar(6) not null,
+                    expire timestamp not null
+ )

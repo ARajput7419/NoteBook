@@ -1,9 +1,13 @@
 package database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+
 
 
 @Entity
@@ -25,12 +29,14 @@ public class Resource {
 
     @ColumnDefault("0")
     @Column(name = "count_")
+   // @JsonIgnore
     private int count;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name="timestamp_")
     private Timestamp timestamp;
 
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false,name="user_id")
     private User user;

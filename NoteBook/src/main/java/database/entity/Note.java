@@ -1,5 +1,6 @@
 package database.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Note {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false,name="user_id")
+    @JsonManagedReference
     private User user;
 
     public int getId() {

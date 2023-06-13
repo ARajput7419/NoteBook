@@ -1,5 +1,6 @@
 package main;
 
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import database.entity.User;
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -20,6 +24,8 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import service.web.UserService;
+
+import java.util.List;
 
 @SpringBootApplication
 @EnableWebMvc
@@ -45,6 +51,22 @@ public class Start implements WebMvcConfigurer {
 
     @Value("${page_size}")
     private int page_size;
+
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+        Hibernate5Module module = new Hibernate5Module();
+        module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
+        module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.modulesToInstall(module);
+        builder.simpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+
+    }
 
 
 

@@ -28,20 +28,20 @@ public class NoteDAO {
 
 
     public List<Note> searchByKeywordPublic(String keyword,int count,int offset){
-        TypedQuery<Note> query = entityManager.createQuery("select n from Note n where n.name like :key and visibility = 'Public' limit :count offset :offset",Note.class);
+        TypedQuery<Note> query = entityManager.createQuery("select n from Note n where n.name like :key and visibility = 'Public'",Note.class);
         query.setParameter("key","%"+keyword+"%");
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
         return query.getResultList();
     }
 
 
     public List<Note> searchByKeywordPrivate(String keyword,String username,int count,int offset){
-        TypedQuery<Note> query = entityManager.createQuery("select n from Note n join n.user u where n.name like :key and u.email = :username limit :count  offset :offset",Note.class);
+        TypedQuery<Note> query = entityManager.createQuery("select n from Note n join n.user u where n.name like :key and u.email = :username ",Note.class);
         query.setParameter("key","%"+keyword+"%");
         query.setParameter("username",username);
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
         return query.getResultList();
     }
 
@@ -54,19 +54,19 @@ public class NoteDAO {
 
 
     public int searchByKeywordPrivateCount(String keyword,String username){
-        TypedQuery<Integer> query = entityManager.createQuery("select count(n) from Note n join n.user u where n.name like :key and u.email = :username",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("select count(n) from Note n join n.user u where n.name like :key and u.email = :username",Long.class);
         query.setParameter("key","%"+keyword+"%");
         query.setParameter("username",username);
-        return query.getSingleResult();
+        return (int)(long)(query.getSingleResult());
     }
 
 
     public List<Note> getNotesPrivate(String username,int count,int offset){
 
-        TypedQuery<Note> query = entityManager.createQuery("Select n from Note n join n.user u where u.email = :username limit :count offset :offset ",Note.class);
+        TypedQuery<Note> query = entityManager.createQuery("Select n from Note n join n.user u where u.email = :username ",Note.class);
         query.setParameter("username",username);
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
         return query.getResultList();
 
     }
@@ -81,17 +81,17 @@ public class NoteDAO {
 
     public List<Note> getNotesPublic(int count,int offset){
 
-        TypedQuery<Note> query = entityManager.createQuery("Select n from Note n  where n.visibility = 'Public' limit :count offset :offset ",Note.class);
-        query.setParameter("count",count);
-        query.setParameter("offset",offset);
+        TypedQuery<Note> query = entityManager.createQuery("Select n from Note n  where n.visibility = 'Public'",Note.class);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
         return query.getResultList();
 
     }
 
 
     public int getNotesPublicCount(){
-        TypedQuery<Integer> query = entityManager.createQuery("Select count(n) from Note n  where visibility = 'Public' ",Integer.class);
-        return query.getSingleResult();
+        TypedQuery<Long> query = entityManager.createQuery("Select count(n) from Note n  where visibility = 'Public' ",Long.class);
+        return (int)(long)(query.getSingleResult());
     }
 
 

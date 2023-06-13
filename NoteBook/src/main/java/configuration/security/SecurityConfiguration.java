@@ -90,11 +90,14 @@ public class SecurityConfiguration {
             customizer.mvcMatchers("/execution/api/**").permitAll();
             customizer.mvcMatchers("/login_processing").permitAll();
             customizer.mvcMatchers("/notes").authenticated();
+            customizer.mvcMatchers("/notes/create").authenticated();
             customizer.mvcMatchers("/notes/private/search").authenticated();
             customizer.mvcMatchers("/notes/public/search").permitAll();
             customizer.mvcMatchers("/notes/view/{id}").permitAll();
             customizer.mvcMatchers("/resources/api/**").authenticated();
             customizer.mvcMatchers("/").permitAll();
+            customizer.mvcMatchers("/api/notes/public/**").permitAll();
+            customizer.mvcMatchers("/api/notes/{id}").authenticated();
         });
 
         httpSecurity.authenticationProvider(authenticationProvider);

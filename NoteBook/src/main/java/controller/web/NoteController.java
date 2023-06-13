@@ -21,6 +21,7 @@ import java.util.List;
 
 
 @RequestMapping("/notes")
+@Controller
 public class NoteController {
 
     @Autowired
@@ -64,7 +65,7 @@ public class NoteController {
         return (String) authentication.getPrincipal();
     }
 
-    @GetMapping("/submit")
+    @PostMapping("/submit")
     public String submit(@ModelAttribute("note") Note note, Model model, HttpServletRequest request){
         note.setTimestamp(new Timestamp(System.currentTimeMillis()));
         note.setUser(userService.getByUsername(getUserName()));

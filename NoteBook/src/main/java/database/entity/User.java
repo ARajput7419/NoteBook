@@ -1,5 +1,7 @@
 package database.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,18 +24,23 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private boolean oauth2 = false;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user")
     List<Note> notes;
 
 
+    @JsonBackReference
     @OneToMany(mappedBy = "from",fetch = FetchType.LAZY)
     List<Chat> chatsAsSender;
 
 
+
+    @JsonBackReference
     @OneToMany(mappedBy = "to",fetch=FetchType.LAZY)
     List<Chat> chatAsReceiver;
 
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     List<Resource> resources;
 
@@ -41,6 +48,8 @@ public class User implements UserDetails {
         return oauth2;
     }
 
+
+    @JsonIgnore
     public void setOauth2(boolean oauth2) {
         this.oauth2 = oauth2;
     }
@@ -70,31 +79,39 @@ public class User implements UserDetails {
         return password;
     }
 
+
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
 
+    @JsonIgnore
     public void setPassword(String password) {
         this.password = password;
     }

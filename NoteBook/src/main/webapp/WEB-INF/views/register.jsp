@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="/static/css/register.css">
+        <script src="/static/js/register.js"></script>
     
 
     </head>
@@ -52,14 +53,18 @@
                       </div>
 
                       <div class="form-outline mb-4">
-                        <form:input type="email" id="typeEmailX-2" class="form-control form-control-lg" path="email" placeholder="Email" />
+                        <form:input type="email" id="typeEmailX-2" class="form-control form-control-lg email" path="email" placeholder="Email" />
                       </div>
           
                       <div class="form-outline mb-4">
                         <form:input type="password" id="typePasswordX-2" class="form-control form-control-lg" path="password" placeholder="Password"/>
                       </div>
+
+                      <div class="form-outline mb-4" style="display: none;">
+                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg otp"  name="otp" placeholder="Enter OTP"/>
+                      </div>
           
-                      <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
+                      <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="form_submit()">Register</button>
           
                       <hr class="my-4">
           
