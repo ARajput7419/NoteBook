@@ -1,1 +1,3 @@
 NoteBook/src/main/resources/application.properties
+NoteBook/src/main/resources/email_config.properties
+
