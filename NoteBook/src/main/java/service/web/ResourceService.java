@@ -6,6 +6,7 @@ import database.entity.User;
 import database.repository.ResourceDAO;
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class ResourceService {
     private ResourceDAO resourceDAO;
     @Autowired
     private UserDAO userDAO;
+
+    @Value("#{(servletContext.getRealPath('/'))}")
+    private String resourcesDirectory;
 
     @Transactional
     public int getResourcesPrivateCount(){
@@ -114,6 +118,18 @@ public class ResourceService {
             }
         }
     }
+
+    @Transactional
+    public void cleanUp(){
+        DirectoryHandler directoryHandler = new DirectoryHandler();
+        directoryHandler.setCwd(resourcesDirectory);
+        List<String> locations = resourceDAO.getLocations();
+        for(String filename : locations){
+            directoryHandler.delete(filename);
+        }
+        resourceDAO.cleanUp();
+    }
+
 
 
 }

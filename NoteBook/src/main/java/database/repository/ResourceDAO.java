@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -94,6 +95,20 @@ public class ResourceDAO {
             query.executeUpdate();
         }
 
+    }
+
+    public List<String> getLocations(){
+        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r where r.count = 0 ",Resource.class);
+        List<String> locations = new ArrayList<>();
+        for(Resource resource : query.getResultList()){
+            locations.add(resource.getLocation());
+        }
+        return locations;
+    }
+
+    public void cleanUp(){
+        Query query = entityManager.createQuery("delete from Resource r where r.count = 0 ");
+        query.executeUpdate();
     }
 
 

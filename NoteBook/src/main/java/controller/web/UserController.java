@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import service.web.UserService;
 
 @Controller
@@ -33,19 +30,32 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user,Model model){
+    public String registerUser(@ModelAttribute("user") User user, Model model, @RequestParam("otp") String otp){
 
         boolean status =userService.exists(user.getUsername());
         if (!status){
-            try {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                userService.registerUser(user);
-                model.addAttribute("login",false);
-                return "home";
-            }
-            catch (Exception e){
-                model.addAttribute("message","Registration Failed");
+
+            UserService.OtpStatus otpStatus = userService.verifyOtp(user.getEmail(),otp);
+
+            if (otpStatus == UserService.OtpStatus.EXPIRED) {
+                model.addAttribute("message","Otp is Expired");
                 return "register";
+            }
+            else if (otpStatus == UserService.OtpStatus.FAILED){
+                model.addAttribute("message","Otp Verification is Failed");
+                return "register";
+            }
+            else{
+                try {
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    userService.registerUser(user);
+                    model.addAttribute("login",false);
+                    return "home";
+                }
+                catch (Exception e){
+                    model.addAttribute("message","Registration Failed");
+                    return "register";
+                }
             }
         }
         else{

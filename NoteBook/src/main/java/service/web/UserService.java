@@ -5,6 +5,7 @@ import database.entity.User;
 import database.repository.OtpDAO;
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -26,6 +28,9 @@ public class UserService {
 
     @Autowired
     private OtpDAO otpDAO;
+
+    @Value("${email}")
+    private String from;
 
     @Transactional
     public User getByUsername(String username){
@@ -61,16 +66,59 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void generateOtp(String email){
-        Otp otp  = otpDAO.get(email);
-        if (otp.getExpire().compareTo(new Timestamp(System.currentTimeMillis()))>=0){
+    public void sendEmail(String email,String otp) throws MessagingException {
+        String body = "<h2>Otp is </h2><br><h3>"+otp+"</h3><br><br><h3>Sent By : NoteBook Team</h3>";
+        EmailService.sendMail(from,email,"OTP For Registration Verification",body);
+    }
 
-            Random random = new Random();
-            String new_otp = ""+random.nextInt(100000,1000000);
-            otp.setOtp(new_otp);
-            //otp.setExpire();
+    public enum OtpStatus{
+        EXPIRED,FAILED,SUCCESS
+    }
+
+
+    @Transactional
+    public OtpStatus verifyOtp(String email , String otp){
+        Otp actual_otp = otpDAO.get(email);
+        if (actual_otp == null) return OtpStatus.FAILED;
+        else if (actual_otp.getExpire().compareTo(new Timestamp(System.currentTimeMillis()))<0) return OtpStatus.EXPIRED;
+        else
+        {
+            if (actual_otp.getOtp().equals(otp)) return OtpStatus.SUCCESS;
+            else return OtpStatus.FAILED;
         }
+
+
+    }
+
+    @Transactional
+    public void otpCleanUp(){
+        otpDAO.cleanUp();
+    }
+
+
+    @Transactional(rollbackOn = MessagingException.class)
+    public void generateOtp(String email) throws MessagingException {
+        Otp otp  = otpDAO.get(email);
+        Random random = new Random();
+        if (otp == null){
+            otp = new Otp();
+            otp.setOtp(random.nextInt(100000,1000000)+"");
+            otp.setExpire(new Timestamp(System.currentTimeMillis()+2000*60));
+            otp.setEmail(email);
+            otpDAO.insert(otp);
+
+        }
+        else {
+
+            if (otp.getExpire().compareTo(new Timestamp(System.currentTimeMillis())) < 0) {
+                String new_otp = "" + random.nextInt(100000, 1000000);
+                otp.setOtp(new_otp);
+            }
+            otp.setExpire(new Timestamp(System.currentTimeMillis() + 2000 * 60));
+            otpDAO.update(otp);
+        }
+
+        sendEmail(email,otp.getOtp());
     }
 
 }
