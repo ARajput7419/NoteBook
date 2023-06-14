@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,14 +36,29 @@ public class UserService {
      return userDAO.get(username);
     }
 
+    public enum UserExistenceStatus{
+        Oauth2,PASSWORD,NOT_EXIST;
+    }
+
     @Transactional
-    public boolean exists(String username){
-        return userDAO.get(username)!=null;
+    public UserExistenceStatus exists(String username){
+        User user = userDAO.get(username);
+        if (user == null) return UserExistenceStatus.NOT_EXIST;
+        else{
+            if (user.isOauth2()) return UserExistenceStatus.Oauth2;
+            else return UserExistenceStatus.PASSWORD;
+        }
     }
 
     @Transactional
     public void registerUser(User user){
-        userDAO.insert(user);
+        userDAO.update(user);
+    }
+
+    @Transactional
+    public void update(User user)
+    {
+        userDAO.update(user);
     }
 
     @Transactional
@@ -67,7 +81,48 @@ public class UserService {
     }
 
     public void sendEmail(String email,String otp) throws MessagingException {
-        String body = "<h2>Otp is </h2><br><h3>"+otp+"</h3><br><br><h3>Sent By : NoteBook Team</h3>";
+        String body ="<html>\n" +
+                "<head>\n" +
+                "    <style>\n" +
+                "        /* CSS styles for the email body */\n" +
+                "        body {\n" +
+                "            font-family: Arial, sans-serif;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "            background-color: #f2f2f2;\n" +
+                "        }\n" +
+                "        .container {\n" +
+                "            max-width: 600px;\n" +
+                "            margin: 0 auto;\n" +
+                "            padding: 20px;\n" +
+                "        }\n" +
+                "        .otp-code {\n" +
+                "            font-size: 24px;\n" +
+                "            font-weight: bold;\n" +
+                "            text-align: center;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        .message {\n" +
+                "            text-align: center;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        .sent-by {\n" +
+                "            text-align: center;\n" +
+                "            margin-top: 20px;\n" +
+                "            font-size: 14px;\n" +
+                "            color: #888888;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div class=\"container\">\n" +
+                "        <p class=\"message\">Your One-Time Password (OTP) is:</p>\n" +
+                "        <p class=\"otp-code\">{"+otp+"}</p>\n" +
+                "        <p class=\"message\">Please use this OTP to verify your account.</p>\n" +
+                "        <p class=\"sent-by\">Sent By: Notebook Team</p>\n" +
+                "    </div>\n" +
+                "</body>\n" +
+                "</html>";
         EmailService.sendMail(from,email,"OTP For Registration Verification",body);
     }
 

@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Markdown Note</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/themes/prism.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+  <style>
+    
+    #b{
+      padding-bottom: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    #label_{
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .markdown-container {
+      display: flex;
+    }
+
+    .markdown-container textarea {
+      flex: 1;
+      width: 100%;
+      height: 10%;
+    }
+
+    .note-preview {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      flex: 1;
+      height: 300px;
+      overflow-y: auto;
+    }
+
+    .buttons-container {
+      margin-top: 20px;
+    }
+
+
+    #prog{
+      padding-top: 30px;
+      border-radius: 4px;
+
+    }
+
+    @media only screen and (min-width:768px){
+    
+      #prog {
+
+        padding-top: 60px;
+
+      }
+
+    }
+
+
+
+    .navbar-toggler {
+  display: block;
+  background-color: yellow;
+  color: black;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+
+.navbar-nav li a {
+  margin: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.navbar {
+
+  background-color: black;
+  color: white;
+
+} 
+nav ul li a {
+
+ color: white;
+
+}
+
+nav ul li a:hover{
+
+ color: black;
+
+}
+
+.navbar-item{
+
+  color: white;
+}
+
+
+.navbar-brand {
+  font-size: 24px;
+  font-family: 'Fantasy', Papyrus;
+  color: white;
+}
+
+
+
+
+.my_li:hover {
+  background-color:  yellow;
+  color: black;
+  border-radius: 3px;
+}
+
+#heading{
+
+    text-shadow: 0px 10px 10px gray;
+}
+
+
+
+  </style>
+</head>
+<body id="b">
+
+
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">NoteBook</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i> <!-- Custom toggle icon using Font Awesome -->
+
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">My Notes</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Public Notes</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Chat</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Log In</a>
+        </li>
+        <li class="nav-item my_li">
+          <a class="nav-link" href="#">Register</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <br><br>
+
+  <div class="container-fluid">
+    <form>
+      <div class="row">
+        <div class="col">
+        <label id="label_" for="note-name">Note Name:</label>
+        <input type="text" class="form-control" id="note-name" placeholder="Enter note name">
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md">
+          <br>
+        <label id="label_" for="visibility">Visibility:</label>
+        <select class="form-control" id="visibility">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        </div>
+        <div class="col-md">
+          <br>
+          <label id="label_" for="file-upload">File Upload:</label>
+          <input style="width:50%" type="file" class="form-control-file" id="file-upload">
+          </div>
+          <div class="col-md" style="display: none;">
+            <br>
+            <br>
+            <div class="form-text">
+            <a href="#">Url for the resource</a>
+            </div>
+          </div>
+
+          <div class="col-md"   id="prog">
+            <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar bg-success" style="width: 20%">25%</div>
+            </div>
+          </div>
+
+      </div>
+      <br>
+      <div class="markdown-container">
+        <textarea class="form-control" id="markdown-textarea" rows="10"></textarea>
+        <div class="note-preview" id="preview-section" style="display: none;"></div>
+      </div>
+      <div class="buttons-container">
+        <button type="button" class="btn btn-primary" id="preview-button">Preview</button>
+        <button type="button" class="btn btn-primary" id="original-button">Original</button>
+        <button type="submit" class="btn btn-success">Create</button>
+      </div>
+    </form>
+    </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    var previewButton = document.getElementById('preview-button');
+    var originalButton = document.getElementById('original-button');
+    var markdownTextarea = document.getElementById('markdown-textarea');
+    var previewSection = document.getElementById('preview-section');
+
+    function convertToHtml() {
+      var markdownInput = document.getElementById('markdown-textarea').value;
+      var htmlOutput = document.getElementById('preview-section');
+
+      var converter = new showdown.Converter();
+
+     let convertedHtml  = converter.makeHtml(markdownInput);
+      
+      htmlOutput.innerHTML = convertedHtml;
+      Prism.highlightAll();
+    }
+
+
+    function appendCodeSections(){
+      let pre = document.querySelectorAll("pre");
+      for( let i = 0;  i < pre.length; i++){
+
+        let element = pre[i];
+        
+        var htmlString = '<button class="btn btn-primary run-button i'+i+' "  onclick="runCode(event,'+i+')">Run</button>' +
+                 '<button class="btn btn-primary run-button input-button" onclick="showInput(event,'+i+')">Input</button>' +
+                 '<div class="input-block i' +i+'">' +
+                 '  <label class="code-labels" for="inputValue">Input:</label>' +
+                 '  <textarea rows = "4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea>' +
+                 '</div>' +
+                 '<div class="output-block i'+ i +'" id="outputBlock">' +
+                 '  <label class="code-labels" for="output">Output:</label><br>' +
+                 '  compiled successfully ....' +
+                 '</div>';
+
+        element.classList.add(""+i);
+        element.insertAdjacentHTML("afterend",htmlString);
+
+      }
+      
+    }
+
+    function addStyle(){
+
+      let styleString = '<style>' +
+                  '  .code-block {' +
+                  '    background-color: #f1f1f1;' +
+                  '    padding: 10px;' +
+                  '  }' +
+                  '  .input-block,' +
+                  '  .output-block {' +
+                  '    display: none;' +
+                  '    margin-top: 2%;' +
+                  '  }' +
+                  '  .input-block.show,' +
+                  '  .output-block.show {' +
+                  '    display: block;' +
+            
+                  '  }' +
+  
+                  '  .output-block {' +
+                  '    background-color: black;' +
+                  '    color: white;' +
+                  '    padding: 10px;' +
+                  '    font-weight: bold;' +
+                  '    margin-top: 10px;' +
+                  '    overflow-x: scroll;' +
+                  '    overflow-y: scroll;' +
+                  '    height: 30%;' +
+                  '  }' +
+                  '  .run-button {' +
+                  '    margin-top: 10px;' +
+                  '  }' +
+                  '  .input-button {' +
+                  '    margin-left: 10%;' +
+                  '  }' +
+                  '  .code-labels {' +
+                  '    font-weight: bold;' +
+                  '  }' +
+                  '</style>';
+
+     document.head.insertAdjacentHTML("beforeend",styleString);
+
+    }
+
+    function addJavascript(){
+      
+      var scriptElement = document.createElement("script");
+  scriptElement.innerHTML = `
+    function runCode(event,index) {
+      event.preventDefault();
+      var outputBlock = document.querySelector(".output-block.i" + index );
+      outputBlock.classList.add("show");
+    }
+    
+    function showInput(event,index) {
+      event.preventDefault();
+      var inputBlock = document.querySelector(".input-block.i"+index);
+      if (inputBlock.classList.contains("show")) {
+        inputBlock.classList.remove("show");
+      } else {
+        inputBlock.classList.add("show");
+      }
+    }
+  `;
+  document.head.appendChild(scriptElement);
+    }
+
+   
+      addStyle();
+      
+      addJavascript();
+
+    previewButton.addEventListener('click', function() {
+      var markdownText = markdownTextarea.value;
+      previewSection.innerHTML = markdownText;
+      previewSection.style.display = 'block';
+      markdownTextarea.style.display = 'none';
+      convertToHtml();
+      appendCodeSections();
+    });
+
+    originalButton.addEventListener('click', function() {
+      previewSection.style.display = 'none';
+      markdownTextarea.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

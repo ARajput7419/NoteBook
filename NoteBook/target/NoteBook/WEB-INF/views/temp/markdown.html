@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Markdown to HTML</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/themes/prism.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+</head>
+<body>
+  <textarea id="markdown-input" oninput="convertToHtml()"></textarea>
+  <div id="html-output"></div>
+
+  <script>
+    function convertToHtml() {
+      var markdownInput = document.getElementById('markdown-input').value;
+      var htmlOutput = document.getElementById('html-output');
+
+      var converter = new showdown.Converter();
+
+     let convertedHtml  = converter.makeHtml(markdownInput);
+      
+      htmlOutput.innerHTML = convertedHtml;
+      Prism.highlightAll();
+    }
+  </script>
+
+
+
+</body>
+</html>

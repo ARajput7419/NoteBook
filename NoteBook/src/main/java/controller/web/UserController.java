@@ -32,8 +32,8 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model, @RequestParam("otp") String otp){
 
-        boolean status =userService.exists(user.getUsername());
-        if (!status){
+        UserService.UserExistenceStatus status =userService.exists(user.getUsername());
+        if (status == UserService.UserExistenceStatus.NOT_EXIST){
 
             UserService.OtpStatus otpStatus = userService.verifyOtp(user.getEmail(),otp);
 
@@ -49,6 +49,32 @@ public class UserController {
                 try {
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
                     userService.registerUser(user);
+                    model.addAttribute("login",false);
+                    return "home";
+                }
+                catch (Exception e){
+                    model.addAttribute("message","Registration Failed");
+                    return "register";
+                }
+            }
+        }
+        else if (UserService.UserExistenceStatus.Oauth2 == status){
+
+            UserService.OtpStatus otpStatus = userService.verifyOtp(user.getEmail(),otp);
+
+            if (otpStatus == UserService.OtpStatus.EXPIRED) {
+                model.addAttribute("message","Otp is Expired");
+                return "register";
+            }
+            else if (otpStatus == UserService.OtpStatus.FAILED){
+                model.addAttribute("message","Otp Verification is Failed");
+                return "register";
+            }
+            else{
+                try {
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    user.setOauth2(false);
+                    userService.update(user);
                     model.addAttribute("login",false);
                     return "home";
                 }

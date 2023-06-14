@@ -1,7 +1,4 @@
 package service.web;
-
-import org.springframework.stereotype.Service;
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -19,7 +16,7 @@ public class EmailService {
     static{
 
         try {
-            properties.load(EmailService.class.getResourceAsStream("/resources/email_config.properties"));
+            properties.load(EmailService.class.getResourceAsStream("/email_config.properties"));
             username = properties.getProperty("username");
             password = properties.getProperty("password");
         } catch (IOException e) {
