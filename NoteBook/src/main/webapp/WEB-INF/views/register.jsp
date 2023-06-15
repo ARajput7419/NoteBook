@@ -89,7 +89,7 @@
     
     <c:if test="${message != null}">
     <script>
-            toast("$message"); 
+            toast("${message}"); 
     </script>
     </c:if>
 </html>

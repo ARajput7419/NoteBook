@@ -79,75 +79,7 @@
             </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-            <div class="card card-spacing notes-card">
-                <div class="card-body">
-                    <h5 class="card-title">Note 1</h5>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
-                    <hr>
-                    <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Read</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
-                    </div>
-                    <p class="card-timestamp"><span>Time Stamp:</span> 22-11-2021</p>
-
-                </div>
-            </div>
-
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col">
-            <div class="card card-spacing notes-card">
-                <div class="card-body">
-                    <h5 class="card-title">Note 1</h5>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
-                    <hr>
-                    <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Read</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
-                    </div>
-                    <p class="card-timestamp"><span>Time Stamp:</span> 22-11-2021</p>
-
-                </div>
-
-            </div>
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col">
-            <div class="card card-spacing notes-card">
-                <div class="card-body">
-                    <h5 class="card-title">Note 1</h5>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
-                    <hr>
-                    <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Read</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
-                    </div>
-                    <p class="card-timestamp"><span>Time Stamp:</span> 22-11-2021</p>
-
-                </div>
-
-            </div>
-            </div>
-        </div>
-
-
-
-
-
+        
 
         <div class="row">
 
@@ -218,30 +150,6 @@
             </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-            <div class="card card-spacing resource-card">
-                <div class="card-body">
-                    <h5 class="card-title">Resource 1</h5>
-                    <p class="card-text"><span>Access Link:</span> <a href="#">https://example.com/resource1</a></p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
-                    <hr>
-                    <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Access</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
-
-                    </div>
-                    <p class="card-timestamp"><span>Last Modified:</span> 2023-05-31 12:30 PM</p>
-                </div>
-            </div>
-            </div>
-        </div>
-            
-
-
-
         
         <div class="row">
 

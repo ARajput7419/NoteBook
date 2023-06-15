@@ -5,6 +5,8 @@ import database.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
 @Repository
 public class UserDAO {
 
@@ -30,7 +32,7 @@ public class UserDAO {
 
 
     public void update(User user){
-        entityManager.refresh(user);
+
     }
 
 }
