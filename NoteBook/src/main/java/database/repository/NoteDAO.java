@@ -102,7 +102,13 @@ public class NoteDAO {
 
 
     public void update(Note note){
-        entityManager.refresh(note);
+
+    }
+
+    public List<Note> getRecentPublicNotes(int count){
+        TypedQuery<Note> query = entityManager.createQuery("select n from Note n where n.visibility = 'Public' order by n.timestamp desc",Note.class);
+        query.setMaxResults(count);
+        return query.getResultList();
     }
 
 

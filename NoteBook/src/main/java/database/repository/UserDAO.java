@@ -32,7 +32,6 @@ public class UserDAO {
 
 
     public void update(User user){
-
     }
 
 }

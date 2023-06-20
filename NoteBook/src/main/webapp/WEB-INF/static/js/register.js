@@ -1,7 +1,13 @@
 function form_submit(){
     let otp_field = document.getElementsByClassName("otp")[0];
     let email = document.getElementsByClassName("email")[0].value;
+    let full_name = document.getElementsByClassName("full_name")[0].value;
+    if(full_name.length == 0 ){
+        toast("Name Can Not be Empty");
+         return false;
+    } 
     if(!isValidEmail(email)){
+        toast("Invalid Email Address");
         return false;
     }
 
@@ -10,15 +16,15 @@ function form_submit(){
         let p = fetch(`/api/user/otp_generate?email=${email}`);
         p.then((response)=>{
             if(response.ok){
-                toast("Otp is sent Successfully...");
+                toast("Otp is Sent Successfully...");
+                otp_field.style.display="block";
             }
             else{
-                toast("Otp is not sent");
+                toast("Otp is Not Sent");
             }
         },(error)=>{
-            toast("Error while generating Otp");
+            toast("Error While Generating Otp");
         });
-        otp_field.style.display="block";
         return false;
     }
     else{
@@ -32,7 +38,7 @@ function form_submit(){
         else {
 
             if(password.length <6 ){
-                toast("Password should consist more than 5 characters");
+                toast("Password Should Consist More Than 5 Characters");
                 return false;
             }
             else {
@@ -58,6 +64,6 @@ function isValidEmail(email){
 
     }
 
-    return true;
+    return flag;
 }
 

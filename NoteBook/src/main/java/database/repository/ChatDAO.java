@@ -29,6 +29,6 @@ public class ChatDAO {
 
 
     public void update(Chat chat){
-        entityManager.refresh(chat);
+
     }
 }

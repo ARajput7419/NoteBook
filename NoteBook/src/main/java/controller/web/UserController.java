@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import service.web.NoteService;
 import service.web.UserService;
 
 @Controller
@@ -14,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NoteService noteService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,6 +54,7 @@ public class UserController {
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
                     userService.registerUser(user);
                     model.addAttribute("login",false);
+                    model.addAttribute("notes",noteService.getRecentPublicNotes(10));
                     return "home";
                 }
                 catch (Exception e){
@@ -76,6 +81,7 @@ public class UserController {
                     user.setOauth2(false);
                     userService.update(user);
                     model.addAttribute("login",false);
+                    model.addAttribute("notes",noteService.getRecentPublicNotes(10));
                     return "home";
                 }
                 catch (Exception e){

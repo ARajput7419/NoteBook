@@ -35,7 +35,7 @@ public class ResourceDAO {
 
 
     public void update(Resource resource){
-        entityManager.refresh(resource);
+
     }
 
 

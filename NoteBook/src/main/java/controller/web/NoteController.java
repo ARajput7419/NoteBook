@@ -102,7 +102,7 @@ public class NoteController {
             }
         }
     }
-    @GetMapping("/")
+    @GetMapping("/private")
     public String myNotes(Model model){
         int total_notes = service.getNotesPrivateCount();
         List<Note> notes = service.getNotesPrivate(page_size,0);
@@ -115,6 +115,16 @@ public class NoteController {
         model.addAttribute("notes",notes);
         model.addAttribute("resources",resources);
         return "my_notes";
+    }
+
+    @GetMapping("/public")
+    public String publicNotes(Model model){
+        int total_notes = service.getNotesPublicCount();
+        List<Note> notes = service.getNotesPublic(page_size,0);
+        int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
+        model.addAttribute("total_pages_notes",total_pages_notes);
+        model.addAttribute("notes",notes);
+        return "public_notes";
     }
 
 

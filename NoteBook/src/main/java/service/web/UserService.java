@@ -58,7 +58,10 @@ public class UserService {
     @Transactional
     public void update(User user)
     {
-        userDAO.update(user);
+        User temp = userDAO.get(user.getEmail());
+        temp.setOauth2(user.isOauth2());
+        temp.setPassword(user.getPassword());
+        temp.setName(user.getName());
     }
 
     @Transactional

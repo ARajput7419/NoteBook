@@ -52,7 +52,7 @@
                       <input type="hidden" name="_csrf"  value="${_csrf.token}">
 
                         <div class="form-outline mb-4">
-                        <form:input type="text" id="typeNameX-2" class="form-control form-control-lg" path="name" placeholder="Full Name" />
+                        <form:input type="text" id="typeNameX-2" class="form-control form-control-lg full_name" path="name" placeholder="Full Name" />
                       </div>
 
                       <div class="form-outline mb-4">
@@ -67,7 +67,7 @@
                         <input type="password" id="typePasswordX-3" class="form-control form-control-lg otp_input"  name="otp" placeholder="Enter OTP"/>
                       </div>
           
-                      <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="form_submit();">Register</button>
+                      <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="return form_submit();">Register</button>
           
                       <hr class="my-4">
           

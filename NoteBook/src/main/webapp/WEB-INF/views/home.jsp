@@ -20,11 +20,13 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
+          <c:if test="${login}">
           <li class="nav-item my_li">
-            <a class="nav-link" href="#">My Notes</a>
+            <a class="nav-link" href="/notes/private">My Notes</a>
           </li>
+          </c:if>
           <li class="nav-item my_li">
-            <a class="nav-link" href="#">Public Notes</a>
+            <a class="nav-link" href="/notes/public">Public Notes</a>
           </li>
           <li class="nav-item my_li">
             <a class="nav-link" href="#">Chat</a>
@@ -67,9 +69,9 @@
         <div class="col-md-6">
           <h2>Recent Public Notes</h2>
           <ul class="list-group">
-            <li class="list-group-item"><a href="#">Introduction to HTML</a></li>
-            <li class="list-group-item"><a href="#">Getting Started with JavaScript</a></li>
-            <li class="list-group-item"><a href="#">Python Basics for Beginners</a></li>
+            <c:forEach var="note" items="${notes}">
+              <li class="list-group-item"><a href="/view/${note.id}">${note.name}</a></li>
+            </c:forEach>
           </ul>
         </div>
        </div>
@@ -78,8 +80,14 @@
           <h2>Featured Notes</h2>
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">10 Tips for Writing Clean Code</h5>
-              <p class="card-text">Learn how to write maintainable and readable code with these helpful tips
+              <h5 class="card-title">Tips for Writing Clean Notes</h5>
+              <p class="card-text"><ul>
+               <strong><li>Use Meaningful Names</li></strong>
+               <strong><li>Modularization</li></strong>
+               <strong><li>Comments and Documentation</li></strong>
+               <strong><li>Avoid Code Duplication</li></strong>
+               <strong><li>Keep Functions Small and Single-Purpose</li></strong>
+              </ul>
             </div>
         </div>
       </div>
@@ -95,11 +103,11 @@
       <div class="row">
         <div class="col-md-4">
           <h5>About</h5>
-          <p>My Notes is a website for creating and sharing personal notes on coding and technical topics. Users can also search for public notes and chat with other users.</p>
+          <p>NoteBook is a website for creating and sharing personal notes on coding and technical topics. Users can also search for public notes and chat with other users.</p>
         </div>
         <div class="col-md-4">
           <h5>Contact</h5>
-          <p>Email: info@mynotes.com</p>
+          <p>Email: aniketranag123@gmail.com</p>
         </div>
         <div class="col-md-4">
           <h5>Follow Us</h5>

@@ -21,7 +21,7 @@ public class OtpDAO {
     }
 
     public void update(Otp otp){
-        entityManager.refresh(otp);
+
     }
 
     public void cleanUp(){

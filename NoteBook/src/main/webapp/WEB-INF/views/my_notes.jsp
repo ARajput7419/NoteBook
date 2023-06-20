@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/my_notes.css">
-    <title>Notes</title>
+    <title>My Notes</title>
 
 </head>
 
@@ -60,41 +60,45 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col parent">
+            <c:forEach var="note" items="${notes}">
             <div class="card card-spacing notes-card">
                 <div class="card-body">
-                    <h5 class="card-title">Note 1</h5>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
+                    <h5 class="card-title">${note.name}</h5>
+                    <p class="card-text"><span>Visibility:</span> ${note.visibility}</p>
+                    <p class="card-text"><span>Author:</span> ${note.user.name}</p>
                     <hr>
                     <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Read</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
+                        <a onclick="deleteNote('${note.id}')" class="btn btn-danger">Delete</a>
+                        <a href="/view/${note.id}" class="btn btn-primary">Read</a>
+                        <a href="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
                     </div>
-                    <p class="card-timestamp"><span>Time Stamp:</span> 22-11-2021</p>
+                    <p class="card-timestamp"><span>Time Stamp:</span> ${note.timestamp}</p>
 
                 </div>
 
             </div>
+            </c:forEach>
             </div>
         </div>
         
-
+        <input type="hidden" id="current_page" value="1">
+        <input type="hidden" id="start_page" value="1">
+        <input type="hidden" id="keyword" value="">
         <div class="row">
 
             <div class="col">
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        <li class="page-item p0 disabled">
+                            <a class="page-link" onclick="pagination(0,'${total_pages_notes}')" tabindex="-1" aria-disabled="true">Previous</a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
+                        <li class="page-item p1 active"><a class="page-link" onclick="pagination(1,'${total_pages_notes}')">1</a></li>
+                        <li class="page-item p2 "><a class="page-link" onclick="pagination(2,'${total_pages_notes}')">2</a></li>
+                        <li class="page-item p3 "><a class="page-link" onclick="pagination(3,'${total_pages_notes}')">3</a></li>
+                        <li class="page-item p4">
+                            <a class="page-link" onclick="pagination(4,'${total_pages_notes}')">Next</a>
                         </li>
                     </ul>
                 </nav>

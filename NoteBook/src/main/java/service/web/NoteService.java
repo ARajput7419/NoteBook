@@ -180,6 +180,11 @@ public class NoteService {
 
      }
 
+     @Transactional
+    public List<Note> getRecentPublicNotes(int count){
+            return noteDAO.getRecentPublicNotes(count);
+     }
+
 
 
 
