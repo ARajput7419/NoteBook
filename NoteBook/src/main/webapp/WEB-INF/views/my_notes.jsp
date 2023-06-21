@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+
 <html lang="en">
 
 <head>
@@ -94,12 +95,35 @@
                         <li class="page-item p0 disabled">
                             <a class="page-link" onclick="pagination(0,'${total_pages_notes}')" tabindex="-1" aria-disabled="true">Previous</a>
                         </li>
-                        <li class="page-item p1 active"><a class="page-link" onclick="pagination(1,'${total_pages_notes}')">1</a></li>
-                        <li class="page-item p2 "><a class="page-link" onclick="pagination(2,'${total_pages_notes}')">2</a></li>
-                        <li class="page-item p3 "><a class="page-link" onclick="pagination(3,'${total_pages_notes}')">3</a></li>
+                        <c:if test="${total_pages_notes < 1}">
+                        <li class="page-item p1 disabled"><a class="page-link pp1" onclick="pagination(1,'${total_pages_notes}')">1</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes>=1}">
+                        <li class="page-item p1 active"><a class="page-link pp1" onclick="pagination(1,'${total_pages_notes}')">1</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes<2}">
+                            <li class="page-item p2 disabled"><a class="page-link pp2" onclick="pagination(2,'${total_pages_notes}')">2</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes>=2}">
+                            <li class="page-item p2 "><a class="page-link pp2" onclick="pagination(2,'${total_pages_notes}')">2</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes<3}">
+                            <li class="page-item p3 disabled"><a class="page-link pp3" onclick="pagination(3,'${total_pages_notes}')">3</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes>=3}">
+                            <li class="page-item p3 "><a class="page-link pp3" onclick="pagination(3,'${total_pages_notes}')">3</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_notes<=3}">
+                            <li class="page-item p4 disabled">
+                                <a class="page-link" onclick="pagination(4,'${total_pages_notes}')">Next</a>
+                            </li>    
+                    </c:if>
+                    <c:if test="${total_pages_notes>3}">
                         <li class="page-item p4">
                             <a class="page-link" onclick="pagination(4,'${total_pages_notes}')">Next</a>
-                        </li>
+                        </li>    
+                </c:if>
+                        
                     </ul>
                 </nav>
 

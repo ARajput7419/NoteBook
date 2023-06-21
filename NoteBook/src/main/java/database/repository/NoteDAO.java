@@ -73,9 +73,9 @@ public class NoteDAO {
 
 
     public int getNotesPrivateCount(String username){
-        TypedQuery<Integer> query = entityManager.createQuery("Select count(n) from Note n  where u.email = :username ",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("Select count(n) from Note n join n.user u  where u.email = :username ",Long.class);
         query.setParameter("username",username);
-        return query.getSingleResult();
+        return (int)(long)query.getSingleResult();
     }
 
 

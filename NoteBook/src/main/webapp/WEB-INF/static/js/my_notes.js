@@ -19,6 +19,7 @@ notesButton.addEventListener('click', () => {
 
 
 function render_notes(total_pages,list_notes,keyword){
+    
     if(total_pages == 0){
         toast("No Notes Found");
         return;
@@ -33,12 +34,12 @@ function render_notes(total_pages,list_notes,keyword){
 
         let parent = document.getElementsByClassName("parent")[0];
 
-        parent.innserHTML = "";
+        parent.innerHTML = "";
 
-        for( let i = 0 ; i <list_notes.length;i++ )
+        for( let i = 0 ; i <list_notes['notes'].length;i++ )
         {
 
-            let note = list_notes[i];
+            let note = list_notes['notes'][i];
 
             let cardHTML = `
                             
@@ -56,6 +57,8 @@ function render_notes(total_pages,list_notes,keyword){
                                     <p class="card-timestamp"><span>Time Stamp:</span> ${note.timestamp}</p>
                                 </div>
                             </div>`;
+
+            console.log(cardHTML);
 
             parent.insertAdjacentHTML("beforeend",cardHTML);
         
@@ -114,58 +117,144 @@ function render_notes(total_pages,list_notes,keyword){
 // }
 
 
+
+
+
+
+
 function pagination(offset,total_pages){
 
 
+    total_pages = Number(total_pages);
+    let page_item = document.getElementsByClassName(`p${offset}`)[0];
     let current_page_field = document.getElementById("current_page");
+    let current_page = Number(current_page_field.value);
     let start_page_field = document.getElementById("start_page");
+    let start_page = Number(start_page_field.value);
+    let current_offset = current_page - start_page + 1;
     let keyword_field = document.getElementById("keyword");
     let keyword = keyword_field.value;
-    let current_page = current_page_field.value;
-    let start_page = start_page_field.value;
-    let page_item = document.getElementsByClassName(`p${offset}`)[0];
+    let pp1 = document.getElementsByClassName("pp1")[0];
+    let pp2 = document.getElementsByClassName("pp2")[0];
+    let pp3 = document.getElementsByClassName("pp3")[0];
+    let p1 = document.getElementsByClassName("p1")[0];
+    let p2 = document.getElementsByClassName("p2")[0];
+    let p3 = document.getElementsByClassName("p3")[0];
+    let p0 = document.getElementsByClassName("p0")[0];
+    let p4 = document.getElementsByClassName("p4")[0];
     let current_page_item = document.getElementsByClassName(`p${current_page-start_page+1}`)[0];
+
     
-     if( offset>0 && offset < 4 ){
-     
-        if(page_item.classList.contains("disable")){
-                return;
-        }   
-        else{
-                
-            let p = fetch(`/api/notes/private/${offset-1+start_page}?keyword=${keyword}`);
-            p.then((response)=>{
-                if(response.ok){
-                    current_page_field.value = offset-1+start_page;
-                    current_page_item.classList.remove("active");
-                    page_item.classList.add("active");
-                    return response.json();
-                }
-                else{
-                    toast("Unable to Fetch Notes");
-                }
-            })
-            .then((res)=>{
+     if(page_item.classList.contains("disabled") ||  current_offset==offset) return;
 
-                // render notes 
+     else if(offset == 0) {
 
-            }); 
-            
+        let promise = fetch(`/api/notes/private/${start_page + offset - 1 }?keyword=${keyword}`);
+        promise.then((response)=>{
+            if(response.ok){            
+                return response.json();
+            }
+            else{
+                toast("Unable to Fetch Notes");
+                throw new Error("Unable to Fetch Notes");
+            }
+        })
+        .then((result)=>{
+
+            // render 
+            render_notes(total_pages,result,keyword);
+
+
+            start_page_field.value = start_page - 1;
+            current_page_field.value = start_page - 1;
+            pp1.value = start_page - 1;
+            pp2.value = start_page;
+            pp3.value = start_page+1;
+            current_page_item.classList.remove("active");
+            p1.classList.add("active");
+            if(pp1.value>total_pages) p1.classList.add("disabled");
+            else p1.classList.remove("disabled");
+            if(pp2.value>total_pages) p2.classList.add("disabled");
+            else p2.classList.remove("disabled");
+            if(pp3.value>total_pages) p3.classList.add("disabled");
+            else p3.classList.remove("disabled");
+            if(p1.value == 1 )  {
+                p0.classList.add("disabled");
+            }
+
+        });
+    
+     }
+     else if(offset == 4){
+
+
+        let promise = fetch(`/api/notes/private/${start_page + offset - 1 }?keyword=${keyword}`);
+        promise.then((response)=>{
+            if(response.ok){            
+                return response.json();
+            }
+            else{
+                toast("Unable to Fetch Notes");
+                throw new Error("Unable to Fetch Notes");
+            }
+        })
+        .then((result)=>{
+
+            // render 
+            render_notes(total_pages,result,keyword);
+
+            start_page_field.value = start_page + 1;
+            current_page_field.value = start_page +  3;
+            pp1.value = start_page + 1;
+            pp2.value = start_page + 2;
+            pp3.value = start_page+ + 3;
+            current_page_item.classList.remove("active");
+            p3.classList.add("active");
+            if(pp1.value>total_pages) p1.classList.add("disabled");
+            else p1.classList.remove("disabled");
+            if(pp2.value>total_pages) p2.classList.add("disabled");
+            else p2.classList.remove("disabled");
+            if(pp3.value>total_pages) p3.classList.add("disabled");
+            else p3.classList.remove("disabled");
+            if(p3.value == total_pages )  {
+                p4.classList.add("disabled");
+            }
+
+        });
+
+
+
 
 
      }
-    }
-    else if(offset == 0){
+     else {
 
-    }
-    else{
+        let promise = fetch(`/api/notes/private/${start_page + offset - 1 }?keyword=${keyword}`);
+        promise.then((response)=>{
+            
+            if(response.ok){            
+                return response.json();
+            }
+            else{
+                toast("Unable to Fetch Notes");
+                throw new Error("Unable to Fetch Notes");
+            }
+        })
+        .then((result)=>{
 
-    }
+          
+            // render 
+            render_notes(total_pages,result,keyword);
 
 
+            current_page_field.value = offset + start_page - 1;
+            current_page_item.classList.remove("active");
+            page_item.classList.add("active");
+
+        });
+
+
+
+     }
 
 }
-
-
-
-
