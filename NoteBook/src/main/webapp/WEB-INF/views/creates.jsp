@@ -25,7 +25,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item my_li">
-          <a class="nav-link" href="#">My Notes</a>
+          <a class="nav-link" href="/notes/private">My Notes</a>
         </li>
         <li class="nav-item my_li">
           <a class="nav-link" href="#">Public Notes</a>
@@ -61,7 +61,7 @@
         <div class="col-md">
           <br>
           <label id="label_" for="file-upload">File Upload:</label>
-          <input style="width:50%" type="file" class="form-control-file" id="file-upload">
+          <input style="width:50%" type="file" class="form-control-file resource_file"  id="file-upload">
           </div>
           <div class="col-md" style="display: none;">
             <br>

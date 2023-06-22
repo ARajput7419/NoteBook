@@ -96,7 +96,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login/failure")
+    @PostMapping("/login/failure")
     public String error(Model model){
         model.addAttribute("message","Login Failed");
         return "login";

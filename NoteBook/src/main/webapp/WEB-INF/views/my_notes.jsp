@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 
+
 <html lang="en">
 
 <head>
@@ -8,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/my_notes.css">
+    <script src="/static/js/toast.js"></script>
+    <link rel="stylesheet" href="/static/css/toast.css">
     <title>My Notes</title>
 
 </head>
@@ -29,8 +32,12 @@
               <a class="nav-link" href="#">Chat</a>
             </li>
             <li class="nav-item my_li">
+                <a class="nav-link" href="/notes/create">Create Note</a>
+              </li>
+            <li class="nav-item my_li">
               <a class="nav-link" href="#">Log Out</a>
             </li>
+            
             
           </ul>
         </div>
@@ -66,11 +73,11 @@
             <div class="card card-spacing notes-card">
                 <div class="card-body">
                     <h5 class="card-title">${note.name}</h5>
-                    <p class="card-text"><span>Visibility:</span> ${note.visibility}</p>
+                    <p class="card-text visibility_${note.id}"><span>Visibility:</span> ${note.visibility}</p>
                     <p class="card-text"><span>Author:</span> ${note.user.name}</p>
                     <hr>
                     <div class="card-buttons">
-                        <a onclick="deleteNote('${note.id}')" class="btn btn-danger">Delete</a>
+                        <a onclick="deleteNote(`${note.id}')" class="btn btn-danger">Delete</a>
                         <a href="/view/${note.id}" class="btn btn-primary">Read</a>
                         <a href="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
                     </div>
@@ -212,5 +219,4 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
-
 </html>

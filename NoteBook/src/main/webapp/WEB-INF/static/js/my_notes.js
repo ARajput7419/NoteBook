@@ -18,15 +18,23 @@ notesButton.addEventListener('click', () => {
 });
 
 
-function render_notes(total_pages,list_notes,keyword){
+function render_notes(page_retrived,total_pages,list_notes,keyword){
     
+
+    let start_page_field = document.getElementById("start_page");
+    let start_page = Number(start_page_field.value);
+
     if(total_pages == 0){
         toast("No Notes Found");
         return;
     }
     else{
         if(list_notes.length == 0){
-            fetch_private_notes(page_number,keyword);
+
+            let offset = page_retrived - start_page + 1;
+            let page_item = document.getElementsByClassName(`p${offset}`);
+            page_item.classList.remove("active");
+            fetch_private_notes(page_retrived-1,keyword);
             return;
         }
         else {
@@ -46,7 +54,7 @@ function render_notes(total_pages,list_notes,keyword){
                             <div class="card card-spacing notes-card">
                                 <div class="card-body">
                                 <h5 class="card-title">${note.name}</h5>
-                                <p class="card-text"><span>Visibility:</span> ${note.visibility}</p>
+                                <p class="card-text visibility_${note.id}"><span>Visibility:</span> ${note.visibility}</p>
                                 <p class="card-text"><span>Author:</span> ${note.user.name}</p>
                                 <hr>
                                 <div class="card-buttons">
@@ -63,7 +71,15 @@ function render_notes(total_pages,list_notes,keyword){
             parent.insertAdjacentHTML("beforeend",cardHTML);
         
         
-        }   
+        } 
+        
+        if( page_retrived != null)
+        {
+            let offset = page_retrived - start_page + 1;
+            let page_item = document.getElementsByClassName(`p${offset}`);
+            page_item.classList.add("active");
+        }
+
 
         }
 
@@ -72,50 +88,80 @@ function render_notes(total_pages,list_notes,keyword){
 }
 
 
-// function fetch_private_notes(page_number,keyword){
+function fetch_private_notes(page_number,keyword){
 
-//     let new_data = fetch(`/api/notes/private/${page_number}?keyword=${keyword}`);
-//             new_data.then((response)=>{
-//                 if(response.ok)
-//                 return response.json();
-//                 else 
-//                 throw new Error("Not Able to fetch ");
-//             })
-//             .then((res)=>{
+    let new_data = fetch(`/api/notes/private/${page_number}?keyword=${keyword}`);
+            new_data.then((response)=>{
+                if(response.ok)
+                return response.json();
+                else 
+                throw new Error("Not Able to Fetch ");
+            })
+            .then((res)=>{
 
-//                 let total_pages = res["total_pages"];
-//                 let list_notes = res["notes"];
-//                 render_notes(total_pages,list_notes,keyword);
+                let total_pages = res["total_pages"];
+                let list_notes = res["notes"];
+                render_notes(page_number,total_pages,list_notes,keyword);
 
-//             }).catch((error)=>{
-//                 toast(error);
-//             });
+            }).catch((error)=>{
+                toast(error);
+            });
 
-// }
-
-
-// function ondeletNoteClick(id,page_number){
-
-//     let keyword = document.getElementById("note_keyword");
-//     let request = fetch(`/api/notes/${id}`);
-//     request.then((response)=>{
-
-//         if(response.ok){
-//             fetch_private_notes(page_number,keyword);
-//         }
-
-//         return response.json();
-//     })
-//     .then((value)=>{
-//         toast(value["message"]);
-//     });
-// }
+}
 
 
-// function change_visibility(visibility){
+
+function deleteNote(id){
+
+    let current_page_field = document.getElementById("current_page");
+    let current_page = current_page_field.value;
+    let keyword_field = document.getElementById("keyword");
+    let keyword = keyword_field.value;
+    let metadata ={
+        method:"DELETE"
+    };
+    let promise = fetch(`/api/notes/${id}`,metadata);
+    promise.then((response)=>{
+        if(response.ok){
+            toast("Note is Deleted Successfully");
+            fetch_private_notes(current_page,current_page,keyword);
+
+        }
+        else{
+            toast("Unable to Delete Note");
+            throw new Error("Unable to Delete Note");
+        }
+    });
+
+}
+
+
+
+
+function changeVisibility(visibility,id){
+    let metadata = {
+
+        method : "PUT",
     
-// }
+    };
+    let promise = fetch(`/api/notes/${id}?visibility=${visibility}`,metadata);
+    promise.then((response)=>{
+        if(response.ok){
+            toast("Visibility Updated Successfully");
+            return response.json();
+        }
+        else{
+            toast("Not Able to Update Visibility");
+            throw new Error("Not Able to Update Visibility");
+        }
+    })
+    .then((result)=>{
 
+        let visibility_field = document.getElementsByClassName(`visibility_${id}`)[0];
+        visibility_field.innerText = result['current_visibility'];
+
+    });
+}
 
 
 
@@ -162,24 +208,27 @@ function pagination(offset,total_pages){
         .then((result)=>{
 
             // render 
-            render_notes(total_pages,result,keyword);
+            render_notes(null,total_pages,result,keyword);
 
 
             start_page_field.value = start_page - 1;
             current_page_field.value = start_page - 1;
-            pp1.value = start_page - 1;
-            pp2.value = start_page;
-            pp3.value = start_page+1;
+            pp1.innerText = start_page - 1;
+            pp2.innerText = start_page;
+            pp3.innerText = start_page+1;
             current_page_item.classList.remove("active");
             p1.classList.add("active");
-            if(pp1.value>total_pages) p1.classList.add("disabled");
+            if(pp1.innerText>total_pages) p1.classList.add("disabled");
             else p1.classList.remove("disabled");
-            if(pp2.value>total_pages) p2.classList.add("disabled");
+            if(pp2.innerText>total_pages) p2.classList.add("disabled");
             else p2.classList.remove("disabled");
-            if(pp3.value>total_pages) p3.classList.add("disabled");
+            if(pp3.innerText>total_pages) p3.classList.add("disabled");
             else p3.classList.remove("disabled");
-            if(p1.value == 1 )  {
+            if(p1.innerText == 1 )  {
                 p0.classList.add("disabled");
+            }
+            if(p3.innerText < total_pages){
+                p4.classList.remove("disabled");
             }
 
         });
@@ -201,23 +250,26 @@ function pagination(offset,total_pages){
         .then((result)=>{
 
             // render 
-            render_notes(total_pages,result,keyword);
+            render_notes(null,total_pages,result,keyword);
 
             start_page_field.value = start_page + 1;
             current_page_field.value = start_page +  3;
-            pp1.value = start_page + 1;
-            pp2.value = start_page + 2;
-            pp3.value = start_page+ + 3;
+            pp1.innerText = start_page + 1;
+            pp2.innerText = start_page + 2;
+            pp3.innerText = start_page+ 3;
             current_page_item.classList.remove("active");
             p3.classList.add("active");
-            if(pp1.value>total_pages) p1.classList.add("disabled");
+            if(pp1.innerText>total_pages) p1.classList.add("disabled");
             else p1.classList.remove("disabled");
-            if(pp2.value>total_pages) p2.classList.add("disabled");
+            if(pp2.innerText>total_pages) p2.classList.add("disabled");
             else p2.classList.remove("disabled");
-            if(pp3.value>total_pages) p3.classList.add("disabled");
+            if(pp3.innerText>total_pages) p3.classList.add("disabled");
             else p3.classList.remove("disabled");
-            if(p3.value == total_pages )  {
+            if(p3.innerText == total_pages )  {
                 p4.classList.add("disabled");
+            }
+            if(p1.innerText > 1 ){
+                p0.classList.remove("disabled");
             }
 
         });
@@ -244,7 +296,7 @@ function pagination(offset,total_pages){
 
           
             // render 
-            render_notes(total_pages,result,keyword);
+            render_notes(null,total_pages,result,keyword);
 
 
             current_page_field.value = offset + start_page - 1;

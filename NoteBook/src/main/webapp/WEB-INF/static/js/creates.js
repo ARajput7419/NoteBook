@@ -125,3 +125,35 @@ originalButton.addEventListener('click', function() {
   previewSection.style.display = 'none';
   markdownTextarea.style.display = 'block';
 });
+
+
+function fileUpload(event){
+
+    let file = event.target.files[0];
+    let form = new FormData();
+    let visibility = document.getElementById("visibility").value;
+    form.append("file",file);
+    let metadata = {
+      method:"POST",
+      body:form
+    }
+    let promise = fetch(`/api/resources?visibility=${visibility}`,metadata);
+    promise.then((response)=>{
+      if(response.ok){
+        toast("File Uploaded Successfully");
+        return response.json();
+      }
+      else{
+        let error = new Error("Unable to Upload File");
+        //error.error_reponse = 
+      }
+    })  
+    .then((result)=>{
+
+        // update url link
+
+    });
+
+}
+
+document.getElementsByClassName("resource_file")[0].addEventListener('change',fileUpload);

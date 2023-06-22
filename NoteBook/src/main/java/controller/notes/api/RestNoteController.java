@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import responses.resources.DeleteStatus;
+import responses.resources.UpdateStatus;
 import service.web.NoteService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -128,4 +129,27 @@ public class RestNoteController {
         }
 
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateStatus> updateVisibility(@PathVariable int id , @RequestParam("visibility") String visibility)
+    {
+        UpdateStatus updateStatus = new UpdateStatus();
+        Note note = new Note();
+        NoteService.Status status = noteService.updateVisibility(note,id,visibility);
+        if (status == NoteService.Status.NOT_AUTHORIZED){
+            updateStatus.setMessage("Not Authorized");
+            return new ResponseEntity<>(updateStatus,HttpStatus.UNAUTHORIZED);
+        }
+        else if (status == NoteService.Status.RESOURCE_DOES_NOT_EXISTS){
+            updateStatus.setMessage("Note Does Not Exists");
+            return new ResponseEntity<>(updateStatus,HttpStatus.NOT_FOUND);
+        }
+        else{
+            updateStatus.setMessage("Visibility Updated Successfully");
+            updateStatus.setCurrent_visibility(note.getVisibility());
+            return new ResponseEntity<>(updateStatus,HttpStatus.OK);
+        }
+
+    }
+
 }

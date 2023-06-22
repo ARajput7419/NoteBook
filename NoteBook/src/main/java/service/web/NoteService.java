@@ -181,6 +181,28 @@ public class NoteService {
      }
 
      @Transactional
+     public Status updateVisibility(Note note_ , int id , String visibility){
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         String username = (String) authentication.getPrincipal();
+         if (visibility == null || (!visibility.equals("Public") && !visibility.equals("Private"))) return Status.BAD_REQUEST ;
+         Note note = noteDAO.get(id);
+         if( note == null){
+            return Status.RESOURCE_DOES_NOT_EXISTS;
+         }
+         else if (note.getUser().getEmail().equals(username)){
+             note.setVisibility(visibility);
+             noteDAO.update(note);
+             note_.setVisibility(note.getVisibility());
+             return Status.OK;
+         }
+         else{
+             return Status.NOT_AUTHORIZED;
+         }
+
+     }
+
+
+     @Transactional
     public List<Note> getRecentPublicNotes(int count){
             return noteDAO.getRecentPublicNotes(count);
      }

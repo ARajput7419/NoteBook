@@ -1,4 +1,4 @@
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <html>
     <head>
 
@@ -52,11 +52,11 @@
                       <form action="/login_processing" method="POST">
                         <input type="hidden" name="_csrf" value="${_csrf.token}">
                         <div class="form-outline mb-4">
-                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg" name="username" placeholder="Email" />
+                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg email" name="username" placeholder="Email" />
                       </div>
           
                       <div class="form-outline mb-4">
-                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg"  name="password" placeholder="Password"/>
+                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg password"  name="password" placeholder="Password"/>
                       </div>
 
                       
@@ -77,7 +77,15 @@
               </div>
             </div>
           </section>
+
+          
+
     </body>
+    <c:if test="${message != null}">
+    <script>
+            toast("${message}"); 
+    </script>
+    </c:if>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
