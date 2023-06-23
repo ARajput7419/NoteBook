@@ -129,15 +129,28 @@ originalButton.addEventListener('click', function() {
 
 function fileUpload(event){
 
+    let csrfToken = document.getElementById("csrfToken").value;
+    let progress_outer = document.getElementById("progress_outer");
+    let progress_inner = document.getElementById("progress_inner");
     let file = event.target.files[0];
     let form = new FormData();
     let visibility = document.getElementById("visibility").value;
     form.append("file",file);
     let metadata = {
       method:"POST",
-      body:form
+      body:form,
+      headers: {
+        'X-CSRF-Token': csrfToken
+      },
+      onUploadProgress: function(progressEvent) {
+        if (progressEvent.lengthComputable) {
+          const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          progress_outer.setAttribute("aria-valuenow" ,percent);
+          progress_inner.innerText = percent + '%';
+        }
+      }
     }
-    let promise = fetch(`/api/resources?visibility=${visibility}`,metadata);
+    let promise = fetch(`/api/resources/?visibility=${visibility}`,metadata);
     promise.then((response)=>{
       if(response.ok){
         toast("File Uploaded Successfully");
@@ -145,12 +158,29 @@ function fileUpload(event){
       }
       else{
         let error = new Error("Unable to Upload File");
-        //error.error_reponse = 
+        error.error_reponse = response.json();
+        throw error; 
       }
     })  
     .then((result)=>{
 
-        // update url link
+        let url = result['url'];
+        let div = document.getElementsByClassName("url_field")[0];
+        let url_link = document.querySelector(".url_field div a");
+        div.style.display = 'block';
+        url_link.innerText = url;
+        url_link.href = url;
+      
+
+    })
+    .catch((error)=>{
+      console.log(error);
+      let pr = error.error_reponse;
+      pr.then((error_detail)=>{
+
+        toast(error_detail['message']);
+
+      });
 
     });
 

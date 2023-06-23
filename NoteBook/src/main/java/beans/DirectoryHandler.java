@@ -65,6 +65,12 @@ public class DirectoryHandler {
         return file.delete();
     }
 
+
+    public boolean exists(String filename){
+        File file = new File(getCwd()+"/"+filename);
+        return file.exists();
+    }
+
     public boolean createDirectory(String dirName){
 
         File file = new File(getCwd()+"/"+dirName);

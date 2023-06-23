@@ -102,12 +102,11 @@ public class RestResourcesController {
 
     public String createUserDirectoryIfNotExists(){
         String username = getUsername();
+        boolean exists = directoryHandler.exists(username);
+        if (exists) return directoryHandler.getCwd()+"/"+username;
         boolean status = directoryHandler.createDirectory(username);
-        if (status){
-            return directoryHandler.getCwd()+"/"+username;
-        }
-        else
-            return null;
+        if (status) return directoryHandler.getCwd()+"/"+username;
+        else return null;
     }
 
     public String getUsername(){

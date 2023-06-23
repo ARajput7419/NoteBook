@@ -2,10 +2,14 @@ package configuration.security;
 
 import configuration.security.authentication.DatabaseAuthenticationProvider;
 import configuration.security.authentication.DatabaseUserDetailService;
+import configuration.security.authorization.ResourceAuthorizationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.core.userdetails.User;
@@ -98,6 +102,7 @@ public class SecurityConfiguration {
             customizer.mvcMatchers("/").permitAll();
             customizer.mvcMatchers("/api/notes/public/**").permitAll();
             customizer.mvcMatchers("/api/notes/{id}").authenticated();
+            customizer.mvcMatchers("/res/**").access(new ResourceAuthorizationManager());
         });
 
         httpSecurity.authenticationProvider(authenticationProvider);

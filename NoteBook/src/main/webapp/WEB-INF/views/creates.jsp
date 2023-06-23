@@ -12,6 +12,10 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
   <link rel="stylesheet" href="/static/css/creates.css">
+  <link rel="stylesheet" href="/static/css/toast.css">
+  <script src="/static/js/toast.js"></script>
+
+
 </head>
 <body id="b">
 
@@ -49,6 +53,9 @@
         </div>
       </div>
       
+
+      <input type="hidden" name="_csrf" value="${_csrf.token}" id="csrfToken">
+
       <div class="row">
         <div class="col-md">
           <br>
@@ -63,7 +70,7 @@
           <label id="label_" for="file-upload">File Upload:</label>
           <input style="width:50%" type="file" class="form-control-file resource_file"  id="file-upload">
           </div>
-          <div class="col-md" style="display: none;">
+          <div class="col-md url_field" style="display: none;">
             <br>
             <br>
             <div class="form-text">
@@ -72,8 +79,8 @@
           </div>
 
           <div class="col-md"   id="prog">
-            <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar bg-success" style="width: 20%">25%</div>
+            <div id="progress_outer" class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div id="progress_inner" class="progress-bar bg-success" style="width: 20%">25%</div>
             </div>
           </div>
 
