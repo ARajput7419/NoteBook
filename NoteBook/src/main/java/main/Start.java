@@ -27,6 +27,10 @@ import java.util.List;
 @ComponentScan(basePackages = {"configuration","controller","responses","beans","database","service"})
 public class Start implements WebMvcConfigurer {
 
+
+    @Value("${resources}")
+    private String resources;
+
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         configurer.setUseTrailingSlashMatch(true);
@@ -36,6 +40,8 @@ public class Start implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("file:/home/aniket/IdeaProjects/NoteBook/NoteBook/src/main/webapp/WEB-INF/static/");
+        registry.addResourceHandler("/"+resources+"/**")
+                .addResourceLocations("file:/home/aniket/IdeaProjects/NoteBook/NoteBook/src/main/webapp/"+resources+"/");
     }
 
     public static void main(String[] args) {

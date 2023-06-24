@@ -5,6 +5,7 @@ import database.entity.Note;
 import database.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -79,6 +80,12 @@ public class NoteController {
         return "creates";
     }
 
+    private String getUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getClass() == AnonymousAuthenticationToken.class) return null;
+        else return (String) authentication.getPrincipal();
+    }
+
     @GetMapping("/view/{id}")
     public String view(@PathVariable int id , HttpServletResponse response,Model model) throws IOException {
         try {
@@ -87,6 +94,9 @@ public class NoteController {
                 model.addAttribute("message","Not Available");
                 return "error";
             }
+            String user = getUser();
+            if (user != null && note.getUser().getEmail().equals(user)) model.addAttribute("edit",true);
+            if (user != null) model.addAttribute("login",true);
             model.addAttribute("note",note);
             return "view";
         }

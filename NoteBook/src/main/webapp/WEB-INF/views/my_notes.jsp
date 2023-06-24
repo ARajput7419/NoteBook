@@ -78,8 +78,8 @@
                     <hr>
                     <div class="card-buttons">
                         <a onclick="deleteNote(`${note.id}')" class="btn btn-danger">Delete</a>
-                        <a href="/view/${note.id}" class="btn btn-primary">Read</a>
-                        <a href="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
+                        <a href="/notes/view/${note.id}" class="btn btn-primary">Read</a>
+                        <a onclick="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
                     </div>
                     <p class="card-timestamp"><span>Time Stamp:</span> ${note.timestamp}</p>
 

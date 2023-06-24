@@ -49,6 +49,9 @@ public class SecurityConfiguration {
     @Autowired
     private UserService userService;
 
+    @Value("${resources}")
+    private String resources;
+
 
      private List<ClientRegistration> registration(){
 
@@ -102,7 +105,7 @@ public class SecurityConfiguration {
             customizer.mvcMatchers("/").permitAll();
             customizer.mvcMatchers("/api/notes/public/**").permitAll();
             customizer.mvcMatchers("/api/notes/{id}").authenticated();
-            customizer.mvcMatchers("/res/**").access(new ResourceAuthorizationManager());
+            customizer.mvcMatchers("/"+resources+"/**").access(resourceAuthorizationManager());
         });
 
         httpSecurity.authenticationProvider(authenticationProvider);
@@ -111,6 +114,11 @@ public class SecurityConfiguration {
 
         return httpSecurity.build();
 
+     }
+
+     @Bean
+     public ResourceAuthorizationManager resourceAuthorizationManager(){
+         return new ResourceAuthorizationManager();
      }
 
 

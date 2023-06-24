@@ -1,0 +1,118 @@
+select  rollno as Rollno , concat("( ",group_concat(subject  separator ' , ') , " )") as Subjects , concat( "( ",group_concat(marks separator ' , ')," )" ) as Marks  from marks group by rollno ;
+
+
+
+select * from students left outer join marks on marks.rollno = students.rollno;  // Correct
+
+
+
+
+
+select * from students left  join marks on marks.rollno = students.rollno;  // Correct
+
+
+
+
+select * from students left outer join marks where  marks.rollno = students.rollno; //wrong 
+
+
+select * from students   join marks on marks.rollno = students.rollno; //correct
+
+
+
+select * from students  join marks where marks.rollno = students.rollno; //correct 
+
+
+select * from students join marks; // correct
+
+
+drop table aniket;
+
+
+drop view aniket;
+
+
+
+alter table aniket rename New_table_name;
+
+
+alter table aniket rename column age to A_g_e;
+
+
+alter table aniket change old_name new_name data_type;
+
+
+
+alter table add constraint my_constraint primary key(id);
+
+
+alter table add primary key(id);
+
+alter table add new_column data_type;
+
+
+alter table drop primary key;
+
+
+alter table drop constraint constraint_name;
+
+
+alter table modify column_name data_type;
+
+
+select "aniket" regexp binary "ANIKET" ; ans = 0
+
+select "aniket" regexp "ANIKET"; ans = 1
+
+
+select concat("aniket"," , ","rana");
+
+select concat_ws(",","aniket","rana");
+
+select gender , group_concat(name separator ',') from person group by gender;
+
+
+
+with hello as ( select * from table ) select * from hello;
+
+
+
+create view total_marks  as ( select rollno ,  name , fName ,sum(marks) as total_marks   from students  natural join marks group by rollno);
+
+
+
+truncate table temp;
+
+
+simple cloning 
+shallow cloning
+deep cloning
+
+
+describe table_name;
+
+
+
+
+
+
+[https://www.sql-practice.com/]
+
+
+with recursive month_ as 
+(
+
+  select 1 as date_
+  
+  Union all 
+  
+  select date_ + 1  from month_ where date_ +1 <= 31 
+
+)
+
+select date_ , count(1) from month_ left join admissions on month_.date_ = day(admissions.admission_date) group by date_ order by count(1) desc;
+
+
+
+
+

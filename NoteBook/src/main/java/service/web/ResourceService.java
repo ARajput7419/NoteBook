@@ -7,6 +7,7 @@ import database.repository.ResourceDAO;
 import database.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -128,6 +129,19 @@ public class ResourceService {
             directoryHandler.delete(filename);
         }
         resourceDAO.cleanUp();
+    }
+
+    @Transactional
+    public Boolean authorize(String location){
+        Resource resource = resourceDAO.getByUrl(location);
+        if( resource == null) return null;
+        else if(resource.getVisibility().equals("Public")) return true;
+        else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication.getClass() == AnonymousAuthenticationToken.class) return false;
+            String username = (String) authentication.getPrincipal();
+            return resource.getUser().getEmail().equals(username);
+        }
     }
 
 

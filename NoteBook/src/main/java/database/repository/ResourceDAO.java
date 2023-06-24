@@ -111,6 +111,12 @@ public class ResourceDAO {
         query.executeUpdate();
     }
 
+    public Resource getByUrl(String location){
+        TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r where r.location = :location",Resource.class);
+        query.setParameter("location",location);
+        return query.getSingleResult();
+    }
+
 
 
 }

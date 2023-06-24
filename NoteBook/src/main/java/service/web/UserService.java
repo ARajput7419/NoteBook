@@ -52,7 +52,7 @@ public class UserService {
 
     @Transactional
     public void registerUser(User user){
-        userDAO.update(user);
+        userDAO.insert(user);
     }
 
     @Transactional

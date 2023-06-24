@@ -78,11 +78,6 @@
             </div>
           </div>
 
-          <div class="col-md"   id="prog">
-            <div id="progress_outer" class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-              <div id="progress_inner" class="progress-bar bg-success" style="width: 20%">25%</div>
-            </div>
-          </div>
 
       </div>
       <br>
