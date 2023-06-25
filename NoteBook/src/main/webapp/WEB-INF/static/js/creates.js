@@ -18,7 +18,7 @@ function convertToHtml() {
 
 
 function appendCodeSections(){
-  let pre = document.querySelectorAll("pre");
+  let pre = document.querySelectorAll('pre[class^="language"]');
   for( let i = 0;  i < pre.length; i++){
 
     let element = pre[i];
@@ -31,7 +31,7 @@ function appendCodeSections(){
              '</div>' +
              '<div class="output-block i'+ i +'" id="outputBlock">' +
              '  <label class="code-labels" for="output">Output:</label><br>' +
-             '  compiled successfully ....' +
+             '  <pre></pre>' +
              '</div>';
 
     element.classList.add(""+i);
@@ -84,15 +84,79 @@ function addStyle(){
 
 }
 
-function addJavascript(){
+let languages = ["cpp","java","python"];
   
-  var scriptElement = document.createElement("script");
-scriptElement.innerHTML = `
-function runCode(event,index) {
-  event.preventDefault();
-  var outputBlock = document.querySelector(".output-block.i" + index );
-  outputBlock.classList.add("show");
+ class CustomError extends Error {
+  constructor(message, data) {
+    super(message);
+    this.data = data;
+  }
 }
+
+  function runCode(event,index) {
+    event.preventDefault();
+    let csrfToken = document.getElementById("csrfToken").value;
+    var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+    var outputBlockParent = document.querySelector(".output-block.i" + index );
+    var inputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+    let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
+    let code_field = pre.firstElementChild;
+    if(code_field!= null){
+      let code = code_field.innerText;
+      let input = inputBlock.value;
+      for(let lang of code_field.classList){
+        if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
+          let data = {
+            code:code,
+            lang:lang,
+            input:input
+          }
+          let meta = {
+            method: "post",
+            headers:{'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+
+          }
+            ,
+          body: JSON.stringify(data)
+          };
+          let request = fetch("/api/execution/exec",meta);
+          request.then((response)=>{
+            
+            if(response.ok) return response.json();
+            else{
+              throw new CustomError(null,response.json());
+            }
+
+          })
+          .then((result)=>{
+            console.log(result);
+            outputBlockParent.classList.add("show");
+            
+            if(result.output.trim().length != 0 ){
+              outputBlock.style.color="white";
+              outputBlock.innerText = result.output;
+            }
+            else{
+              outputBlock.style.color="red";
+              outputBlock.innerText = result.error;
+            }
+          })
+          .catch((error)=>{
+
+              error.data.then((error_detail)=>{
+                outputBlockParent.classList.add("show");
+                outputBlock.style.color="red";
+                outputBlock.innerText = result.exception;
+              });
+          });
+
+
+        }
+      }
+    }
+  }
+
 
 function showInput(event,index) {
   event.preventDefault();
@@ -103,14 +167,11 @@ function showInput(event,index) {
     inputBlock.classList.add("show");
   }
 }
-`;
-document.head.appendChild(scriptElement);
-}
 
 
   addStyle();
   
-  addJavascript();
+
 
 previewButton.addEventListener('click', function() {
   var markdownText = markdownTextarea.value;
@@ -130,8 +191,6 @@ originalButton.addEventListener('click', function() {
 function fileUpload(event){
 
     let csrfToken = document.getElementById("csrfToken").value;
-    let progress_outer = document.getElementById("progress_outer");
-    let progress_inner = document.getElementById("progress_inner");
     let file = event.target.files[0];
     let form = new FormData();
     let visibility = document.getElementById("visibility").value;
@@ -141,15 +200,9 @@ function fileUpload(event){
       body:form,
       headers: {
         'X-CSRF-Token': csrfToken
-      },
-      onUploadProgress: function(progressEvent) {
-        if (progressEvent.lengthComputable) {
-          const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          progress_outer.setAttribute("aria-valuenow" ,percent);
-          progress_inner.innerText = percent + '%';
-        }
       }
-    }
+      
+      }
     let promise = fetch(`/api/resources/?visibility=${visibility}`,metadata);
     promise.then((response)=>{
       if(response.ok){
@@ -184,6 +237,5 @@ function fileUpload(event){
 
     });
 
-}
-
+  }
 document.getElementsByClassName("resource_file")[0].addEventListener('change',fileUpload);

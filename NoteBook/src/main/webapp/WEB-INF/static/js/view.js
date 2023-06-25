@@ -63,7 +63,7 @@ function addStyle(){
 
 
   function appendCodeSections(){
-    let pre = document.querySelectorAll("pre");
+    let pre = document.querySelectorAll('pre[class^="language"]');
     for( let i = 0;  i < pre.length; i++){
   
       let element = pre[i];
@@ -76,7 +76,7 @@ function addStyle(){
                '</div>' +
                '<div class="output-block i'+ i +'" id="outputBlock">' +
                '  <label class="code-labels" for="output">Output:</label><br>' +
-               '  compiled successfully ....' +
+               '  <pre></pre>' +
                '</div>';
   
       element.classList.add(""+i);
@@ -87,14 +87,77 @@ function addStyle(){
   }
 
 
-  function addJavascript(){
-    
-    var scriptElement = document.createElement("script");
-scriptElement.innerHTML = `
+ let languages = ["cpp","java","python"];
+  
+ class CustomError extends Error {
+  constructor(message, data) {
+    super(message);
+    this.data = data;
+  }
+}
+
   function runCode(event,index) {
     event.preventDefault();
-    var outputBlock = document.querySelector(".output-block.i" + index );
-    outputBlock.classList.add("show");
+    let csrfToken = document.getElementById("csrfToken").value;
+    var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+    var outputBlockParent = document.querySelector(".output-block.i" + index );
+    var inputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+    let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
+    let code_field = pre.firstElementChild;
+    if(code_field!= null){
+      let code = code_field.innerText;
+      let input = inputBlock.value;
+      for(let lang of code_field.classList){
+        if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
+          let data = {
+            code:code,
+            lang:lang,
+            input:input
+          }
+          let meta = {
+            method: "post",
+            headers:{'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+
+          }
+            ,
+          body: JSON.stringify(data)
+          };
+          let request = fetch("/api/execution/exec",meta);
+          request.then((response)=>{
+            
+            if(response.ok) return response.json();
+            else{
+              throw new CustomError(null,response.json());
+            }
+
+          })
+          .then((result)=>{
+            console.log(result);
+            outputBlockParent.classList.add("show");
+            
+            if(result.output.trim().length != 0 ){
+              outputBlock.style.color="white";
+              outputBlock.innerText = result.output;
+            }
+            else{
+              outputBlock.style.color="red";
+              outputBlock.innerText = result.error;
+            }
+          })
+          .catch((error)=>{
+
+              error.data.then((error_detail)=>{
+                outputBlockParent.classList.add("show");
+                outputBlock.style.color="red";
+                outputBlock.innerText = result.exception;
+              });
+          });
+
+
+        }
+      }
+    }
   }
   
   function showInput(event,index) {
@@ -105,9 +168,6 @@ scriptElement.innerHTML = `
     } else {
       inputBlock.classList.add("show");
     }
-  }
-`;
-document.head.appendChild(scriptElement);
   }
 
  

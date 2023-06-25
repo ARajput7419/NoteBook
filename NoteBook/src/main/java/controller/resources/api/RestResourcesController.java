@@ -141,6 +141,7 @@ public class RestResourcesController {
                 }
                 else{
                     uploadStatus.setMessage("Internal Server Error");
+                    uploadStatus.setUrl(null);
                     return new ResponseEntity<>(uploadStatus,HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }

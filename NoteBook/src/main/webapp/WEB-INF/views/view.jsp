@@ -79,6 +79,7 @@
     <div style="display: none;" id="markdown_content">
         ${note.content}
     </div>
+    <input type="hidden" id="csrfToken" name="_csrf" value="${_csrf.token}">
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="/static/js/view.js"></script>
@@ -95,11 +96,10 @@
 }
 
 
-    document.onload = function() { 
-        console.log("hELLO WORLD");
+    window.onload = function() { 
+       
         convertToHtml();
         addStyle();
-        addJavascript();
         appendCodeSections();
     }
 
