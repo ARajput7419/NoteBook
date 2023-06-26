@@ -5,7 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Note Name</title>
+  <title>${note.name}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -13,6 +13,9 @@
   <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-cpp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-python.min.js"></script>
+
   <link href="/static/css/view.css" rel="stylesheet">
 </head>
 <body id="b">
@@ -68,7 +71,7 @@
 
     </div>
     </c:if>
-    <br>
+    <br><br>
 
 
             
@@ -76,8 +79,8 @@
 
     </div>
     
-    <div style="display: none;" id="markdown_content">
-        ${note.content}
+    <div style="display: none;">
+      <pre id="markdown_content">${note.content}</pre>
     </div>
     <input type="hidden" id="csrfToken" name="_csrf" value="${_csrf.token}">
 
@@ -87,7 +90,7 @@
 
 
     function convertToHtml() {
-        var markdownInput = document.getElementById('markdown_content').innerText;
+        var markdownInput = document.getElementById('markdown_content').textContent;
         var htmlOutput = document.getElementsByClassName('actual_content')[0];
         var converter = new showdown.Converter();
         let convertedHtml  = converter.makeHtml(markdownInput);
@@ -97,7 +100,6 @@
 
 
     window.onload = function() { 
-       
         convertToHtml();
         addStyle();
         appendCodeSections();

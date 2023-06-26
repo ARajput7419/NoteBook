@@ -18,48 +18,51 @@ function makePostRequest(url,token){
 }
 
 
+
+
 function addStyle(){
 
-    let styleString = '<style>' +
-                '  .code-block {' +
-                '    background-color: #f1f1f1;' +
-                '    padding: 10px;' +
-                '  }' +
-                '  .input-block,' +
-                '  .output-block {' +
-                '    display: none;' +
-                '    margin-top: 2%;' +
-                '  }' +
-                '  .input-block.show,' +
-                '  .output-block.show {' +
-                '    display: block;' +
-          
-                '  }' +
+  let styleString = '<style>' +
+              '  .code-block {' +
+              '    background-color: #f1f1f1;' +
+              '    padding: 10px;' +
+              '  }' +
+              '  .input-block,' +
+              '  .output-block {' +
+              '    display: none;' +
+              '    margin-top: 2%;' +
+              '  }' +
+              '  .input-block.show,' +
+              '  .output-block.show {' +
+              '    display: block;' +
+        
+              '  }' +
 
-                '  .output-block {' +
-                '    background-color: black;' +
-                '    color: white;' +
-                '    padding: 10px;' +
-                '    font-weight: bold;' +
-                '    margin-top: 10px;' +
-                '    overflow-x: scroll;' +
-                '    overflow-y: scroll;' +
-                '    height: 30%;' +
-                '  }' +
-                '  .run-button {' +
-                '    margin-top: 10px;' +
-                '  }' +
-                '  .input-button {' +
-                '    margin-left: 10%;' +
-                '  }' +
-                '  .code-labels {' +
-                '    font-weight: bold;' +
-                '  }' +
-                '</style>';
+              '  .output-block {' +
+              '    background-color: black;' +
+              '    color: white;' +
+              '    padding: 10px;' +
+              '    font-weight: bold;' +
+              '    margin-top: 10px;' +
+              '    overflow-x: scroll;' +
+              '    overflow-y: scroll;' +
+              '    height: 45%;' +
+              '  }' +
+              '  .run-button {' +
+              '    margin-top: 10px;' +
+              '  }' +
+              '  .input-button {' +
+              '    margin-left: 10%;' +
+              '  }' +
+              '  .code-labels {' +
+              '    font-weight: bold;' +
+              '  }' +
+              '</style>';
 
-   document.head.insertAdjacentHTML("beforeend",styleString);
+ document.head.insertAdjacentHTML("beforeend",styleString);
 
-  }
+}
+
 
 
   function appendCodeSections(){
@@ -76,7 +79,7 @@ function addStyle(){
                '</div>' +
                '<div class="output-block i'+ i +'" id="outputBlock">' +
                '  <label class="code-labels" for="output">Output:</label><br>' +
-               '  <pre></pre>' +
+               '  <pre style="overflow:visible;"</pre>' +
                '</div>';
   
       element.classList.add(""+i);
@@ -96,69 +99,68 @@ function addStyle(){
   }
 }
 
-  function runCode(event,index) {
-    event.preventDefault();
-    let csrfToken = document.getElementById("csrfToken").value;
-    var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
-    var outputBlockParent = document.querySelector(".output-block.i" + index );
-    var inputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
-    let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
-    let code_field = pre.firstElementChild;
-    if(code_field!= null){
-      let code = code_field.innerText;
-      let input = inputBlock.value;
-      for(let lang of code_field.classList){
-        if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
-          let data = {
-            code:code,
-            lang:lang,
-            input:input
-          }
-          let meta = {
-            method: "post",
-            headers:{'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken
+  
 
-          }
-            ,
-          body: JSON.stringify(data)
-          };
-          let request = fetch("/api/execution/exec",meta);
-          request.then((response)=>{
-            
-            if(response.ok) return response.json();
-            else{
-              throw new CustomError(null,response.json());
-            }
 
-          })
-          .then((result)=>{
-            console.log(result);
-            outputBlockParent.classList.add("show");
-            
-            if(result.output.trim().length != 0 ){
-              outputBlock.style.color="white";
-              outputBlock.innerText = result.output;
-            }
-            else{
-              outputBlock.style.color="red";
-              outputBlock.innerText = result.error;
-            }
-          })
-          .catch((error)=>{
-
-              error.data.then((error_detail)=>{
-                outputBlockParent.classList.add("show");
-                outputBlock.style.color="red";
-                outputBlock.innerText = result.exception;
-              });
-          });
-
+function runCode(event,index) {
+  event.preventDefault();
+  let csrfToken = document.getElementById("csrfToken").value;
+  var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+  var outputBlockParent = document.querySelector(".output-block.i" + index );
+  var inputBlock = document.querySelector(".input-block.i" + index ).lastElementChild;
+  let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
+  let code_field = pre.firstElementChild;
+  if(code_field!= null){
+    let code = code_field.innerText;
+    let input = inputBlock.value;
+    for(let lang of code_field.classList){
+      if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
+        let data = {
+          code:code,
+          lang:lang,
+          input:input
+        }
+        let meta = {
+          method: "post",
+          headers:{'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
 
         }
+          ,
+        body: JSON.stringify(data)
+        };
+        let request = fetch("/api/execution/exec",meta);
+        request.then((response)=>{
+          
+          if(response.ok) return response.json();
+          else{
+            throw new CustomError(null,response.json());
+          }
+
+        })
+        .then((result)=>{
+          console.log(result);
+          outputBlockParent.classList.add("show");
+          outputBlock.style.color="white";
+          outputBlock.innerText = result.output;
+          
+        })
+        .catch((error)=>{
+
+            error.data.then((error_detail)=>{
+              outputBlockParent.classList.add("show");
+              outputBlock.style.color="red";
+              outputBlock.innerText = error_detail.exception;
+            });
+        });
+
+
       }
     }
   }
+}
+
+
   
   function showInput(event,index) {
     event.preventDefault();

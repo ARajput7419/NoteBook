@@ -11,6 +11,8 @@
   <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-cpp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-python.min.js"></script>
   <link rel="stylesheet" href="/static/css/creates.css">
   <link rel="stylesheet" href="/static/css/toast.css">
   <script src="/static/js/toast.js"></script>

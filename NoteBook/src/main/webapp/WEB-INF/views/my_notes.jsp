@@ -93,6 +93,9 @@
         <input type="hidden" id="current_page" value="1">
         <input type="hidden" id="start_page" value="1">
         <input type="hidden" id="keyword" value="">
+        <input type="hidden" id="resource_current_page" value="1">
+        <input type="hidden" id="resource_start_page" value="1">
+        <input type="hidden" id="resource_keyword" value="">
         <div class="row">
 
             <div class="col">
@@ -139,6 +142,11 @@
         </div>
 
     </div>
+
+
+
+
+
     <div class="container-fluid resource-container mt-5">
       
 
@@ -166,23 +174,25 @@
 
 
         <div class="row">
-            <div class="col">
+            <div class="col resource_parent">
+            <c:forEach> var="resource" items="${resources}">
             <div class="card card-spacing resource-card">
                 <div class="card-body">
-                    <h5 class="card-title">Resource 1</h5>
-                    <p class="card-text"><span>Access Link:</span> <a href="#">https://example.com/resource1</a></p>
-                    <p class="card-text"><span>Author:</span> John Doe</p>
-                    <p class="card-text"><span>Visibility:</span> Public</p>
+                    <h5 class="card-title">${resource.name}</h5>
+                    <p class="card-text"><span>Access Link:</span> <a href="${resource.location}">${resource.location}</a></p>
+                    <p class="card-text"><span>Author:</span>${resource.user.name}</p>
+                    <p class="card-text resource_visibility_${note.id}"><span>Visibility:</span>${resource.visibility}</p>
                     <hr>
                     <div class="card-buttons">
                         <a href="#" class="btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-primary">Access</a>
+                        <a onclick="copyTextToClipboard(${resource.location})" class="btn btn-primary">Copy Link</a>
                         <a href="#" class="btn btn-success vis">Change Visibility</a>
 
                     </div>
-                    <p class="card-timestamp"><span>Last Modified:</span> 2023-05-31 12:30 PM</p>
+                    <p class="card-timestamp"><span>Time stamp</span>${resource.timestamp}</p>
                 </div>
             </div>
+            </c:forEach>
             </div>
         </div>
         
@@ -192,15 +202,38 @@
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        <li class="page-item rp0 disabled">
+                            <a class="page-link" onclick="resourcePagination(0,'${total_pages_resources}')" tabindex="-1" aria-disabled="true">Previous</a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
+                        <c:if test="${total_pages_resources < 1}">
+                        <li class="page-item rp1 disabled"><a class="page-link rpp1" onclick="resourcePagination(1,'${total_pages_resources}')">1</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources>=1}">
+                        <li class="page-item rp1 active"><a class="page-link rpp1" onclick="resourcePagination(1,'${total_pages_resources}')">1</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources<2}">
+                            <li class="page-item rp2 disabled"><a class="page-link rpp2" onclick="resourcePagination(2,'${total_pages_resources}')">2</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources>=2}">
+                            <li class="page-item rp2 "><a class="page-link rpp2" onclick="resourcePagination(2,'${total_pages_resources}')">2</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources<3}">
+                            <li class="page-item rp3 disabled"><a class="page-link rpp3" onclick="resourcePagination(3,'${total_pages_resources}')">3</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources>=3}">
+                            <li class="page-item rp3 "><a class="page-link rpp3" onclick="resourcePagination(3,'${total_pages_resources}')">3</a></li>
+                        </c:if>
+                        <c:if test="${total_pages_resources<=3}">
+                            <li class="page-item rp4 disabled">
+                                <a class="page-link" onclick="resourcePagination(4,'${total_pages_resources}')">Next</a>
+                            </li>    
+                    </c:if>
+                    <c:if test="${total_pages_resources>3}">
+                        <li class="page-item rp4">
+                            <a class="page-link" onclick="resourcePagination(4,'${total_pages_resources}')">Next</a>
+                        </li>    
+                </c:if>
+                        
                     </ul>
                 </nav>
 

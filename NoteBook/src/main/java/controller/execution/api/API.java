@@ -43,10 +43,10 @@ public class API {
     private String getStringRepresentation(BufferedReader reader) throws IOException {
 
         StringBuilder output = new StringBuilder();
-        String line = reader.readLine();;
-        while (line != null){
-            output.append(line);
-            line = reader.readLine();
+        String line = reader.readLine();
+        int ch = 0;
+        while((ch=reader.read())!=-1){
+            output.append((char) ch);
         }
         return output.toString();
 
@@ -91,6 +91,8 @@ public class API {
 
             ProcessBuilder builder = new ProcessBuilder(new String[]{command, filename});
 
+            builder.redirectErrorStream(true);
+
             builder.directory(new File(directoryHandler.getCwd()+"/"+ip));
 
             Process compiler = builder.start();
@@ -101,9 +103,7 @@ public class API {
 
                 CodeOutput output = new CodeOutput();
 
-                output.setError(getStringRepresentation(compiler.errorReader()));
-
-                output.setOutput("");
+                output.setOutput(getStringRepresentation(compiler.errorReader()));
 
                 return output;
 
@@ -118,6 +118,8 @@ public class API {
 
         ProcessBuilder builder = new ProcessBuilder(new String[]{command, filename});
 
+        builder.redirectErrorStream(true);
+
         builder.directory(new File(directoryHandler.getCwd()+"/"+ip));
 
         Process process = builder.start();
@@ -128,15 +130,14 @@ public class API {
 
         writer.close();
 
+
         BufferedReader output_reader = process.inputReader();
 
-        BufferedReader error_reader = process.errorReader();
 
         CodeOutput codeOutput = new CodeOutput();
 
         codeOutput.setOutput(getStringRepresentation(output_reader));
 
-        codeOutput.setError(getStringRepresentation(error_reader));
 
         return codeOutput;
 

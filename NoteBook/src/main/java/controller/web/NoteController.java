@@ -113,12 +113,16 @@ public class NoteController {
         }
     }
     @GetMapping("/private")
-    public String myNotes(Model model){
+    public String myNotes(Model model,HttpServletRequest request){
         int total_notes = service.getNotesPrivateCount();
         List<Note> notes = service.getNotesPrivate(page_size,0);
         int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
         int total_resources = resourceService.getResourcesPrivateCount();
         List<Resource> resources = resourceService.getResourcesPrivate(page_size,0);
+        for (Resource resource : resources){
+            String link = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getServletContext().getContextPath()+"/"+resource.getLocation();
+            resource.setLocation(link);
+        }
         int total_pages_resources = total_resources/page_size + (total_resources%page_size!=0?1:0);
         model.addAttribute("total_pages_notes",total_pages_notes);
         model.addAttribute("total_pages_resources",total_pages_resources);

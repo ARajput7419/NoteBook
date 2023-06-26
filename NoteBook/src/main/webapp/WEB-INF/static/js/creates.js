@@ -31,7 +31,7 @@ function appendCodeSections(){
              '</div>' +
              '<div class="output-block i'+ i +'" id="outputBlock">' +
              '  <label class="code-labels" for="output">Output:</label><br>' +
-             '  <pre></pre>' +
+             '  <pre style="overflow:visible;"</pre>' +
              '</div>';
 
     element.classList.add(""+i);
@@ -67,7 +67,7 @@ function addStyle(){
               '    margin-top: 10px;' +
               '    overflow-x: scroll;' +
               '    overflow-y: scroll;' +
-              '    height: 30%;' +
+              '    height: 45%;' +
               '  }' +
               '  .run-button {' +
               '    margin-top: 10px;' +
@@ -98,7 +98,7 @@ let languages = ["cpp","java","python"];
     let csrfToken = document.getElementById("csrfToken").value;
     var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
     var outputBlockParent = document.querySelector(".output-block.i" + index );
-    var inputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+    var inputBlock = document.querySelector(".input-block.i" + index ).lastElementChild;
     let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
     let code_field = pre.firstElementChild;
     if(code_field!= null){
@@ -132,22 +132,16 @@ let languages = ["cpp","java","python"];
           .then((result)=>{
             console.log(result);
             outputBlockParent.classList.add("show");
+            outputBlock.style.color="white";
+            outputBlock.innerText = result.output;
             
-            if(result.output.trim().length != 0 ){
-              outputBlock.style.color="white";
-              outputBlock.innerText = result.output;
-            }
-            else{
-              outputBlock.style.color="red";
-              outputBlock.innerText = result.error;
-            }
           })
           .catch((error)=>{
 
               error.data.then((error_detail)=>{
                 outputBlockParent.classList.add("show");
                 outputBlock.style.color="red";
-                outputBlock.innerText = result.exception;
+                outputBlock.innerText = error_detail.exception;
               });
           });
 
