@@ -179,9 +179,11 @@ function fetch_private_notes(page_number,keyword){
                 let total_pages = res["total_pages"];
                 let list_notes = res["notes"];
                 render_notes(page_number,total_pages,list_notes,keyword);
+                return true;
 
             }).catch((error)=>{
                 toast(error);
+                return false;
             });
 
 }
@@ -621,4 +623,46 @@ function copyTextToClipboard(text) {
       .catch((error) => {
         toast("Error While Copying Link");
       });
+  }
+
+
+  function searchNotes(){
+
+    let keyword = document.getElementById("notes_search").value;
+
+    let status = fetch_private_notes(1,keyword);
+    
+    if(status){
+
+        let keyword_field = document.getElementById("keyword");
+        let start_field = document.getElementById("start_page");
+        let current_field = document.getElementById("current_page");
+        keyword_field.value = keyword;
+        start_field.value = 1;
+        current_field.value = 1;
+     
+    }
+
+
+  }
+
+
+  function searchResources(){
+
+    let keyword = document.getElementById("resources_search").value;
+
+    let status = fetch_private_resources(1,keyword);
+    
+    if(status){
+
+        let keyword_field = document.getElementById("resource_keyword");
+        let start_field = document.getElementById("resource_start_page");
+        let current_field = document.getElementById("resource_current_page");
+        keyword_field.value = keyword;
+        start_field.value = 1;
+        current_field.value = 1;
+     
+    }
+
+
   }

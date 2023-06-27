@@ -55,12 +55,12 @@
             <div class="col-md-4 offset-md-6">
 
 
-                <form method="get" method="/notes/private/search">
+                <form method="get" action="#">
                 <div class="input-group mb-3 searchbar">
                     
-                    <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your notes" aria-label="Search public notes" aria-describedby="button-addon2">
+                    <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your notes" aria-label="Search public notes" aria-describedby="button-addon2" id="notes_search">
                     <div class="input-group-append" style="margin-left: 1%;">
-                      <button class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
+                      <button onclick = "searchNotes()" class="btn btn-outline-success " type="button" id="button-addon2">Search</button>
                     </div>
                   </div>
                   </form>
@@ -160,11 +160,11 @@
                 
                 <div class="col-md-4 offset-md-6">
     
-                    <form method="get" action="/resources/private/search">
+                    <form method="get" action="#">
                     <div class="input-group mb-3 searchbar">
-                        <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your resources" aria-label="Search public notes" aria-describedby="button-addon2">
+                        <input style="font-weight: bold;" type="text" class="form-control" placeholder="Search your resources" aria-label="Search public notes" aria-describedby="button-addon2" id="resources_search">
                         <div class="input-group-append" style="margin-left: 1%;">
-                          <button class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
+                          <button onclick = "searchResources()" class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
                         </div>
                       </div>
                       </form>

@@ -53,11 +53,11 @@
       <h1 class="display-4" id="heading">Welcome to NoteBook!</h1>
       <p class="lead">Create your own notes, search for public notes, and chat with other users.</p>
       <hr class="my-4">
-      <form>
+      <form method="get" action="/notes/public">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Search public notes by keyword or topic" aria-label="Search public notes" aria-describedby="button-addon2">
+          <input type="text" class="form-control" placeholder="Search public notes by keyword or topic" aria-label="Search public notes" aria-describedby="button-addon2" name="keyword">
           <div class="input-group-append" style="margin-left: 1%;">
-            <button class="btn btn-outline-success" type="button" id="button-addon2">Search</button>
+            <button class="btn btn-outline-success" type="submit" id="button-addon2">Search</button>
           </div>
         </div>
       </form>
@@ -70,7 +70,7 @@
           <h2>Recent Public Notes</h2>
           <ul class="list-group">
             <c:forEach var="note" items="${notes}">
-              <li class="list-group-item"><a href="/view/${note.id}">${note.name}</a></li>
+              <li class="list-group-item"><a href="/notes/view/${note.id}">${note.name}</a></li>
             </c:forEach>
           </ul>
         </div>

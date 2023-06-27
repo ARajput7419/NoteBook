@@ -132,13 +132,27 @@ public class NoteController {
     }
 
     @GetMapping("/public")
-    public String publicNotes(Model model){
+    public String publicNotes(Model model,HttpServletRequest request){
+        String keyword = request.getParameter("keyword");
+        if (keyword.trim().length()!=0) {
+            publicNotesByKeyword(model,keyword);
+            return "public_notes";
+        }
         int total_notes = service.getNotesPublicCount();
         List<Note> notes = service.getNotesPublic(page_size,0);
         int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
         model.addAttribute("total_pages_notes",total_pages_notes);
         model.addAttribute("notes",notes);
         return "public_notes";
+    }
+
+    private void publicNotesByKeyword(Model model,String keyword){
+       int total_notes = service.searchByKeywordPublicCount(keyword);
+        List<Note> notes = service.searchByKeywordPublic(keyword,page_size,0);
+        int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
+        model.addAttribute("total_pages_notes",total_pages_notes);
+        model.addAttribute("notes",notes);
+        model.addAttribute("keyword",keyword);
     }
 
 
