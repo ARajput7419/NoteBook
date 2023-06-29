@@ -26,6 +26,10 @@ public class Chat {
     @Column(nullable = false)
     private String message;
 
+    @ColumnDefault("false")
+    @Column(name = "read_")
+    private boolean read;
+
     public int getId() {
         return id;
     }
