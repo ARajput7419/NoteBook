@@ -43,3 +43,12 @@ function sendMessage(event){
     }
 
 }
+
+function connect() {
+    var socket = new SockJS('/chat_connection');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+    });
+}

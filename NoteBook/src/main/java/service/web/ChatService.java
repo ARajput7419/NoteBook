@@ -5,9 +5,12 @@ import database.repository.ChatDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Service
 public class ChatService {
 
     @Autowired
@@ -27,6 +30,11 @@ public class ChatService {
     @Transactional
     public List<Chat> chatsByUser(){
         return chatDAO.chatsByUser(getUsername());
+    }
+
+    @Transactional
+    public void insert(Chat chat){
+        chatDAO.insert(chat);
     }
 
 }

@@ -10,9 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import service.web.ChatService;
-
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @RequestMapping("/chat")
 @Controller
@@ -32,7 +31,6 @@ public class ChatController {
     public String chat(Model model){
         List<Chat> chats = chatService.chatsByUser();
         LinkedHashMap<String,ArrayList<Chat>> linkedHashMap = new LinkedHashMap<>();
-        Map.Entry entry;
         for (Chat chat : chats){
             String from_user = chat.getFrom().getEmail();
             String to_user = chat.getTo().getEmail();

@@ -35,7 +35,7 @@ public class ChatDAO {
     }
 
     public List<Chat> chatsByUser(String username){
-        TypedQuery<Chat> chats = entityManager.createQuery("select c from Chat join c.from f join c.to t where f.email = :username or t.email = :username order by c.timestamp desc",Chat.class);
+        TypedQuery<Chat> chats = entityManager.createQuery("select c from Chat c  join c.from f join c.to t where f.email = :username or t.email = :username order by c.timestamp desc",Chat.class);
         chats.setParameter("username",username);
         return chats.getResultList();
     }
