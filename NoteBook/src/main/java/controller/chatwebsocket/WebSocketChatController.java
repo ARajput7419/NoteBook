@@ -26,6 +26,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/send")
     public Message received(@Payload Message message){
+        System.out.println(message);
+        System.out.println(message.getMessage());
         Chat chat = new Chat();
         chat.setTimestamp(new Timestamp(System.currentTimeMillis()));
         chat.setMessage(message.getMessage());

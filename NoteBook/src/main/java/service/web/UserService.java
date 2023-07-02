@@ -33,7 +33,8 @@ public class UserService {
 
     @Transactional
     public User getByUsername(String username){
-     return userDAO.get(username);
+        if (username == null) return null;
+        return userDAO.get(username);
     }
 
     public enum UserExistenceStatus{

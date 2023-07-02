@@ -13,30 +13,30 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
 
 
 
-    class CustomFunction{
-
-        public boolean check(HttpServletRequest request , Authentication authentication){
-             String requestUri = request.getRequestURI();
-             if(requestUri.startsWith("/chat/user/"+(String)authentication.getPrincipal())){
-                 return true;
-             } else return false;
-        }
-
-    }
-
-
-    @Bean
-    CustomFunction customFunction(){
-        return new CustomFunction();
-    }
-
-
-
-    @Override
-    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages.simpSubscribeDestMatchers("/chat/user/**")
-                .access("@customFunction.check(#request,authentication)");
-
-    }
+//    class CustomFunction{
+//
+//        public boolean check(HttpServletRequest request , Authentication authentication){
+//             String requestUri = request.getRequestURI();
+//             if(requestUri.startsWith("/chat/user/"+(String)authentication.getPrincipal())){
+//                 return true;
+//             } else return false;
+//        }
+//
+//    }
+//
+//
+//    @Bean
+//    CustomFunction customFunction(){
+//        return new CustomFunction();
+//    }
+//
+//
+//
+//    @Override
+//    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
+//        messages.simpSubscribeDestMatchers("/chat/user/**")
+//                .access("@customFunction.check(#request,authentication)");
+//
+//    }
 
 }

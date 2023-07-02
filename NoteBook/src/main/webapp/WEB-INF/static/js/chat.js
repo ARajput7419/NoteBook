@@ -47,8 +47,13 @@ function sendMessage(event){
 function connect() {
     var socket = new SockJS('/chat_connection');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        setConnected(true);
+    stompClient.connect({'X-CSRF-TOKEN': ''}, function (frame) {
         console.log('Connected: ' + frame);
     });
 }
+
+stompClient.subscribe('/chat/user/aniketranag123@gmail.com/private', function (message) {
+    console.log(message);
+});
+
+stompClient.send("/chat/send", {}, JSON.stringify({'sender':'aniketranag1234@gmail.com','receiver':'aniketranag123@gmail.com','message':'Ohhhh yeeee'}));

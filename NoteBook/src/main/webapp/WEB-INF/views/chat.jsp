@@ -47,6 +47,7 @@ let chats = [
 <div class="row clearfix">
     <div class="col-lg-12">
         <div class="card chat-app">
+            <input type="hidden" name="_csrf" value="${_csrf.token}">
             <div id="plist" class="people-list">
                 
                 <ul class="list-unstyled chat-list mt-2 mb-0">
