@@ -244,6 +244,9 @@
         height: 300px;
         overflow-x: auto
     }
+
+   
+
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
@@ -267,6 +270,27 @@
         overflow-x: auto
     }
 }
+
+.round {
+  border-radius: 50%;
+}
+
+.previous {
+  background-color: #f1f1f1;
+  color: black;
+}
+.special_button{
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+.special_button:hover {
+  background-color: #ddd;
+  color: black;
+  text-decoration: none;
+}
+
 </style>
 </head>
 <body>
@@ -274,9 +298,19 @@
 <div class="row clearfix">
     <div class="col-lg-12">
         <div class="card chat-app">
-            <div id="plist" class="people-list">
+            <div id="plist" class="people-list first_segment">
                 
                 <ul class="list-unstyled chat-list mt-2 mb-0">
+
+                    <form>
+                        <div class="input-group mb-3">
+                          <input type="text" style="font-weight:bold;" class="form-control" placeholder="Username" aria-label="Search public notes" aria-describedby="button-addon2">
+                          <div class="input-group-append" style="margin-left: 5%;">
+                            <button class="btn btn-outline-success" type="button" id="button-addon2">Chat</button>
+                          </div>
+                        </div>
+                      </form>
+                   
                     <li class="clearfix">
                         <div class="about">
                             <div class="name">Vincent Porter</div>
@@ -309,20 +343,29 @@
                     </li>
                 </ul>
             </div>
-            <div class="chat">
+            <div class="chat second_segment">
                 <div class="chat-header clearfix">
                     <div class="row">
-                        <div class="col-lg-6">
+                        
+                       
+
+                        <div class="col-lg-6 offset-4">
                             <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
                                
                             </a>
                             <div class="chat-about">
-                                <h6 class="m-b-0">Aiden Chavez</h6>
+                                <h6 class="m-b-0" style="font-weight:bold;">Aiden Chavez</h6>
                             </div>
                         </div>
-                        <div class="col-lg-1 offset-lg-5">
-                           <button class="button" onclick="document.getElementById('messgae_focused').focus()">&#8964;</button>
-                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-1 " id="pre_button">
+                            <a href="javascript:void(0);"  class="previous round special_button">&#8249;</a>
+                         </div>
+                         <div class="col-1 offset-9" style="text-align: right;">
+                            <a href="javascript:void(0);" class="special_button round previous" onclick="document.getElementById('messgae_focused').focus()">&#8964;</a>
+                         </div>
                     </div>
                 </div>
                 <div class="chat-history">
@@ -330,7 +373,6 @@
                         <li class="clearfix">
                             <div class="message-data text-right">
                                 <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
                             </div>
                             <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
                         </li>
@@ -338,7 +380,26 @@
                             <div class="message-data">
                                 <span class="message-data-time">10:12 AM, Today</span>
                             </div>
-                            <div class="message my-message">Are we meeting today?</div>                                    
+                            <div class="message my-message"><pre><code>
+
+     import java.util.Scanner;
+  class A{
+   public static void main(String argc[]){       
+       }
+                                }
+
+                            </code></pre>
+                        
+                            <button class="btn btn-primary run-button i0 " onclick="runCode(event,0)">Run</button>&nbsp&nbsp&nbsp
+
+                            <button class="btn btn-primary run-button input-button" onclick="showInput(event,0)">Input</button>
+
+                            <div class="input-block i0">  <label class="code-labels" for="inputValue">Input:</label>  <textarea rows="4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea></div>
+
+                            <div class="output-block i0" id="outputBlock">  <label class="code-labels" for="output">Output:</label><br>  compiled successfully ....</div>
+                        
+                        
+                        </div>                                    
                         </li>                               
                         <li class="clearfix">
                             <div class="message-data">
@@ -370,6 +431,18 @@
     </div>
 </div>
 </div>
+<script>
+
+window.onresize = function(){
+    if(window.innerWidth<=766){
+        document.getElementById("pre_button").style.display="block";
+    }
+    else{
+        document.getElementById("pre_button").style.display="none";
+    }
+}
+
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>

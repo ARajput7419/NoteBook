@@ -57,3 +57,30 @@ stompClient.subscribe('/chat/user/aniketranag123@gmail.com/private', function (m
 });
 
 stompClient.send("/chat/send", {}, JSON.stringify({'sender':'aniketranag1234@gmail.com','receiver':'aniketranag123@gmail.com','message':'Ohhhh yeeee'}));
+
+
+window.onresize = function(){
+    if(window.innerWidth<=766){
+        document.getElementById("pre_button").style.display="block";
+    }
+    else{
+        document.getElementById("pre_button").style.display="none";
+    }
+}
+
+function makePostRequest(url,token){
+
+
+    let f = document.createElement("form");
+    f.action=url;
+    f.method="post";
+    f.type="hidden";
+    let hidden_input = document.createElement("input");
+    hidden_input.type="hidden";
+    hidden_input.name="_csrf";
+    hidden_input.value=token;
+    f.appendChild(hidden_input);
+    document.body.appendChild(f);
+    f.submit();
+
+}

@@ -617,7 +617,7 @@ function resourcePagination(offset,total_pages){
 
 function copyTextToClipboard(text) {
     navigator.clipboard.writeText(text)
-      .then(() => {
+      .then((code) => {
          toast("Link Copied");
       })
       .catch((error) => {

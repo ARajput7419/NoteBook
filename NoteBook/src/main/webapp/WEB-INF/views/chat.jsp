@@ -6,8 +6,16 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/themes/prism.min.css">
+<script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
 <title>Chat</title>
 <link rel="stylesheet" href="/static/css/chat.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-cpp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-python.min.js"></script>
+<link rel="stylesheet" href="/static/css/toast.css">
+<script src="/static/js/toast.js"></script>
 <script>
 
 let chats = [
@@ -43,15 +51,52 @@ let chats = [
 </script>
 </head>
 <body id="b_ody">
+
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">NoteBook</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars"></i> <!-- Custom toggle icon using Font Awesome -->
+  
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item my_li">
+              <a class="nav-link" href="/notes/private">My Notes</a>
+            </li>
+            
+            <li class="nav-item my_li">
+              <a class="nav-link" href="/notes/public">Public Notes</a>
+            </li>
+           
+            <li class="nav-item my_li">
+              <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>
+            </li>
+            
+         
+          </ul>
+        </div>
+      </nav>
+
+      <br>
 <div class="container">
 <div class="row clearfix">
     <div class="col-lg-12">
         <div class="card chat-app">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <div id="plist" class="people-list">
+            <div id="plist" class="people-list first_segment">
                 
                 <ul class="list-unstyled chat-list mt-2 mb-0">
 
+
+                    <form>
+                        <div class="input-group mb-3">
+                          <input type="text" style="font-weight:bold;" class="form-control" placeholder="Username" aria-label="Search public notes" aria-describedby="button-addon2">
+                          <div class="input-group-append" style="margin-left: 5%;">
+                            <button class="btn btn-outline-success" type="button" id="button-addon2">Chat</button>
+                          </div>
+                        </div>
+                      </form>
 
                     <c:forEach var = "chat" items = "${chats}">
 
@@ -68,17 +113,24 @@ let chats = [
             <div class="chat">
                 <div class="chat-header clearfix">
                     <div class="row">
-                        <div class="col-lg-6">
+                        
+                        <div class="col-lg-6 offset-4">
                             <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
                                
                             </a>
                             <div class="chat-about">
-                                <h6 class="m-b-0" id="focused_user">Aiden Chavez</h6>
+                                <h6 class="m-b-0" style="font-weight:bold;">Aiden Chavez</h6>
                             </div>
                         </div>
-                        <div class="col-lg-1 offset-lg-5">
-                           <button class="button" onclick="document.getElementById('messgae_focused').focus()">&#8964;</button>
-                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-1 " id="pre_button">
+                            <a href="javascript:void(0);"  class="previous round special_button">&#8249;</a>
+                         </div>
+                         <div class="col-1 offset-9" style="text-align: right;">
+                            <a href="javascript:void(0);" class="special_button round previous" onclick="document.getElementById('messgae_focused').focus()">&#8964;</a>
+                         </div>
                     </div>
                 </div>
                 <div class="chat-history">

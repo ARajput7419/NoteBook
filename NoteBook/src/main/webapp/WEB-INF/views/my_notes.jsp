@@ -175,7 +175,7 @@
 
         <div class="row">
             <div class="col resource_parent">
-            <c:forEach> var="resource" items="${resources}">
+            <c:forEach var="resource" items="${resources}">
             <div class="card card-spacing resource-card">
                 <div class="card-body">
                     <h5 class="card-title">${resource.name}</h5>
@@ -185,11 +185,11 @@
                     <hr>
                     <div class="card-buttons">
                         <a href="#" class="btn btn-danger">Delete</a>
-                        <a onclick="copyTextToClipboard(${resource.location})" class="btn btn-primary">Copy Link</a>
+                        <a onclick="copyTextToClipboard('${resource.location}')" class="btn btn-primary">Copy Link</a>
                         <a href="#" class="btn btn-success vis">Change Visibility</a>
 
                     </div>
-                    <p class="card-timestamp"><span>Time stamp</span>${resource.timestamp}</p>
+                    <p class="card-timestamp"><span>Time stamp: </span>${resource.timestamp}</p>
                 </div>
             </div>
             </c:forEach>

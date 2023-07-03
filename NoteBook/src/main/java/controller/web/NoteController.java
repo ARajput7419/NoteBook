@@ -134,7 +134,7 @@ public class NoteController {
     @GetMapping("/public")
     public String publicNotes(Model model,HttpServletRequest request){
         String keyword = request.getParameter("keyword");
-        if (keyword.trim().length()!=0) {
+        if (keyword!=null && keyword.trim().length()!=0) {
             publicNotesByKeyword(model,keyword);
             return "public_notes";
         }
