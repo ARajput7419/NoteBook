@@ -18,6 +18,8 @@
 <script src="/static/js/toast.js"></script>
 <script>
 
+let actualUser = '${actualUser}';
+
 let chats = [
 
 
@@ -31,10 +33,10 @@ let chats = [
                             <c:forEach var="chat_per_person" items="${chat.value}">
 
                             {
-                                "message" : ${chat_per_person.message} ,
-                                "from" : ${chat_per_person.from.email},
-                                "to"   : ${chat_per_person.to.email},
-                                "timestamp" : ${chat_per_person.timestamp}
+                                "message"    :  "${chat_per_person.message}" ,
+                                "timestamp" : "${chat_per_person.timestamp}",
+                                "from" : "${chat_per_person.from}",
+                                "to" : "${chat_per_person.to}"
 
                             } ,
 
@@ -48,7 +50,14 @@ let chats = [
 
                 ];
 
+
+
+
+
+
 </script>
+<script src="/static/js/chat.js"></script>
+
 </head>
 <body id="b_ody">
 
@@ -86,10 +95,10 @@ let chats = [
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <div id="plist" class="people-list first_segment">
                 
-                <ul class="list-unstyled chat-list mt-2 mb-0">
+                <ul class="list-unstyled chat-list mt-2 mb-0 interacted_people">
 
 
-                    <form>
+                    <form id="search_user">
                         <div class="input-group mb-3">
                           <input type="text" style="font-weight:bold;" class="form-control" placeholder="Username" aria-label="Search public notes" aria-describedby="button-addon2">
                           <div class="input-group-append" style="margin-left: 5%;">
@@ -102,7 +111,7 @@ let chats = [
 
                         <li class="clearfix" onclick="chatClicked('${chat.key}',chats)">
                             <div class="about">
-                                <div class="name">${chats.key}</div>
+                                <div class="name user_id">${chats.key}</div>
                             </div>
                         </li>
 
@@ -119,7 +128,7 @@ let chats = [
                                
                             </a>
                             <div class="chat-about">
-                                <h6 class="m-b-0" style="font-weight:bold;">Aiden Chavez</h6>
+                                <h6 class="m-b-0" style="font-weight:bold;" id="focused_user">Aiden Chavez</h6>
                             </div>
                         </div>
                         
@@ -134,6 +143,7 @@ let chats = [
                     </div>
                 </div>
                 <div class="chat-history">
+
                     <ul class="m-b-0" id="chat_data">
                         
                            
@@ -148,11 +158,10 @@ let chats = [
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-send"></i></span>
                         </div>
-                        <input type="text" class="form-control" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                    
+                        <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                    
                     </div>
                 </div>         
             </div>
-            
         </div>
     </div>
 </div>

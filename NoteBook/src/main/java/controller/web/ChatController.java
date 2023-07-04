@@ -22,9 +22,14 @@ public class ChatController {
 
 
     private boolean checkCurrentUser(String username){
+        String authenticatedUser = getUser();
+        return authenticatedUser.equals(username);
+    }
+
+    private String getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUser = (String) authentication.getPrincipal();
-        return authenticatedUser.equals(username);
+        return authenticatedUser;
     }
 
     @GetMapping("/")
@@ -47,6 +52,7 @@ public class ChatController {
 
         }
         model.addAttribute("chats",linkedHashMap);
+        model.addAttribute("actualUser",getUser());
         return "chat";
     }
 
