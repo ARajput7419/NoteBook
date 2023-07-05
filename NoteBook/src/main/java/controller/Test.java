@@ -24,6 +24,7 @@ import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 
 @Controller
 public class Test {
@@ -43,6 +44,7 @@ public class Test {
     @GetMapping("/hello")
     @ResponseBody
     public String name(HttpServletRequest request){
+        SimpleDateFormat format;
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
 //        return "<img src=\""+token.getPrincipal().getAttribute("picture")+"\">";

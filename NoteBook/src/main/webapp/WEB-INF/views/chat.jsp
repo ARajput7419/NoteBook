@@ -92,20 +92,20 @@ let chats = [
 <div class="row clearfix">
     <div class="col-lg-12">
         <div class="card chat-app">
-            <input type="hidden" name="_csrf" value="${_csrf.token}">
+            <input type="hidden" name="_csrf" value="${_csrf.token}" id="csrfToken">
             <div id="plist" class="people-list first_segment">
                 
                 <ul class="list-unstyled chat-list mt-2 mb-0 interacted_people">
 
 
-                    <form id="search_user">
-                        <div class="input-group mb-3">
-                          <input type="text" style="font-weight:bold;" class="form-control" placeholder="Username" aria-label="Search public notes" aria-describedby="button-addon2">
+                    
+                        <div class="input-group mb-3" id="search_user">
+                          <input id="usernameInput" type="text" style="font-weight:bold;" class="form-control" placeholder="Username"  aria-describedby="button-addon2">
                           <div class="input-group-append" style="margin-left: 5%;">
-                            <button class="btn btn-outline-success" type="button" id="button-addon2">Chat</button>
+                            <button class="btn btn-outline-success" type="button" id="button-addon2" onclick="searchUser()">Chat</button>
                           </div>
                         </div>
-                      </form>
+                      
 
                     <c:forEach var = "chat" items = "${chats}">
 
@@ -135,7 +135,7 @@ let chats = [
                     </div>
                     <div class="row">
                         <div class="col-1 " id="pre_button">
-                            <a href="javascript:void(0);"  class="previous round special_button">&#8249;</a>
+                            <a href="javascript:void(0);"  onclick="pressedBackButton()" class="previous round special_button">&#8249;</a>
                          </div>
                          <div class="col-1 offset-9" style="text-align: right;">
                             <a href="javascript:void(0);" class="special_button round previous" onclick="document.getElementById('messgae_focused').focus()">&#8964;</a>

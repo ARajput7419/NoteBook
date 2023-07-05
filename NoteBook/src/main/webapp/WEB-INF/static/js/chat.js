@@ -1,6 +1,5 @@
 function chatClicked(event , email,chats){
 
-
     let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
     sendMessageInputTag.onkeydown = `sendMessage(event,${email})`;
     let target = event.target;
@@ -39,8 +38,11 @@ function chatClicked(event , email,chats){
 function sendMessage(event,receiver){
 
     if(event.keyCode == 13){
+        console.log(event);
         let sender = actualUser;
-        send(sender,receiver,message);
+        let messageField = document.getElementsByClassName("sendMessageInput")[0];
+        send(sender,receiver,messageField.value);
+        messageField.value = "";
     }
 
 }
@@ -48,15 +50,17 @@ function sendMessage(event,receiver){
 let stompClient = null;
 
 function connect() {
+    let csrfToken = document.getElementById("csrfToken").value;
     var socket = new SockJS('/chat_connection');
     stompClient = Stomp.over(socket);
-    stompClient.connect({'X-CSRF-TOKEN': ''}, function (frame) {
+    stompClient.connect({'X-CSRF-TOKEN': csrfToken}, function (frame) {
         console.log('Connected: ' + frame);
+        subscribe(actualUser);
     });
 }
 
 
-connect();
+
 
 
 function initializeUserIds(){
@@ -92,10 +96,11 @@ function subscribe(username){
         let sender = actual_message['sender'];
         let m = actual_message['message'];
         let timestamp = actual_message['timestamp'];
-        initializeUserIds();
+        if(chats[sender] == null) chats[sender] = [];
         if(user_id.has(sender)){
 
-            chats[sender].push({'message':m,'timestamp':timestamp});
+            
+            chats[sender].push({'message':m,'timestamp':timestamp,'from':sender,'to':actualUser});
             if(focused_user == sender){
                 
                 chat_data.insertAdjacentHTML("beforeend",` <li class="clearfix">
@@ -140,7 +145,9 @@ function subscribe(username){
             chats[sender] = [
                 {
                     'message':m,
-                    'timestamp':timestamp
+                    'timestamp':timestamp,
+                    'from':sender,
+                    'to':actualUser
                 }
             ]
 
@@ -153,27 +160,38 @@ function subscribe(username){
 let user_id = null;
 
 function send(sender,receiver,message){
+
+
     
     if(stompClient == null){
         connect();
     }
 
+    let date = new Date();
+    
+    let timestamp = date.getDate() + "-"+date.getMonth()+"-" + date.getFullYear() + " " + date.getHours()+":"+date.getMinutes();
+
     stompClient.send("/chat/send", {}, JSON.stringify(
         {   'sender':sender,
             'receiver':receiver,
-            'message':message}
+            'message':message,
+            'timestamp':timestamp
+        }
         
         ));
 
         let focused_user = document.getElementById("focused_user");
         let container = document.getElementById("chat_data");
-        chats[receiver].push({});
-
-
-
-
-
-
+        if(chats[receiver] == null) chats[receiver] = [];
+        chats[receiver].push({'message':message,'from':sender,'to':receiver,'timestamp':timestamp});
+        if(focused_user == sender){
+            container.insertAdjacentHTML("beforeend",` <li class="clearfix">
+                <div class="message-data">
+                    <span class="message-data-time">${timestamp}</span>
+                </div>
+                <div class="message other-message float-right">${message}</div>
+            </li>`);
+        }
 
 }
 
@@ -183,6 +201,9 @@ window.onresize = function(){
     }
     else{
         document.getElementById("pre_button").style.display="none";
+        let people_list = document.getElementsByClassName("first_segment")[0];
+        people_list.style.zIndex = -10;
+
     }
 }
 
@@ -201,4 +222,80 @@ function makePostRequest(url,token){
     document.body.appendChild(f);
     f.submit();
 
+}
+
+
+function userExists(username){
+
+    let search_user = document.getElementById("search_user");
+    let container = document.getElementById("chat_data");
+    let focused_user = document.getElementById("focused_user");
+    if(user_id.has(username)){
+
+        
+        let list = document.getElementsByClassName("user_id");
+        let todelete = null;
+        for( let people of list){
+            if(people.innerText.trim() == username){
+                todelete = people; 
+                break;
+            }
+        }
+        todelete.remove();
+
+    }
+    else{
+        
+        user_id.add(username);
+    }
+    search_user.insertAdjacentHTML("afterend",`<li class="clearfix" onclick="chatClicked(event,${username},chats)">
+                            <div class="about">
+                                <div class="name user_id" style="font-weight:bold;">${username}</div>
+                            </div>
+                        </li>`);
+    focused_user.innerText = username;
+    container.innerText = "";
+
+}
+
+
+
+function searchUser(){
+
+    let username = document.getElementById("usernameInput").value;
+
+    if(username!=null){
+
+
+        let promise = fetch(`/api/user/exists?email=${username}`);
+        promise.then((response)=>{
+            if(!response.ok){
+                toast("User Does Not Exists");
+            }
+            else {
+                userExists(username);
+            }
+        });
+
+    }
+    else{
+        toast("Enter Username");
+    }
+
+}
+
+function pressedBackButton(){
+
+
+    let people_list = document.getElementsByClassName("first_segment")[0];
+    people_list.style.display="block";
+    document.getElementsByClassName("second_segment")[0].style.display = "none";
+
+
+}
+
+
+window.onload = function (){
+    initializeUserIds();
+    connect();
 }

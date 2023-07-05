@@ -1,8 +1,6 @@
 package database.entity;
-
-import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
-import java.sql.Timestamp;
+
 
 @Entity
 public class Chat {
@@ -19,16 +17,11 @@ public class Chat {
     @JoinColumn(nullable = false,name="to_userid")
     private User to;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "timestamp_")
-    private Timestamp timestamp;
+    private String timestamp;
 
     @Column(nullable = false)
     private String message;
-
-    @ColumnDefault("false")
-    @Column(name = "read_")
-    private boolean read;
 
     public int getId() {
         return id;
@@ -54,11 +47,11 @@ public class Chat {
         this.to = to;
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

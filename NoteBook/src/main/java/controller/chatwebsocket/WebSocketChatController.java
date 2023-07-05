@@ -29,7 +29,7 @@ public class WebSocketChatController {
         System.out.println(message);
         System.out.println(message.getMessage());
         Chat chat = new Chat();
-        chat.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        chat.setTimestamp(message.getTimestamp());
         chat.setMessage(message.getMessage());
         User sender = userService.getByUsername(message.getSender());
         User receiver = userService.getByUsername(message.getReceiver());

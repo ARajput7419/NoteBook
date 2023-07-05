@@ -29,4 +29,16 @@ public class RestUserController {
         return new ResponseEntity<>("Otp Sent Successfully", HttpStatus.OK);
     }
 
+    @GetMapping("/exists")
+    public ResponseEntity<String> exists(@RequestParam("email") String email){
+        if (email == null || email.length() == 0) return new ResponseEntity<>("Bad Request",HttpStatus.BAD_REQUEST);
+        else {
+            UserService.UserExistenceStatus status = userService.exists(email);
+            if (status != UserService.UserExistenceStatus.NOT_EXIST) return new ResponseEntity<>("User Exists",HttpStatus.OK);
+            else return new ResponseEntity<>("User Does Not Exists",HttpStatus.NOT_FOUND);
+
+        }
+
+    }
+
 }
