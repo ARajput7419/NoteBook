@@ -1,10 +1,13 @@
 function chatClicked(event , email,chats){
 
     let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
-    sendMessageInputTag.onkeydown = `sendMessage(event,${email})`;
+    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,${email})`);
     let target = event.target;
+    console.log(event);
     target.style = "";
     let chat_of_clicked_user = chats[email];
+    console.log(chats);
+    console.log(chats[email]);
     let focused_user = document.getElementById("focused_user");
     focused_user.innerText = email;
     
@@ -12,19 +15,21 @@ function chatClicked(event , email,chats){
 
     let container = document.getElementById("chat_data");
     
-    for(let single_chat  in  chat_of_clicked_user)
+    for(let single_chat  of  chat_of_clicked_user)
     {
 
-        let side= single_chat["from"] == email ? "" : "text-right";
+        let time_side= single_chat["from"] == email ? "" : "text-right";
+
+        let message_side = single_chat["from"] == email ? "" : "float-right";
 
 
         chat += `
 
                             <li class="clearfix">
-                                <div class="message-data ${side}">
+                                <div class="message-data ${time_side}">
                                     <span class="message-data-time">${single_chat['timestamp']}</span>
                                 </div>
-                                <div class="message other-message float-right">${single_chat["message"]}</div>
+                                <div class="message other-message ${message_side}">${single_chat["message"]}</div>
                             </li>
 
         `;
@@ -43,6 +48,7 @@ function sendMessage(event,receiver){
         let messageField = document.getElementsByClassName("sendMessageInput")[0];
         send(sender,receiver,messageField.value);
         messageField.value = "";
+        messageField.focus();
     }
 
 }
@@ -167,6 +173,9 @@ function send(sender,receiver,message){
         connect();
     }
 
+
+    if(receiver == sender) return;
+
     let date = new Date();
     
     let timestamp = date.getDate() + "-"+date.getMonth()+"-" + date.getFullYear() + " " + date.getHours()+":"+date.getMinutes();
@@ -184,28 +193,30 @@ function send(sender,receiver,message){
         let container = document.getElementById("chat_data");
         if(chats[receiver] == null) chats[receiver] = [];
         chats[receiver].push({'message':message,'from':sender,'to':receiver,'timestamp':timestamp});
-        if(focused_user == sender){
-            container.insertAdjacentHTML("beforeend",` <li class="clearfix">
-                <div class="message-data">
-                    <span class="message-data-time">${timestamp}</span>
+        if(focused_user.innerText.trim() == receiver){
+            container.insertAdjacentHTML("beforeend",` <li class="clearfix" style="width:50%;margin-left:45%;">
+                <div class="message-data text-right">
+                <span class="message-data-time">${timestamp}</span>
+               
                 </div>
-                <div class="message other-message float-right">${message}</div>
+                <div class="message other-message float-right" style=" width:60%;overflow:wrap;">${message}</div>
+               
             </li>`);
         }
 
 }
 
-window.onresize = function(){
-    if(window.innerWidth<=766){
-        document.getElementById("pre_button").style.display="block";
-    }
-    else{
-        document.getElementById("pre_button").style.display="none";
-        let people_list = document.getElementsByClassName("first_segment")[0];
-        people_list.style.zIndex = -10;
+// window.onresize = function(){
+//     if(window.innerWidth<=766){
+//         document.getElementById("pre_button").style.display="block";
+//     }
+//     else{
+//         document.getElementById("pre_button").style.display="none";
+//         let people_list = document.getElementsByClassName("first_segment")[0];
+//         people_list.style.zIndex = -10;
 
-    }
-}
+//     }
+// }
 
 function makePostRequest(url,token){
 
@@ -236,7 +247,10 @@ function userExists(username){
         let list = document.getElementsByClassName("user_id");
         let todelete = null;
         for( let people of list){
-            if(people.innerText.trim() == username){
+
+            let name = people.firstElementChild.firstElementChild;
+
+            if(name.innerText.trim() == username){
                 todelete = people; 
                 break;
             }
@@ -248,13 +262,15 @@ function userExists(username){
         
         user_id.add(username);
     }
-    search_user.insertAdjacentHTML("afterend",`<li class="clearfix" onclick="chatClicked(event,${username},chats)">
+    search_user.insertAdjacentHTML("afterend",`<li class="clearfix user_id" onclick="chatClicked(event,${username},chats)">
                             <div class="about">
-                                <div class="name user_id" style="font-weight:bold;">${username}</div>
+                                <div class="name">${username}</div>
                             </div>
                         </li>`);
     focused_user.innerText = username;
     container.innerText = "";
+    let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
+    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,"${username}")`);
 
 }
 
@@ -265,6 +281,13 @@ function searchUser(){
     let username = document.getElementById("usernameInput").value;
 
     if(username!=null){
+
+
+
+        if(username == actualUser){
+            toast("It is you");
+            return;
+        }
 
 
         let promise = fetch(`/api/user/exists?email=${username}`);
@@ -284,15 +307,15 @@ function searchUser(){
 
 }
 
-function pressedBackButton(){
+// function pressedBackButton(){
 
 
-    let people_list = document.getElementsByClassName("first_segment")[0];
-    people_list.style.display="block";
-    document.getElementsByClassName("second_segment")[0].style.display = "none";
+//     let people_list = document.getElementsByClassName("first_segment")[0];
+//     people_list.style.display="block";
+//     document.getElementsByClassName("second_segment")[0].style.display = "none";
 
 
-}
+// }
 
 
 window.onload = function (){

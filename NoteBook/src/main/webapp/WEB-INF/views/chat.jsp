@@ -20,14 +20,13 @@
 
 let actualUser = '${actualUser}';
 
-let chats = [
+let chats = {
 
 
                     <c:forEach var = "chat" items = "${chats}">
 
 
-                    "${chat.key}" : 
-                    [
+                    "${chat.key}" : [
                         
 
                             <c:forEach var="chat_per_person" items="${chat.value}">
@@ -35,8 +34,8 @@ let chats = [
                             {
                                 "message"    :  "${chat_per_person.message}" ,
                                 "timestamp" : "${chat_per_person.timestamp}",
-                                "from" : "${chat_per_person.from}",
-                                "to" : "${chat_per_person.to}"
+                                "from" : "${chat_per_person.from.email}",
+                                "to" : "${chat_per_person.to.email}"
 
                             } ,
 
@@ -48,7 +47,7 @@ let chats = [
                     </c:forEach>
 
 
-                ];
+    };
 
 
 
@@ -90,7 +89,7 @@ let chats = [
       <br>
 <div class="container">
 <div class="row clearfix">
-    <div class="col-lg-12">
+    <div class="col-lg-12" style="height:100%">
         <div class="card chat-app">
             <input type="hidden" name="_csrf" value="${_csrf.token}" id="csrfToken">
             <div id="plist" class="people-list first_segment">
@@ -109,9 +108,9 @@ let chats = [
 
                     <c:forEach var = "chat" items = "${chats}">
 
-                        <li class="clearfix" onclick="chatClicked('${chat.key}',chats)">
+                        <li class="clearfix user_id" onclick="chatClicked(event,'${chat.key}',chats)">
                             <div class="about">
-                                <div class="name user_id">${chats.key}</div>
+                                <div class="name">${chat.key}</div>
                             </div>
                         </li>
 
@@ -134,12 +133,12 @@ let chats = [
                         
                     </div>
                     <div class="row">
-                        <div class="col-1 " id="pre_button">
+                        <!-- <div class="col-1 " id="pre_button">
                             <a href="javascript:void(0);"  onclick="pressedBackButton()" class="previous round special_button">&#8249;</a>
-                         </div>
-                         <div class="col-1 offset-9" style="text-align: right;">
+                         </div> -->
+                         <!-- <div class="col-1 offset-9" style="text-align: right;">
                             <a href="javascript:void(0);" class="special_button round previous" onclick="document.getElementById('messgae_focused').focus()">&#8964;</a>
-                         </div>
+                         </div> -->
                     </div>
                 </div>
                 <div class="chat-history">
@@ -153,16 +152,18 @@ let chats = [
                     
                 </div>
 
-                <div class="chat-message clearfix" >
-                    <div class="input-group mb-0">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-send"></i></span>
-                        </div>
-                        <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                    
-                    </div>
-                </div>         
+                       
             </div>
+            
         </div>
+        <div class="chat-message clearfix"  style="position:absolute; left:30%;top:92%;width:67%">
+            <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-send"></i></span>
+                </div>
+                <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                    
+            </div>
+        </div>  
     </div>
 </div>
 </div>
