@@ -127,12 +127,12 @@ let chats = {
                                
                             </a>
                             <div class="chat-about">
-                                <h6 class="m-b-0" style="font-weight:bold;" id="focused_user">Aiden Chavez</h6>
+                                <h6 class="m-b-0" style="font-weight:bold;" id="focused_user"></h6>
                             </div>
                         </div>
                         
                     </div>
-                    <div class="row">
+                    <div class="row ">
                         <!-- <div class="col-1 " id="pre_button">
                             <a href="javascript:void(0);"  onclick="pressedBackButton()" class="previous round special_button">&#8249;</a>
                          </div> -->

@@ -1,13 +1,10 @@
 function chatClicked(event , email,chats){
 
     let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
-    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,${email})`);
+    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,"${email}")`);
     let target = event.target;
-    console.log(event);
     target.style = "";
     let chat_of_clicked_user = chats[email];
-    console.log(chats);
-    console.log(chats[email]);
     let focused_user = document.getElementById("focused_user");
     focused_user.innerText = email;
     
@@ -22,6 +19,8 @@ function chatClicked(event , email,chats){
 
         let message_side = single_chat["from"] == email ? "" : "float-right";
 
+        let style = `width:50%;overflow:wrap;text-align:${single_chat["from"]==email?"left":"right"}`;
+
 
         chat += `
 
@@ -29,7 +28,7 @@ function chatClicked(event , email,chats){
                                 <div class="message-data ${time_side}">
                                     <span class="message-data-time">${single_chat['timestamp']}</span>
                                 </div>
-                                <div class="message other-message ${message_side}">${single_chat["message"]}</div>
+                                <div class="message other-message ${message_side}" style="${style}">${single_chat["message"]}</div>
                             </li>
 
         `;
@@ -49,6 +48,8 @@ function sendMessage(event,receiver){
         send(sender,receiver,messageField.value);
         messageField.value = "";
         messageField.focus();
+        const last = document.querySelector("#chat_data").lastElementChild;
+        last.scrollIntoView(); 
     }
 
 }
@@ -95,10 +96,11 @@ function subscribe(username){
     }
 
     stompClient.subscribe(`/chat/user/${username}/private`, function (message) {
+        
         let focused_user = document.getElementById("focused_user").innerText.trim();
         let search_user = document.getElementById("search_user");
         let chat_data = document.getElementById("chat_data");
-        let actual_message = message.body;
+        let actual_message = JSON.parse(message.body);
         let sender = actual_message['sender'];
         let m = actual_message['message'];
         let timestamp = actual_message['timestamp'];
@@ -110,10 +112,10 @@ function subscribe(username){
             if(focused_user == sender){
                 
                 chat_data.insertAdjacentHTML("beforeend",` <li class="clearfix">
-                <div class="message-data text-right">
+                <div class="message-data ">
                     <span class="message-data-time">${timestamp}</span>
                 </div>
-                <div class="message other-message float-right">${message}</div>
+                <div class="message other-message" style="width:50%;overflow:wrap;text-align:left;">${m}</div>
             </li>`);
 
 
@@ -123,16 +125,20 @@ function subscribe(username){
                 let list = document.getElementsByClassName("user_id");
                 let todelete = null;
                 for( let people of list){
-                    if(people.innerText.trim() == sender){
+
+                    let name = people.firstElementChild.firstElementChild;
+
+                    if(name.innerText.trim() == sender){
                         todelete = people; 
                         break;
                     }
                 }
-                todelete.remove();
+            todelete.remove();
+               
 
-                search_user.insertAdjacentHTML("afterend",`<li class="clearfix" onclick="chatClicked(event,${sender},chats)">
+                search_user.insertAdjacentHTML("afterend",`<li class="clearfix user_id" onclick="chatClicked(event,${sender},chats)">
                             <div class="about">
-                                <div class="name user_id" style="font-weight:bold;">${sender}</div>
+                                <div class="name " style="font-weight:bold;">${sender}</div>
                             </div>
                         </li>`);
 
@@ -143,9 +149,9 @@ function subscribe(username){
 
             user_id.add(sender);
 
-            search_user.insertAdjacentHTML("afterend",`<li class="clearfix" onclick="chatClicked(event,${sender},chats)">
+            search_user.insertAdjacentHTML("afterend",`<li class="clearfix user_id" onclick="chatClicked(event,${sender},chats)">
                             <div class="about">
-                                <div class="name user_id" style="font-weight:bold;">${sender}</div>
+                                <div class="name " style="font-weight:bold;">${sender}</div>
                             </div>
                         </li>`);
             chats[sender] = [
@@ -158,8 +164,9 @@ function subscribe(username){
             ]
 
 
-        }     
-
+        }
+        const last = document.querySelector("#chat_data").lastElementChild;
+        last.scrollIntoView();
     });
 
 }
@@ -199,7 +206,7 @@ function send(sender,receiver,message){
                 <span class="message-data-time">${timestamp}</span>
                
                 </div>
-                <div class="message other-message float-right" style=" width:60%;overflow:wrap;">${message}</div>
+                <div class="message other-message float-right" style=" width:60%;overflow:wrap; text-align:right;">${message}</div>
                
             </li>`);
         }

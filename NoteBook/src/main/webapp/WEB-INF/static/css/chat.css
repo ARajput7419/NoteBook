@@ -1,6 +1,6 @@
 #b_ody{
     background-color: #f4f7f6;
-    margin-top:20px;
+   
 }
 .card {
     background: #fff;
@@ -202,9 +202,9 @@
     height: 0
 }
 
-.chat {
+.chat-history {
     overflow-y: auto; 
-    height: calc(100vh - 52px); 
+    height: calc(100vh - 100px); 
     position: relative;
 }
 
@@ -215,7 +215,7 @@
 
 
 
-@media only screen and (max-width: 767px) {
+/* @media only screen and (max-width: 767px) {
     .chat-app .people-list {
         height: 465px;
         width: 100%;
@@ -262,7 +262,7 @@
         height: calc(100vh - 350px);
         overflow-x: auto
     }
-}
+} */
 
 .round {
   border-radius: 50%;
