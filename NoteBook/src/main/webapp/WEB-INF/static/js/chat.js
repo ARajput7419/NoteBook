@@ -1,3 +1,214 @@
+let global_code_number = 0;
+
+function convertToHtml(message) {
+    var converter = new showdown.Converter();
+   let convertedHtml  = converter.makeHtml(message);
+   return convertedHtml;
+}
+
+
+
+
+function convertMessage(message){
+
+
+
+    if(!message.includes("```")) return message;
+
+
+    let new_message = '';
+
+    while(message.includes("```")){
+        
+        let start_index = message.indexOf("```");
+
+        let last_index = message.substring(start_index+3,message.length).indexOf("```");
+
+        if(last_index == -1){
+            new_message+=message;
+            return new_message;
+        }
+        else{
+
+
+
+            last_index +=  start_index + 3;
+
+            let temp = message.substring(start_index+3,last_index);
+            
+            if( /^(java[^a-zA-Z]?| cpp[^a-zA-Z]? | python[^a-zA-Z]?)/.test(temp) )
+
+            {
+
+                let language = null;
+                if( /^(java[^a-zA-Z]?)/.test(temp)) language = "java";
+                if( /^(cpp[^a-zA-Z]?)/.test(temp)) language = "cpp";
+                if( /^(python[^a-zA-Z]?)/.test(temp)) language = "python";
+
+            new_message+=message.substring(0,start_index)+"<br>";
+
+            let code_message =  message.substring(start_index+3,last_index);
+
+            code_message = `
+              <pre class="language-${language}">
+               <code>
+               ${language=='java'?code_message.substring(4,code_message.length):""}
+               ${language=='python'?code_message.substring(5,code_message.length):""}
+               ${language=='cpp'?code_message.substring(3,code_message.length):""}
+               </code>
+               </pre>`+
+               '<button class="btn btn-primary run-button i'+global_code_number+' "  onclick="runCode(event,'+global_code_number+')">Run</button>' +
+             '<button class="btn btn-primary run-button input-button" onclick="showInput(event,'+global_code_number+')">Input</button>' +
+             '<div class="input-block i' +global_code_number+'">' +
+             '  <label class="code-labels" for="inputValue">Input:</label>' +
+             '  <textarea rows = "4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea>' +
+             '</div>' +
+             '<div class="output-block i'+ global_code_number +'" id="outputBlock">' +
+             '  <label class="code-labels" for="output">Output:</label><br>' +
+             '  <pre style="overflow:visible;"</pre>' +
+             '</div>';
+          
+            new_message+=code_message+"<br>";
+
+
+            }
+
+            else {
+
+                new_message+=message.substring(0,last_index+3);
+            }
+
+            message = message.substring(last_index+3,message.length);
+
+        }
+
+
+    }
+
+    return new_message;
+
+
+}
+
+function addStyle(){
+
+    let styleString = '<style>' +
+                '  .code-block {' +
+                '    background-color: #f1f1f1;' +
+                '    padding: 10px;' +
+                '  }' +
+                '  .input-block,' +
+                '  .output-block {' +
+                '    display: none;' +
+                '    margin-top: 2%;' +
+                '  }' +
+                '  .input-block.show,' +
+                '  .output-block.show {' +
+                '    display: block;' +
+          
+                '  }' +
+  
+                '  .output-block {' +
+                '    background-color: black;' +
+                '    color: white;' +
+                '    padding: 10px;' +
+                '    font-weight: bold;' +
+                '    margin-top: 10px;' +
+                '    overflow-x: scroll;' +
+                '    overflow-y: scroll;' +
+                '    height: 45%;' +
+                '  }' +
+                '  .run-button {' +
+                '    margin-top: 10px;' +
+                '  }' +
+                '  .input-button {' +
+                '    margin-left: 10%;' +
+                '  }' +
+                '  .code-labels {' +
+                '    font-weight: bold;' +
+                '  }' +
+                '</style>';
+  
+   document.head.insertAdjacentHTML("beforeend",styleString);
+  
+  }
+  
+  let languages = ["cpp","java","python"];
+    
+  
+    function runCode(event,index) {
+      event.preventDefault();
+      let csrfToken = document.getElementById("csrfToken").value;
+      var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
+      var outputBlockParent = document.querySelector(".output-block.i" + index );
+      var inputBlock = document.querySelector(".input-block.i" + index ).lastElementChild;
+      let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
+      let code_field = pre.firstElementChild;
+      if(code_field!= null){
+        let code = code_field.innerText;
+        let input = inputBlock.value;
+        for(let lang of code_field.classList){
+          if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
+            let data = {
+              code:code,
+              lang:lang,
+              input:input
+            }
+            let meta = {
+              method: "post",
+              headers:{'Content-Type': 'application/json',
+              'X-CSRF-Token': csrfToken
+  
+            }
+              ,
+            body: JSON.stringify(data)
+            };
+            let request = fetch("/api/execution/exec",meta);
+            request.then((response)=>{
+              
+              if(response.ok) return response.json();
+              else{
+                throw new CustomError(null,response.json());
+              }
+  
+            })
+            .then((result)=>{
+              console.log(result);
+              outputBlockParent.classList.add("show");
+              outputBlock.style.color="white";
+              outputBlock.innerText = result.output;
+              
+            })
+            .catch((error)=>{
+  
+                error.data.then((error_detail)=>{
+                  outputBlockParent.classList.add("show");
+                  outputBlock.style.color="red";
+                  outputBlock.innerText = error_detail.exception;
+                });
+            });
+  
+  
+          }
+        }
+      }
+    }
+  
+  
+  function showInput(event,index) {
+    event.preventDefault();
+    var inputBlock = document.querySelector(".input-block.i"+index);
+    if (inputBlock.classList.contains("show")) {
+      inputBlock.classList.remove("show");
+    } else {
+      inputBlock.classList.add("show");
+    }
+  }
+  
+
+
+
+
 function chatClicked(event , email,chats){
 
     let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
@@ -22,13 +233,17 @@ function chatClicked(event , email,chats){
         let style = `width:50%;overflow:wrap;text-align:${single_chat["from"]==email?"left":"right"}`;
 
 
+        let message = single_chat['message'];
+
+        message = convertMessage(message);
+
         chat += `
 
                             <li class="clearfix">
                                 <div class="message-data ${time_side}">
                                     <span class="message-data-time">${single_chat['timestamp']}</span>
                                 </div>
-                                <div class="message other-message ${message_side}" style="${style}">${single_chat["message"]}</div>
+                                <div class="message other-message ${message_side}" style="${style}">${message}</div>
                             </li>
 
         `;
@@ -115,7 +330,7 @@ function subscribe(username){
                 <div class="message-data ">
                     <span class="message-data-time">${timestamp}</span>
                 </div>
-                <div class="message other-message" style="width:50%;overflow:wrap;text-align:left;">${m}</div>
+                <div class="message other-message" style="width:50%;overflow:wrap;text-align:left;">${convertMessage(m)}</div>
             </li>`);
 
 
@@ -206,7 +421,7 @@ function send(sender,receiver,message){
                 <span class="message-data-time">${timestamp}</span>
                
                 </div>
-                <div class="message other-message float-right" style=" width:60%;overflow:wrap; text-align:right;">${message}</div>
+                <div class="message other-message float-right" style=" width:60%;overflow:wrap; text-align:right;">${convertMessage(message)}</div>
                
             </li>`);
         }
@@ -326,6 +541,7 @@ function searchUser(){
 
 
 window.onload = function (){
+    addStyle();
     initializeUserIds();
     connect();
 }
