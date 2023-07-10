@@ -50,12 +50,12 @@ function convertMessage(message){
             let code_message =  message.substring(start_index+3,last_index);
 
             code_message = `
-              <pre class="language-${language}">
-               <code>
-               ${language=='java'?code_message.substring(4,code_message.length):""}
-               ${language=='python'?code_message.substring(5,code_message.length):""}
-               ${language=='cpp'?code_message.substring(3,code_message.length):""}
-               </code>
+              <pre class="language-${language} ${global_code_number}">
+<code class="${language}">
+ ${language=='java'?code_message.substring(4,code_message.length):""}
+ ${language=='python'?code_message.substring(5,code_message.length):""}
+ ${language=='cpp'?code_message.substring(3,code_message.length):""}
+</code>
                </pre>`+
                '<button class="btn btn-primary run-button i'+global_code_number+' "  onclick="runCode(event,'+global_code_number+')">Run</button>' +
              '<button class="btn btn-primary run-button input-button" onclick="showInput(event,'+global_code_number+')">Input</button>' +
@@ -63,12 +63,14 @@ function convertMessage(message){
              '  <label class="code-labels" for="inputValue">Input:</label>' +
              '  <textarea rows = "4" style="background-color: black; color:white;font-weight: bold;" class="form-control"></textarea>' +
              '</div>' +
-             '<div class="output-block i'+ global_code_number +'" id="outputBlock">' +
+             '<div  style="text-align:left;" class="output-block i'+ global_code_number +'" id="outputBlock">' +
              '  <label class="code-labels" for="output">Output:</label><br>' +
              '  <pre style="overflow:visible;"</pre>' +
              '</div>';
           
             new_message+=code_message+"<br>";
+
+            global_code_number++;
 
 
             }
@@ -84,6 +86,7 @@ function convertMessage(message){
 
 
     }
+
 
     return new_message;
 
@@ -142,7 +145,7 @@ function addStyle(){
       var outputBlock = document.querySelector(".output-block.i" + index ).lastElementChild;
       var outputBlockParent = document.querySelector(".output-block.i" + index );
       var inputBlock = document.querySelector(".input-block.i" + index ).lastElementChild;
-      let pre = document.querySelector(`pre[class^="language"][class~="${index}"]`);
+      let pre = document.querySelector(`pre[class*="language-"][class~="${index}"]`);
       let code_field = pre.firstElementChild;
       if(code_field!= null){
         let code = code_field.innerText;
@@ -230,7 +233,7 @@ function chatClicked(event , email,chats){
 
         let message_side = single_chat["from"] == email ? "" : "float-right";
 
-        let style = `width:50%;overflow:wrap;text-align:${single_chat["from"]==email?"left":"right"}`;
+        let style = `width:70%;overflow:wrap;text-align:${single_chat["from"]==email?"left":"right"}`;
 
 
         let message = single_chat['message'];
@@ -252,6 +255,8 @@ function chatClicked(event , email,chats){
     container.innerHTML = chat;
 
 
+    Prism.highlightAll();
+
 }
 
 function sendMessage(event,receiver){
@@ -265,6 +270,7 @@ function sendMessage(event,receiver){
         messageField.focus();
         const last = document.querySelector("#chat_data").lastElementChild;
         last.scrollIntoView(); 
+        Prism.highlightAll();
     }
 
 }
@@ -330,7 +336,7 @@ function subscribe(username){
                 <div class="message-data ">
                     <span class="message-data-time">${timestamp}</span>
                 </div>
-                <div class="message other-message" style="width:50%;overflow:wrap;text-align:left;">${convertMessage(m)}</div>
+                <div class="message other-message" style="width:70%;overflow:wrap;text-align:left;">${convertMessage(m)}</div>
             </li>`);
 
 
@@ -382,6 +388,7 @@ function subscribe(username){
         }
         const last = document.querySelector("#chat_data").lastElementChild;
         last.scrollIntoView();
+        Prism.highlightAll();
     });
 
 }
@@ -416,12 +423,12 @@ function send(sender,receiver,message){
         if(chats[receiver] == null) chats[receiver] = [];
         chats[receiver].push({'message':message,'from':sender,'to':receiver,'timestamp':timestamp});
         if(focused_user.innerText.trim() == receiver){
-            container.insertAdjacentHTML("beforeend",` <li class="clearfix" style="width:50%;margin-left:45%;">
+            container.insertAdjacentHTML("beforeend",` <li class="clearfix" style="width:70%;margin-left:45%;">
                 <div class="message-data text-right">
                 <span class="message-data-time">${timestamp}</span>
                
                 </div>
-                <div class="message other-message float-right" style=" width:60%;overflow:wrap; text-align:right;">${convertMessage(message)}</div>
+                <div class="message other-message float-right" style=" width:70%;overflow:wrap; text-align:right;">${convertMessage(message)}</div>
                
             </li>`);
         }

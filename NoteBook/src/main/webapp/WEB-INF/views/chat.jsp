@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 
+
+
 <html>
 <head>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -161,7 +163,7 @@ let chats = {
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-send"></i></span>
                 </div>
-                <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                    
+                <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                   
             </div>
         </div>  
     </div>
