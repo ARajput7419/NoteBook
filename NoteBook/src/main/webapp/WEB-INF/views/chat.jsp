@@ -34,7 +34,7 @@ let chats = {
                             <c:forEach var="chat_per_person" items="${chat.value}">
 
                             {
-                                "message"    :  "${chat_per_person.message}" ,
+                                "message"    :  `${chat_per_person.message}` ,
                                 "timestamp" : "${chat_per_person.timestamp}",
                                 "from" : "${chat_per_person.from.email}",
                                 "to" : "${chat_per_person.to.email}"
@@ -91,7 +91,7 @@ let chats = {
       <br>
 <div class="container">
 <div class="row clearfix">
-    <div class="col-lg-12" style="height:100%">
+    <div class="col-lg-12">
         <div class="card chat-app">
             <input type="hidden" name="_csrf" value="${_csrf.token}" id="csrfToken">
             <div id="plist" class="people-list first_segment">
@@ -158,17 +158,23 @@ let chats = {
             </div>
             
         </div>
-        <div class="chat-message clearfix"  style="position:absolute; left:30%;top:92%;width:67%">
-            <div class="input-group mb-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-send"></i></span>
-                </div>
-                <input type="text" class="form-control sendMessageInput" onkeydown="sendMessage(event)" id="messgae_focused" placeholder="Enter text here...">                                   
-            </div>
-        </div>  
+        
     </div>
 </div>
 </div>
+<div class="chat-message clearfix"  style="margin-bottom: 30px;margin-left: 9%; margin-right:9%">
+    <div class="input-group mb-0">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-send"></i></span>
+        </div>
+        <textarea style="height:5%" type="text" class="form-control sendMessageInput"  id="messgae_focused"></textarea> 
+                                          
+    </div>
+    <br>
+    <div class="input-group-append">
+        <button class="btn btn-outline-success" type="button" id="send_button" onclick="sendMessage(event)">Chat</button>
+    </div> 
+</div>  
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>

@@ -53,7 +53,7 @@ function convertMessage(message){
               <pre class="language-${language} ${global_code_number}">
 <code class="${language}">
  ${language=='java'?code_message.substring(4,code_message.length):""}
- ${language=='python'?code_message.substring(5,code_message.length):""}
+ ${language=='python'?code_message.substring(6,code_message.length):""}
  ${language=='cpp'?code_message.substring(3,code_message.length):""}
 </code>
                </pre>`+
@@ -214,8 +214,8 @@ function addStyle(){
 
 function chatClicked(event , email,chats){
 
-    let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
-    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,"${email}")`);
+    let sendMessageButton = document.getElementById("send_button");
+    sendMessageButton.setAttribute("onclick",`sendMessage(event,"${email}")`);
     let target = event.target;
     target.style = "";
     let chat_of_clicked_user = chats[email];
@@ -261,8 +261,6 @@ function chatClicked(event , email,chats){
 
 function sendMessage(event,receiver){
 
-    if(event.keyCode == 13){
-        console.log(event);
         let sender = actualUser;
         let messageField = document.getElementsByClassName("sendMessageInput")[0];
         send(sender,receiver,messageField.value);
@@ -271,7 +269,7 @@ function sendMessage(event,receiver){
         const last = document.querySelector("#chat_data").lastElementChild;
         last.scrollIntoView(); 
         Prism.highlightAll();
-    }
+    
 
 }
 
@@ -498,8 +496,8 @@ function userExists(username){
                         </li>`);
     focused_user.innerText = username;
     container.innerText = "";
-    let sendMessageInputTag = document.getElementsByClassName("sendMessageInput")[0];
-    sendMessageInputTag.setAttribute("onkeydown",`sendMessage(event,"${username}")`);
+    let sendMessageButton = document.getElementById("send_button");
+    sendMessageButton.setAttribute("onclick",`sendMessage(event,"${username}")`);
 
 }
 
