@@ -32,7 +32,7 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
         if(list_notes.length == 0){
 
             let offset = page_retrived - start_page + 1;
-            let page_item = document.getElementsByClassName(`p${offset}`);
+            let page_item = document.getElementsByClassName(`p${offset}`)[0];
             page_item.classList.remove("active");
             fetch_private_notes(page_retrived-1,keyword);
             return;
@@ -66,7 +66,7 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
                                 </div>
                             </div>`;
 
-            console.log(cardHTML);
+           
 
             parent.insertAdjacentHTML("beforeend",cardHTML);
         
@@ -76,7 +76,7 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
         if( page_retrived != null)
         {
             let offset = page_retrived - start_page + 1;
-            let page_item = document.getElementsByClassName(`p${offset}`);
+            let page_item = document.getElementsByClassName(`p${offset}`)[0];
             page_item.classList.add("active");
         }
 
@@ -165,26 +165,28 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
 
 
 
-function fetch_private_notes(page_number,keyword){
+ async function fetch_private_notes(page_number,keyword){
+
+
+   
 
     let new_data = fetch(`/api/notes/private/${page_number}?keyword=${keyword}`);
-            new_data.then((response)=>{
+    let response_promise = new_data.then((response)=>{
                 if(response.ok)
                 return response.json();
                 else 
                 throw new Error("Not Able to Fetch Notes");
-            })
-            .then((res)=>{
-
-                let total_pages = res["total_pages"];
-                let list_notes = res["notes"];
-                render_notes(page_number,total_pages,list_notes,keyword);
-                return true;
-
-            }).catch((error)=>{
-                toast(error);
-                return false;
             });
+
+      let render_promise = response_promise.then((res)=>{
+                let total_pages = res["total_pages"];
+                render_notes(page_number,total_pages,res,keyword);
+                return total_pages;
+
+            });
+
+    return await render_promise;
+  
 
 }
 
@@ -201,10 +203,11 @@ function fetch_private_resources(page_number,keyword){
             .then((res)=>{
 
                 let total_pages = res["total_pages"];
-                let list_resources = res["resources"];
-                render_notes(page_number,total_pages,list_resources,keyword);
+                
+                render_notes(page_number,total_pages,res,keyword);
 
             }).catch((error)=>{
+               
                 toast(error);
             });
 
@@ -265,13 +268,24 @@ function deleteResource(id){
 
 
 function changeVisibility(visibility,id){
+
+
+    let csrfToken = document.getElementById("csrfToken").value;
+
     let metadata = {
 
         method : "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRF-Token': csrfToken
+          }
+
     
     };
-    let promise = fetch(`/api/notes/${id}?visibility=${visibility}`,metadata);
+    let promise = fetch(`/api/notes/${id}?visibility=${visibility.trim()=='Public'?'Private':'Public'}`,metadata);
     promise.then((response)=>{
+        console.log(response);
         if(response.ok){
             toast("Visibility Updated Successfully");
             return response.json();
@@ -284,7 +298,7 @@ function changeVisibility(visibility,id){
     .then((result)=>{
 
         let visibility_field = document.getElementsByClassName(`visibility_${id}`)[0];
-        visibility_field.innerHTML = "<span>Visibility:</span>"+result['current_visibility'];
+        visibility_field.innerHTML = "<span>Visibility:</span> "+result['current_visibility'];
 
     });
 }
@@ -626,13 +640,13 @@ function copyTextToClipboard(text) {
   }
 
 
-  function searchNotes(){
+  async function searchNotes(){
 
     let keyword = document.getElementById("notes_search").value;
 
-    let status = fetch_private_notes(1,keyword);
-    
-    if(status){
+    let total_pages = await fetch_private_notes(1,keyword);
+
+    if(total_pages){
 
         let keyword_field = document.getElementById("keyword");
         let start_field = document.getElementById("start_page");
@@ -640,20 +654,48 @@ function copyTextToClipboard(text) {
         keyword_field.value = keyword;
         start_field.value = 1;
         current_field.value = 1;
-     
+        for(let i = 1;i<=3;i++)
+        {
+                document.getElementsByClassName(`pp${i}`)[0].innerText = i;
+                
+                if(total_pages<i)
+                { 
+                    document.getElementsByClassName(`p${i}`)[0].classList.add("disabled");
+                    document.getElementsByClassName(`p${i}`)[0].classList.remove("active");
+            }
+            else{
+
+                document.getElementsByClassName(`p${i}`)[0].classList.remove("disabled");
+                document.getElementsByClassName(`p${i}`)[0].classList.remove("active");
+                
+            }
+
+        }
+       
+        document.getElementsByClassName("p1")[0].classList.add("active");
+
+        document.getElementsByClassName("p0")[0].classList.add("disabled");
+
+        if(total_pages<=3)
+        document.getElementsByClassName("p4")[0].classList.add("disabled");
+        else
+        document.getElementsByClassName("p4")[0].classList.remove("disabled");
+
     }
 
 
   }
 
 
-  function searchResources(){
+  async function searchResources(){
 
     let keyword = document.getElementById("resources_search").value;
 
     let status = fetch_private_resources(1,keyword);
     
-    if(status){
+    
+
+    if(await status){
 
         let keyword_field = document.getElementById("resource_keyword");
         let start_field = document.getElementById("resource_start_page");

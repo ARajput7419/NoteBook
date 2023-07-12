@@ -96,6 +96,7 @@
         <input type="hidden" id="resource_current_page" value="1">
         <input type="hidden" id="resource_start_page" value="1">
         <input type="hidden" id="resource_keyword" value="">
+        <input type="hidden" id="csrfToken" value="${_csrf.token}">
         <div class="row">
 
             <div class="col">
