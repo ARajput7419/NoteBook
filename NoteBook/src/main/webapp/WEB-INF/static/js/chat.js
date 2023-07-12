@@ -36,14 +36,14 @@ function convertMessage(message){
 
             let temp = message.substring(start_index+3,last_index);
             
-            if( /^(java[^a-zA-Z]?| cpp[^a-zA-Z]? | python[^a-zA-Z]?)/.test(temp) )
+            if( /^(java|python|cpp)[^a-zA-Z]+/.test(temp) )
 
             {
 
                 let language = null;
-                if( /^(java[^a-zA-Z]?)/.test(temp)) language = "java";
-                if( /^(cpp[^a-zA-Z]?)/.test(temp)) language = "cpp";
-                if( /^(python[^a-zA-Z]?)/.test(temp)) language = "python";
+                if( /^java[^a-zA-Z]+/.test(temp)) language = "java";
+                if( /^cpp[^a-zA-Z]+/.test(temp)) language = "cpp";
+                if( /^python[^a-zA-Z]+/.test(temp)) language = "python";
 
             new_message+=message.substring(0,start_index)+"<br>";
 
@@ -149,6 +149,7 @@ function addStyle(){
       let code_field = pre.firstElementChild;
       if(code_field!= null){
         let code = code_field.innerText;
+        
         let input = inputBlock.value;
         for(let lang of code_field.classList){
           if(lang == languages[0] || lang == languages[1] || lang == languages[2]){
@@ -166,6 +167,7 @@ function addStyle(){
               ,
             body: JSON.stringify(data)
             };
+            console.log(meta);
             let request = fetch("/api/execution/exec",meta);
             request.then((response)=>{
               
@@ -237,6 +239,13 @@ function chatClicked(event , email,chats){
 
 
         let message = single_chat['message'];
+
+        if(message == null){
+            message = document.getElementById(`messageId_${single_chat['message_id']}`).innerText;
+            message = message.replace(/>/g,"&gt");
+            message = message.replace(/</g,"&lt");
+           
+        }
 
         message = convertMessage(message);
 
@@ -421,7 +430,7 @@ function send(sender,receiver,message){
         if(chats[receiver] == null) chats[receiver] = [];
         chats[receiver].push({'message':message,'from':sender,'to':receiver,'timestamp':timestamp});
         if(focused_user.innerText.trim() == receiver){
-            container.insertAdjacentHTML("beforeend",` <li class="clearfix" style="width:70%;margin-left:45%;">
+            container.insertAdjacentHTML("beforeend",` <li class="clearfix">
                 <div class="message-data text-right">
                 <span class="message-data-time">${timestamp}</span>
                

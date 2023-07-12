@@ -34,7 +34,10 @@ let chats = {
                             <c:forEach var="chat_per_person" items="${chat.value}">
 
                             {
-                                "message"    :  `${chat_per_person.message}` ,
+
+                               
+                                "message"    :  null ,
+                                "message_id" : ${chat_per_person.id},
                                 "timestamp" : "${chat_per_person.timestamp}",
                                 "from" : "${chat_per_person.from.email}",
                                 "to" : "${chat_per_person.to.email}"
@@ -56,6 +59,8 @@ let chats = {
 
 
 
+
+
 </script>
 <script src="/static/js/chat.js"></script>
 
@@ -65,7 +70,7 @@ let chats = {
     <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="#">NoteBook</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars"></i> <!-- Custom toggle icon using Font Awesome -->
+          <i class="fas fa-bars"></i>
   
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -172,11 +177,20 @@ let chats = {
     </div>
     <br>
     <div class="input-group-append">
-        <button class="btn btn-outline-success" type="button" id="send_button" onclick="sendMessage(event)">Chat</button>
+        <button class="btn btn-outline-success" type="button" id="send_button" onclick="sendMessage(event)">Send</button>
     </div> 
 </div>  
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
+<c:forEach var = "chat" items = "${chats}">            
+
+<c:forEach var="chat_per_person" items="${chat.value}">
+
+<pre style="display:none;" id="messageId_${chat_per_person.id}">${chat_per_person.message}</pre>
+
+</c:forEach>
+
+</c:forEach>
 </html>

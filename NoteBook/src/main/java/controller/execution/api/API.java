@@ -43,7 +43,6 @@ public class API {
     private String getStringRepresentation(BufferedReader reader) throws IOException {
 
         StringBuilder output = new StringBuilder();
-        String line = reader.readLine();
         int ch = 0;
         while((ch=reader.read())!=-1){
             output.append((char) ch);
@@ -103,7 +102,7 @@ public class API {
 
                 CodeOutput output = new CodeOutput();
 
-                output.setOutput(getStringRepresentation(compiler.errorReader()));
+                output.setOutput(getStringRepresentation(compiler.inputReader()));
 
                 return output;
 

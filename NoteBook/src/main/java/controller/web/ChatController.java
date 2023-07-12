@@ -37,8 +37,7 @@ public class ChatController {
         List<Chat> chats = chatService.chatsByUser();
         LinkedHashMap<String,ArrayList<Chat>> linkedHashMap = new LinkedHashMap<>();
         for (Chat chat : chats){
-//            chat.setMessage(chat.getMessage().replaceAll("```","\'\'\'"));
-//            System.out.println(chat.getMessage());
+            chat.setMessage(chat.getMessage().replaceAll("<","&lt").replaceAll(">","&gt"));
             String from_user = chat.getFrom().getEmail();
             String to_user = chat.getTo().getEmail();
             if (!checkCurrentUser(from_user))
