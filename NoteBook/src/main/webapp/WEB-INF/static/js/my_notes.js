@@ -24,6 +24,33 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
     let start_page_field = document.getElementById("start_page");
     let start_page = Number(start_page_field.value);
 
+    if(start_page > 1){
+        document.getElementsByClassName("p0")[0].classList.remove("disabled");
+    }
+    else{
+        document.getElementsByClassName("p0")[0].classList.add("disabled");
+    }
+
+    if(total_pages>=start_page+3){
+        document.getElementsByClassName("p4")[0].classList.remove("disabled");
+    }
+    else{
+        document.getElementsByClassName("p4")[0].classList.add("disabled");
+    }
+
+    for( let i = 1;i<=3;i++){
+        let n  =Number(document.getElementsByClassName(`pp${i}`)[0].innerText);
+        if(total_pages<n){
+            document.getElementsByClassName(`p${i}`)[0].classList.add("disabled");
+            document.getElementsByClassName(`p${i}`)[0].classList.remove("active");
+        }
+        else{
+            document.getElementsByClassName(`p${i}`)[0].classList.remove("disabled");
+        }
+    }
+
+
+
     if(total_pages == 0){
         toast("No Notes Found");
         let parent = document.getElementsByClassName("parent")[0];
@@ -42,7 +69,37 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
                 let next_page = document.getElementsByClassName(`p${a}`)[0];
                 next_page.classList.add("disabled");
             }
+            
+            if(page_retrived == start_page){
+
+                if(start_page == 1){
+
+                    document.getElementsByClassName("p0").classList.add("disabled");
+                    toast("No Notes Found");
+                    let parent = document.getElementsByClassName("parent")[0];
+                    parent.innerHTML = "";
+                    return;
+
+                }
+
+                else
+                {
+
+                  document.getElementsByClassName("pp1")[0].innerText = start_page - 1;
+                  document.getElementsByClassName("pp2")[0].innerText = start_page ;
+                  document.getElementsByClassName("pp3")[0].innerText = start_page + 1;
+                  let start_field = document.getElementById("start_page");
+                  let current_field = document.getElementById("current_page");
+                  start_field.value = start_page - 1 ;
+                  current_field.value =  start_page - 1;
+                  
+                }
+
+
+            }
+
             fetch_private_notes(page_retrived-1,keyword);
+
             return;
         }
         else {
