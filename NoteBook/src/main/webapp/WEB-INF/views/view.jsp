@@ -31,15 +31,22 @@
       <ul class="navbar-nav ml-auto">
         <c:if test="${login}">
         <li class="nav-item my_li">
-          <a class="nav-link" href="#">My Notes</a>
+          <a class="nav-link" href="/notes/private">My Notes</a>
         </li>
         </c:if>
         <li class="nav-item my_li">
-          <a class="nav-link" href="#">Public Notes</a>
+          <a class="nav-link" href="/notes/public">Public Notes</a>
         </li>
+        <c:if test="${login}">
         <li class="nav-item my_li">
-          <a class="nav-link" href="#">Chat</a>
+          <a class="nav-link" href="/chat/">Chat</a>
         </li>
+        </c:if>
+        <c:if test="${!login}">
+        <li class="nav-item my_li">
+          <a class="nav-link" href="/user/register">Register</a>
+        </li>
+        </c:if>
         <c:if test="${!login}">
         <li class="nav-item my_li">
           <a class="nav-link" href="/user/login">Log In</a>
@@ -50,11 +57,7 @@
             <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>
           </li>
           </c:if>
-          <c:if test="${!login}">
-        <li class="nav-item my_li">
-          <a class="nav-link" href="#">Register</a>
-        </li>
-        </c:if>
+          
       </ul>
     </div>
   </nav>

@@ -47,9 +47,9 @@ public class NoteDAO {
 
 
     public int searchByKeywordPublicCount(String keyword){
-        TypedQuery<Integer> query = entityManager.createQuery("select count(n) from Note n where n.name like :key and visibility = 'Public'",Integer.class);
+        TypedQuery<Long> query = entityManager.createQuery("select count(n) from Note n where n.name like :key and visibility = 'Public'",Long.class);
         query.setParameter("key","%"+keyword+"%");
-        return query.getSingleResult();
+        return (int)(long)(query.getSingleResult());
     }
 
 

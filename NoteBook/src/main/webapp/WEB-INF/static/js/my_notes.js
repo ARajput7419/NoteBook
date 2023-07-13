@@ -153,25 +153,88 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
 }
 
 
-
-
 function render_resources(page_retrived,total_pages,list_resources,keyword){
     
 
     let start_page_field = document.getElementById("resource_start_page");
     let start_page = Number(start_page_field.value);
 
+    if(start_page > 1){
+        document.getElementsByClassName("rp0")[0].classList.remove("disabled");
+    }
+    else{
+        document.getElementsByClassName("rp0")[0].classList.add("disabled");
+    }
+
+    if(total_pages>=start_page+3){
+        document.getElementsByClassName("rp4")[0].classList.remove("disabled");
+    }
+    else{
+        document.getElementsByClassName("rp4")[0].classList.add("disabled");
+    }
+
+    for( let i = 1;i<=3;i++){
+        let n  =Number(document.getElementsByClassName(`rpp${i}`)[0].innerText);
+        if(total_pages<n){
+            document.getElementsByClassName(`rp${i}`)[0].classList.add("disabled");
+            document.getElementsByClassName(`rp${i}`)[0].classList.remove("active");
+        }
+        else{
+            document.getElementsByClassName(`rp${i}`)[0].classList.remove("disabled");
+        }
+    }
+
+
+
     if(total_pages == 0){
-        toast("No Resource Found");
+        toast("No Resources Found");
+        let parent = document.getElementsByClassName("resource_parent")[0];
+        parent.innerHTML = "";
         return;
     }
     else{
         if(list_resources.length == 0){
 
             let offset = page_retrived - start_page + 1;
-            let page_item = document.getElementsByClassName(`rp${offset}`);
+            let page_item = document.getElementsByClassName(`rp${offset}`)[0];
             page_item.classList.remove("active");
+            page_item.classList.add("disabled");
+            for(let a = offset+1 ; a<=4;a++)
+            {
+                let next_page = document.getElementsByClassName(`rp${a}`)[0];
+                next_page.classList.add("disabled");
+            }
+            
+            if(page_retrived == start_page){
+
+                if(start_page == 1){
+
+                    document.getElementsByClassName("rp0").classList.add("disabled");
+                    toast("No Resources Found");
+                    let parent = document.getElementsByClassName("resource_parent")[0];
+                    parent.innerHTML = "";
+                    return;
+
+                }
+
+                else
+                {
+
+                  document.getElementsByClassName("rpp1")[0].innerText = start_page - 1;
+                  document.getElementsByClassName("rpp2")[0].innerText = start_page ;
+                  document.getElementsByClassName("rpp3")[0].innerText = start_page + 1;
+                  let start_field = document.getElementById("resource_start_page");
+                  let current_field = document.getElementById("resource_current_page");
+                  start_field.value = start_page - 1 ;
+                  current_field.value =  start_page - 1;
+                  
+                }
+
+
+            }
+
             fetch_private_resources(page_retrived-1,keyword);
+
             return;
         }
         else {
@@ -192,12 +255,12 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
                 <h5 class="card-title">${resource.name}</h5>
                 <p class="card-text"><span>Access Link:</span> <a href="${resource.location}">${resource.location}</a></p>
                 <p class="card-text"><span>Author:</span>${resource.user.name}</p>
-                <p class="card-text resource_visibility_${note.id}"><span>Visibility:</span>${resource.visibility}</p>
+                <p class="card-text resource_visibility_${resource.id}"><span>Visibility:</span>${resource.visibility}</p>
                 <hr>
                 <div class="card-buttons">
-                    <a href="#" class="btn btn-danger">Delete</a>
+                    <a onclick="deleteResource(${resource.id})" class="btn btn-danger">Delete</a>
                     <a onclick="copyTextToClipboard(${resource.location})" class="btn btn-primary">Copy Link</a>
-                    <a href="#" class="btn btn-success vis">Change Visibility</a>
+                    <a onclick="changeVisibilityResources(event,'${resource.visibility}',${resource.id})" class="btn btn-success vis">Change Visibility</a>
 
                 </div>
                 <p class="card-timestamp"><span>Time stamp</span>${resource.timestamp}</p>
@@ -206,7 +269,7 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
 
                             `;
 
-            console.log(cardHTML);
+           
 
             parent.insertAdjacentHTML("beforeend",cardHTML);
         
@@ -216,7 +279,7 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
         if( page_retrived != null)
         {
             let offset = page_retrived - start_page + 1;
-            let page_item = document.getElementsByClassName(`rp${offset}`);
+            let page_item = document.getElementsByClassName(`rp${offset}`)[0];
             page_item.classList.add("active");
         }
 
@@ -256,28 +319,30 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
 }
 
 
-function fetch_private_resources(page_number,keyword){
+async function fetch_private_resources(page_number,keyword){
+
+
+   
 
     let new_data = fetch(`/api/resources/${page_number}?keyword=${keyword}`);
-            new_data.then((response)=>{
+    let response_promise = new_data.then((response)=>{
                 if(response.ok)
                 return response.json();
                 else 
                 throw new Error("Not Able to Fetch Resources");
-            })
-            .then((res)=>{
-
-                let total_pages = res["total_pages"];
-                
-                render_notes(page_number,total_pages,res,keyword);
-
-            }).catch((error)=>{
-               
-                toast(error);
             });
 
-}
+      let render_promise = response_promise.then((res)=>{
+                let total_pages = res["total_pages"];
+                render_resources(page_number,total_pages,res,keyword);
+                return total_pages;
 
+            });
+
+    return await render_promise;
+  
+
+}
 
 
 function deleteNote(id){
@@ -312,18 +377,23 @@ function deleteNote(id){
 
 function deleteResource(id){
 
+    let csrfToken = document.getElementById("csrfToken").value;
     let current_page_field = document.getElementById("resource_current_page");
     let current_page = current_page_field.value;
     let keyword_field = document.getElementById("resource_keyword");
     let keyword = keyword_field.value;
     let metadata ={
-        method:"DELETE"
+        method:"DELETE",
+        headers: {
+            'X-CSRF-Token': csrfToken
+          }
+        
     };
     let promise = fetch(`/api/resources/${id}`,metadata);
     promise.then((response)=>{
         if(response.ok){
             toast("Resource is Deleted Successfully");
-            fetch_private_resources(current_page , current_page,keyword);
+            fetch_private_resources(current_page,keyword);
 
         }
         else{
@@ -336,9 +406,10 @@ function deleteResource(id){
 
 
 
+function changeVisibility(event,visibility,id){
 
-function changeVisibility(visibility,id){
 
+    let target = event.target;
 
     let csrfToken = document.getElementById("csrfToken").value;
 
@@ -369,19 +440,34 @@ function changeVisibility(visibility,id){
 
         let visibility_field = document.getElementsByClassName(`visibility_${id}`)[0];
         visibility_field.innerHTML = "<span>Visibility:</span> "+result['current_visibility'];
+        let current  = result["current_visibility"];
+        target.setAttribute("onclick","changeVisibility(event,"+`'${current}',${id})`);
 
     });
 }
 
 
-function changeVisibilityResources(visibility,id){
+function changeVisibilityResources(event,visibility,id){
+
+
+    let target = event.target;
+
+    let csrfToken = document.getElementById("csrfToken").value;
+
     let metadata = {
 
         method : "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRF-Token': csrfToken
+          }
+
     
     };
-    let promise = fetch(`/api/resources/${id}?visibility=${visibility}`,metadata);
+    let promise = fetch(`/api/resources/${id}?visibility=${visibility=='Public'?'Private':'Public'}`,metadata);
     promise.then((response)=>{
+        console.log(response);
         if(response.ok){
             toast("Visibility Updated Successfully");
             return response.json();
@@ -394,10 +480,17 @@ function changeVisibilityResources(visibility,id){
     .then((result)=>{
 
         let visibility_field = document.getElementsByClassName(`resource_visibility_${id}`)[0];
-        visibility_field.innerHTML = "<span>Visibility:</span>"+result['current_visibility'];
+        visibility_field.innerHTML = "<span>Visibility:</span> "+result['current_visibility'];
+        let current  = result["current_visibility"];
+        target.setAttribute("onclick","changeVisibilityResources(event,"+`'${current}',${id})`);
 
     });
 }
+
+
+
+
+
 
 
 
@@ -592,7 +685,7 @@ function resourcePagination(offset,total_pages){
         .then((result)=>{
 
             // render 
-            render_notes(null,total_pages,result,keyword);
+            render_resources(null,total_pages,result,keyword);
 
 
             start_page_field.value = start_page - 1;
@@ -634,7 +727,7 @@ function resourcePagination(offset,total_pages){
         .then((result)=>{
 
             // render 
-            render_notes(null,total_pages,result,keyword);
+            render_resources(null,total_pages,result,keyword);
 
             start_page_field.value = start_page + 1;
             current_page_field.value = start_page +  3;
@@ -680,7 +773,7 @@ function resourcePagination(offset,total_pages){
 
           
             // render 
-            render_notes(null,total_pages,result,keyword);
+            render_resources(null,total_pages,result,keyword);
 
 
             current_page_field.value = offset + start_page - 1;
@@ -756,15 +849,14 @@ function copyTextToClipboard(text) {
   }
 
 
+
   async function searchResources(){
 
     let keyword = document.getElementById("resources_search").value;
 
-    let status = fetch_private_resources(1,keyword);
-    
-    
+    let total_pages = await fetch_private_resources(1,keyword);
 
-    if(await status){
+    if(total_pages){
 
         let keyword_field = document.getElementById("resource_keyword");
         let start_field = document.getElementById("resource_start_page");
@@ -772,8 +864,55 @@ function copyTextToClipboard(text) {
         keyword_field.value = keyword;
         start_field.value = 1;
         current_field.value = 1;
-     
+        for(let i = 1;i<=3;i++)
+        {
+                document.getElementsByClassName(`rpp${i}`)[0].innerText = i;
+                
+                if(total_pages<i)
+                { 
+                    document.getElementsByClassName(`rp${i}`)[0].classList.add("disabled");
+                    document.getElementsByClassName(`rp${i}`)[0].classList.remove("active");
+            }
+            else{
+
+                document.getElementsByClassName(`rp${i}`)[0].classList.remove("disabled");
+                document.getElementsByClassName(`rp${i}`)[0].classList.remove("active");
+                
+            }
+
+        }
+       
+        document.getElementsByClassName("rp1")[0].classList.add("active");
+
+        document.getElementsByClassName("rp0")[0].classList.add("disabled");
+
+        if(total_pages<=3)
+        document.getElementsByClassName("rp4")[0].classList.add("disabled");
+        else
+        document.getElementsByClassName("rp4")[0].classList.remove("disabled");
+
     }
 
 
   }
+
+
+
+
+
+  function makePostRequest(url,token){
+
+
+    let f = document.createElement("form");
+    f.action=url;
+    f.method="post";
+    f.type="hidden";
+    let hidden_input = document.createElement("input");
+    hidden_input.type="hidden";
+    hidden_input.name="_csrf";
+    hidden_input.value=token;
+    f.appendChild(hidden_input);
+    document.body.appendChild(f);
+    f.submit();
+
+}

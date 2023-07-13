@@ -22,9 +22,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
+
+          
+            <c:if test="${login}">
             <li class="nav-item my_li">
-              <a class="nav-link" href="#">Chat</a>
+              <a class="nav-link" href="/chat/">Chat</a>
             </li>
+            </c:if>
             <c:if test="${login}">
           <li class="nav-item my_li">
             <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>

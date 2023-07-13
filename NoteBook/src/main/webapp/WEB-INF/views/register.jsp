@@ -26,11 +26,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item my_li">
-                  <a class="nav-link" href="#">Public Notes</a>
+                  <a class="nav-link" href="/notes/public">Public Notes</a>
                 </li>
-                <li class="nav-item my_li">
-                  <a class="nav-link" href="#">Chat</a>
-                </li>
+               
                 <li class="nav-item my_li">
                   <a class="nav-link" href="/user/login">Log In</a>
                 </li>

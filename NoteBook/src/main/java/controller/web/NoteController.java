@@ -97,6 +97,7 @@ public class NoteController {
             String user = getUser();
             if (user != null && note.getUser().getEmail().equals(user)) model.addAttribute("edit",true);
             if (user != null) model.addAttribute("login",true);
+            note.setContent(note.getContent().replaceAll("<","&lt").replaceAll(">","&gt"));
             model.addAttribute("note",note);
             return "view";
         }
@@ -143,6 +144,8 @@ public class NoteController {
         int total_pages_notes = total_notes/page_size + (total_notes%page_size!=0?1:0);
         model.addAttribute("total_pages_notes",total_pages_notes);
         model.addAttribute("notes",notes);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("login",authentication.getClass() != AnonymousAuthenticationToken.class);
         return "public_notes";
     }
 

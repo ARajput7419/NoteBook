@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Create Notes</title>
+  <title>${note.name}</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -50,12 +50,12 @@
   <br><br>
 
   <div class="container-fluid">
-    <form:form method="post" action="/notes/submit" modelAttribute="note">
+    <form:form method="put" action="/notes/edit" modelAttribute="note">
       <input type="hidden" name="_csrf" value="${_csrf.token}" >
       <div class="row">
         <div class="col">
         <label id="label_" for="note-name">Note Name:</label>
-        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name"/>
+        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name" readonly />
         </div>
       </div>
       
@@ -88,13 +88,13 @@
       </div>
       <br>
       <div class="markdown-container">
-        <form:textarea class="form-control" id="markdown-textarea" rows="10" path="content"></form:textarea>
+        <form:textarea class="form-control" id="markdown-textarea" rows="10" path="content">${note.content}</form:textarea>
         <div class="note-preview" id="preview-section" style="display: none;"></div>
       </div>
       <div class="buttons-container">
         <button type="button" class="btn btn-primary" id="preview-button">Preview</button>
         <button type="button" class="btn btn-primary" id="original-button">Original</button>
-        <button type="submit" class="btn btn-success">Create</button>
+        <button type="submit" class="btn btn-success">Update</button>
       </div>
     </form:form>
     </div>

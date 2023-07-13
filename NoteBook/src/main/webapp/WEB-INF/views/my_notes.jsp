@@ -26,17 +26,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item my_li">
-              <a class="nav-link" href="#">Public Notes</a>
+              <a class="nav-link" href="/notes/public">Public Notes</a>
             </li>
             <li class="nav-item my_li">
-              <a class="nav-link" href="#">Chat</a>
+              <a class="nav-link" href="/chat/">Chat</a>
             </li>
             <li class="nav-item my_li">
                 <a class="nav-link" href="/notes/create">Create Note</a>
               </li>
-            <li class="nav-item my_li">
-              <a class="nav-link" href="#">Log Out</a>
-            </li>
+              <li class="nav-item my_li">
+                <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>
+              </li>
             
             
           </ul>
@@ -79,7 +79,7 @@
                     <div class="card-buttons">
                         <a onclick="deleteNote(${note.id})" class="btn btn-danger">Delete</a>
                         <a href="/notes/view/${note.id}" class="btn btn-primary">Read</a>
-                        <a onclick="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
+                        <a onclick="changeVisibility(event,'${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
                     </div>
                     <p class="card-timestamp"><span>Time Stamp:</span> ${note.timestamp}</p>
 
@@ -185,9 +185,9 @@
                     <p class="card-text resource_visibility_${note.id}"><span>Visibility:</span>${resource.visibility}</p>
                     <hr>
                     <div class="card-buttons">
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a onclick="deleteResource(${resource.id})" class="btn btn-danger">Delete</a>
                         <a onclick="copyTextToClipboard('${resource.location}')" class="btn btn-primary">Copy Link</a>
-                        <a href="#" class="btn btn-success vis">Change Visibility</a>
+                        <a  onclick="changeVisibilityResources(event,'${resource.visibility}',${resource.id})"  class="btn btn-success vis">Change Visibility</a>
 
                     </div>
                     <p class="card-timestamp"><span>Time stamp: </span>${resource.timestamp}</p>

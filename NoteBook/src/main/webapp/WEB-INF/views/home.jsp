@@ -28,9 +28,18 @@
           <li class="nav-item my_li">
             <a class="nav-link" href="/notes/public">Public Notes</a>
           </li>
+          <c:if test="${login}">
           <li class="nav-item my_li">
-            <a class="nav-link" href="#">Chat</a>
+            <a class="nav-link" href="/chat/">Chat</a>
           </li>
+          </c:if>
+
+          <c:if test="${!login}">
+            <li class="nav-item my_li">
+              <a class="nav-link" href="/user/register">Register</a>
+            </li>
+            </c:if>
+
           <c:if test="${login}">
           <li class="nav-item my_li">
             <a class="nav-link" style="cursor:pointer" onclick="makePostRequest('/logout','${_csrf.token}')">Log Out</a>
@@ -41,14 +50,12 @@
               <a class="nav-link" href="/user/login">Log In</a>
             </li>
             </c:if>
-          <li class="nav-item my_li">
-            <a class="nav-link" href="/user/register">Register</a>
-          </li>
+          
         </ul>
       </div>
     </nav>
 
-    <!-- Jumbotron with search bar -->
+
     <div class="jumbotron">
       <h1 class="display-4" id="heading">Welcome to NoteBook!</h1>
       <p class="lead">Create your own notes, search for public notes, and chat with other users.</p>
@@ -63,7 +70,7 @@
       </form>
     </div>
 
-    <!-- Recent and featured notes -->
+  
     <div class="container">
       <div class="row">
         <div class="col-md-6">
