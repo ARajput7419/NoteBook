@@ -26,6 +26,8 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
 
     if(total_pages == 0){
         toast("No Notes Found");
+        let parent = document.getElementsByClassName("parent")[0];
+        parent.innerHTML = "";
         return;
     }
     else{
@@ -34,6 +36,12 @@ function render_notes(page_retrived,total_pages,list_notes,keyword){
             let offset = page_retrived - start_page + 1;
             let page_item = document.getElementsByClassName(`p${offset}`)[0];
             page_item.classList.remove("active");
+            page_item.classList.add("disabled");
+            for(let a = offset+1 ; a<=4;a++)
+            {
+                let next_page = document.getElementsByClassName(`p${a}`)[0];
+                next_page.classList.add("disabled");
+            }
             fetch_private_notes(page_retrived-1,keyword);
             return;
         }
@@ -217,18 +225,23 @@ function fetch_private_resources(page_number,keyword){
 
 function deleteNote(id){
 
+    let csrfToken = document.getElementById("csrfToken").value;
     let current_page_field = document.getElementById("current_page");
     let current_page = current_page_field.value;
     let keyword_field = document.getElementById("keyword");
     let keyword = keyword_field.value;
     let metadata ={
-        method:"DELETE"
+        method:"DELETE",
+        headers: {
+            'X-CSRF-Token': csrfToken
+          }
+        
     };
     let promise = fetch(`/api/notes/${id}`,metadata);
     promise.then((response)=>{
         if(response.ok){
             toast("Note is Deleted Successfully");
-            fetch_private_notes(current_page,current_page,keyword);
+            fetch_private_notes(current_page,keyword);
 
         }
         else{
@@ -253,7 +266,7 @@ function deleteResource(id){
     promise.then((response)=>{
         if(response.ok){
             toast("Resource is Deleted Successfully");
-            fetch_private_resources(current_page,current_page,keyword);
+            fetch_private_resources(current_page , current_page,keyword);
 
         }
         else{
@@ -283,7 +296,7 @@ function changeVisibility(visibility,id){
 
     
     };
-    let promise = fetch(`/api/notes/${id}?visibility=${visibility.trim()=='Public'?'Private':'Public'}`,metadata);
+    let promise = fetch(`/api/notes/${id}?visibility=${visibility=='Public'?'Private':'Public'}`,metadata);
     promise.then((response)=>{
         console.log(response);
         if(response.ok){
@@ -335,7 +348,6 @@ function changeVisibilityResources(visibility,id){
 
 
 function pagination(offset,total_pages){
-
 
     total_pages = Number(total_pages);
     let page_item = document.getElementsByClassName(`p${offset}`)[0];

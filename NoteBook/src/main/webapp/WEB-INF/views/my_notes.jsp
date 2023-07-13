@@ -77,7 +77,7 @@
                     <p class="card-text"><span>Author:</span> ${note.user.name}</p>
                     <hr>
                     <div class="card-buttons">
-                        <a onclick="deleteNote(`${note.id}')" class="btn btn-danger">Delete</a>
+                        <a onclick="deleteNote(${note.id})" class="btn btn-danger">Delete</a>
                         <a href="/notes/view/${note.id}" class="btn btn-primary">Read</a>
                         <a onclick="changeVisibility('${note.visibility}',${note.id})" class="btn btn-success vis">Change Visibility</a>
                     </div>
