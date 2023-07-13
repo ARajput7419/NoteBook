@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -25,7 +26,7 @@ import java.util.List;
 @EntityScan(basePackages = "database")
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = {"configuration","controller","responses","beans","database","service"})
-public class Start implements WebMvcConfigurer {
+public class Start extends SpringBootServletInitializer implements WebMvcConfigurer   {
 
 
     @Value("${resources}")
