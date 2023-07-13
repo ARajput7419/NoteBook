@@ -97,7 +97,9 @@ public class SecurityConfiguration {
             customizer.mvcMatchers("/execution/api/**").permitAll();
             customizer.mvcMatchers("/login_processing").permitAll();
             customizer.mvcMatchers("/chat/").authenticated();
-            customizer.mvcMatchers("/notes/**").authenticated();
+            customizer.mvcMatchers("/notes/create").authenticated();
+            customizer.mvcMatchers("/notes/edit").authenticated();
+            customizer.mvcMatchers("/notes/submit").authenticated();
             customizer.mvcMatchers("/notes/public/**").permitAll();
             customizer.mvcMatchers("/notes/view/{id}").permitAll();
             customizer.mvcMatchers("/").permitAll();
@@ -105,7 +107,8 @@ public class SecurityConfiguration {
             customizer.mvcMatchers("/api/user/**").permitAll();
             customizer.mvcMatchers("/api/resources/**").permitAll();
             customizer.mvcMatchers("/api/notes/public/**").permitAll();
-            customizer.mvcMatchers("/api/notes/**").authenticated();
+            customizer.mvcMatchers("/api/notes/private/**").authenticated();
+            customizer.mvcMatchers("/api/notes/{id}").authenticated();
             customizer.mvcMatchers("/"+resources+"/**").access(resourceAuthorizationManager());
         });
 
