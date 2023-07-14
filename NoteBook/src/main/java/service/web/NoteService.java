@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -175,8 +176,23 @@ public class NoteService {
      @Transactional
     public void update(Note note , HttpServletRequest request) {
 
-         delete(note.getId(),request);
-         createNote(note,request);
+         Note original_note = noteDAO.get(note.getId());
+         if (original_note == null) throw new RuntimeException("Note Does Not Exists");
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         String username = (String) authentication.getPrincipal();
+         if(note.getUser().getEmail().equals(username)){
+             String content = original_note.getContent();
+             List<String> locations = extractUrls(content,request);
+             resourceDAO.decrement(locations);
+             content = note.getContent();
+             locations = extractUrls(content,request);
+             resourceDAO.increment(locations);
+             original_note.setContent(note.getContent());
+             original_note.setTimestamp(new Timestamp(System.currentTimeMillis()));
+             original_note.setVisibility(note.getVisibility());
+             noteDAO.update(note);
+         }
+         else throw  new RuntimeException("Not Authorized");
 
      }
 

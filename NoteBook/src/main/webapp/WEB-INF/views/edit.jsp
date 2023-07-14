@@ -50,17 +50,18 @@
   <br><br>
 
   <div class="container-fluid">
-    <form:form method="put" action="/notes/edit" modelAttribute="note">
+    <form:form method="PUT" action="/notes/edit" modelAttribute="note">
       <input type="hidden" name="_csrf" value="${_csrf.token}" >
       <div class="row">
         <div class="col">
         <label id="label_" for="note-name">Note Name:</label>
-        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name" readonly />
+        <form:input type="text" class="form-control" id="name" placeholder="Enter note name" path="name" readonly ="true"/>
         </div>
       </div>
       
 
       <input type="hidden" name="_csrf" value="${_csrf.token}" id="csrfToken">
+      <input type="hidden" name="id" value="${note.id}">
 
       <div class="row">
         <div class="col-md">
@@ -88,7 +89,10 @@
       </div>
       <br>
       <div class="markdown-container">
-        <form:textarea class="form-control" id="markdown-textarea" rows="10" path="content">${note.content}</form:textarea>
+        <textarea class="form-control" id="markdown-textarea" rows="10" name="content">
+${note.content}
+
+        </textarea>
         <div class="note-preview" id="preview-section" style="display: none;"></div>
       </div>
       <div class="buttons-container">

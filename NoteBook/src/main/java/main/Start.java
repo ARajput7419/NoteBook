@@ -32,6 +32,12 @@ public class Start extends SpringBootServletInitializer implements WebMvcConfigu
     @Value("${resources}")
     private String resources;
 
+    @Value("${resource_location}")
+    private String resource_location;
+
+    @Value("${static_location}")
+    private String static_location;
+
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         configurer.setUseTrailingSlashMatch(true);
@@ -40,9 +46,9 @@ public class Start extends SpringBootServletInitializer implements WebMvcConfigu
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("file:/home/aniket/IdeaProjects/NoteBook/NoteBook/src/main/webapp/WEB-INF/static/");
+                .addResourceLocations("file:"+static_location);
         registry.addResourceHandler("/"+resources+"/**")
-                .addResourceLocations("file:/home/aniket/IdeaProjects/NoteBook/NoteBook/src/main/webapp/"+resources+"/");
+                .addResourceLocations("file:"+resource_location+resources+"/");
     }
 
     public static void main(String[] args) {

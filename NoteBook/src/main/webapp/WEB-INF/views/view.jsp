@@ -69,7 +69,9 @@
     <c:if test="${edit}">
     <div class="row">
         <div class="col-md-1 offset-md-11">
-            <button class="btn btn-success">Edit</button>
+          
+            <button  onclick="location.href='/notes/edit?id=${note.id}'" class="btn btn-success">Edit</button>
+            
         </div>
 
     </div>

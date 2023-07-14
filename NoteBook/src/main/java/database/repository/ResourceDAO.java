@@ -66,7 +66,7 @@ public class ResourceDAO {
     public List<Resource> searchByKeywordPrivate(String username , String keyword,int count , int offset){
         TypedQuery<Resource> query = entityManager.createQuery("select r from Resource r join r.user u where u.email= :username and r.name like :keyword ",Resource.class);
         query.setParameter("username",username);
-        query.setParameter("keyword",keyword);
+        query.setParameter("keyword","%"+keyword+"%");
         query.setMaxResults(count);
         query.setFirstResult(offset);
         return query.getResultList();

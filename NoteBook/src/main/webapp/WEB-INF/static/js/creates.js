@@ -1,8 +1,4 @@
 
-var previewButton = document.getElementById('preview-button');
-var originalButton = document.getElementById('original-button');
-var markdownTextarea = document.getElementById('markdown-textarea');
-var previewSection = document.getElementById('preview-section');
 
 function convertToHtml() {
   var markdownInput = document.getElementById('markdown-textarea').value;
@@ -163,23 +159,7 @@ function showInput(event,index) {
 }
 
 
-  addStyle();
   
-
-
-previewButton.addEventListener('click', function() {
-  var markdownText = markdownTextarea.value;
-  previewSection.innerHTML = markdownText;
-  previewSection.style.display = 'block';
-  markdownTextarea.style.display = 'none';
-  convertToHtml();
-  appendCodeSections();
-});
-
-originalButton.addEventListener('click', function() {
-  previewSection.style.display = 'none';
-  markdownTextarea.style.display = 'block';
-});
 
 
 function fileUpload(event){
@@ -232,7 +212,8 @@ function fileUpload(event){
     });
 
   }
-document.getElementsByClassName("resource_file")[0].addEventListener('change',fileUpload);
+
+
 
 
 function makePostRequest(url,token){
@@ -249,5 +230,36 @@ function makePostRequest(url,token){
   f.appendChild(hidden_input);
   document.body.appendChild(f);
   f.submit();
+
+}
+
+window.onload = function(){
+
+
+var previewButton = document.getElementById('preview-button');
+var originalButton = document.getElementById('original-button');
+var markdownTextarea = document.getElementById('markdown-textarea');
+var previewSection = document.getElementById('preview-section');
+
+addStyle();
+
+previewButton.addEventListener('click', function() {
+  var markdownText = markdownTextarea.value;
+  previewSection.innerHTML = markdownText;
+  previewSection.style.display = 'block';
+  markdownTextarea.style.display = 'none';
+  convertToHtml();
+  appendCodeSections();
+});
+
+originalButton.addEventListener('click', function() {
+  previewSection.style.display = 'none';
+  markdownTextarea.style.display = 'block';
+});
+
+
+
+document.getElementsByClassName("resource_file")[0].addEventListener('change',fileUpload);
+
 
 }

@@ -43,7 +43,8 @@ public class RestResourcesController {
     }
 
     @ExceptionHandler({IOException.class,RuntimeException.class})
-    public ResponseEntity<UploadStatus> ioExceptionHandler(){
+    public ResponseEntity<UploadStatus> ioExceptionHandler(Exception e){
+        System.out.println(e);
         UploadStatus status = new UploadStatus();
         status.setMessage("Internal Server Error");
         return new ResponseEntity<>(status,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -77,7 +78,7 @@ public class RestResourcesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateStatus> updateVisibility(@RequestParam("visibility") String visibility, int id){
+    public ResponseEntity<UpdateStatus> updateVisibility(@RequestParam("visibility") String visibility, @PathVariable int id){
         UpdateStatus updateStatus = new UpdateStatus();
         Resource resource = new Resource();
         ResourceService.Status status = resourceService.updateVisibility(resource,id,visibility);
@@ -188,7 +189,7 @@ public class RestResourcesController {
     }
 
     @GetMapping("/{page_number}")
-    public Page getResourcesPrivate(@PathVariable int page_number,@RequestParam("keyword") String keyword) throws Exception {
+    public Page getResourcesPrivate(@PathVariable int page_number,@RequestParam("keyword") String keyword,HttpServletRequest request) throws Exception {
         if (page_number <= 0 ) throw new Exception("Page Number Invalid");
 
         if (keyword == null || keyword.trim().length() == 0) return getResourcesPrivateWithoutKeyword(page_number);
@@ -196,6 +197,10 @@ public class RestResourcesController {
         List<Resource> resources = resourceService.searchByKeywordPrivate(keyword,page_size,(page_number-1)*page_size);
         int total_resources = resourceService.searchByKeywordPrivateCount(keyword);
         int total_pages = total_resources/page_size + (total_resources%page_size==0?0:1);
+        for (Resource resource : resources){
+            String link = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getServletContext().getContextPath()+"/"+resource.getLocation();
+            resource.setLocation(link);
+        }
         Page page = new Page();
         page.setResources(resources);
         page.setTotal_pages(total_pages);

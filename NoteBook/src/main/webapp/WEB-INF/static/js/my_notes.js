@@ -259,7 +259,7 @@ function render_resources(page_retrived,total_pages,list_resources,keyword){
                 <hr>
                 <div class="card-buttons">
                     <a onclick="deleteResource(${resource.id})" class="btn btn-danger">Delete</a>
-                    <a onclick="copyTextToClipboard(${resource.location})" class="btn btn-primary">Copy Link</a>
+                    <a onclick="copyTextToClipboard('${resource.location}')" class="btn btn-primary">Copy Link</a>
                     <a onclick="changeVisibilityResources(event,'${resource.visibility}',${resource.id})" class="btn btn-success vis">Change Visibility</a>
 
                 </div>
@@ -467,7 +467,6 @@ function changeVisibilityResources(event,visibility,id){
     };
     let promise = fetch(`/api/resources/${id}?visibility=${visibility=='Public'?'Private':'Public'}`,metadata);
     promise.then((response)=>{
-        console.log(response);
         if(response.ok){
             toast("Visibility Updated Successfully");
             return response.json();
@@ -486,10 +485,6 @@ function changeVisibilityResources(event,visibility,id){
 
     });
 }
-
-
-
-
 
 
 

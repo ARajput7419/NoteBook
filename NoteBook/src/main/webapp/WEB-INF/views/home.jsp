@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/static/js/home.js"></script>
 
   </head>
@@ -118,9 +119,8 @@
         </div>
         <div class="col-md-4">
           <h5>Follow Us</h5>
-          <a href="#"><i class="fab fa-facebook fa-2x mr-3"></i></a>
-          <a href="#"><i class="fab fa-twitter fa-2x mr-3"></i></a>
-          <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+          <a href="https://www.linkedin.com/in/aniket-rajput-28bb40169/"><i class="fa fa-linkedin-square" style="font-size:45px;color:blue"></i></a>
+        
         </div>
       </div>
     </div>

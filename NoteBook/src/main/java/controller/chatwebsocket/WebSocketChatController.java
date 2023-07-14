@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import service.web.ChatService;
 import service.web.UserService;
-import java.sql.Timestamp;
 
 @Controller
 public class WebSocketChatController {
@@ -26,8 +25,6 @@ public class WebSocketChatController {
 
     @MessageMapping("/send")
     public Message received(@Payload Message message){
-        System.out.println(message);
-        System.out.println(message.getMessage());
         Chat chat = new Chat();
         chat.setTimestamp(message.getTimestamp());
         chat.setMessage(message.getMessage());

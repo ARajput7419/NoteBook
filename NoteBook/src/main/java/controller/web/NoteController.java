@@ -52,9 +52,11 @@ public class NoteController {
 
     }
 
-    @PutMapping("/edit")
-    public String edit(@ModelAttribute("note") Note note,Model model,HttpServletRequest request){
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute("note") Note note,@RequestParam("content") String content,@RequestParam("id") int id , Model model,HttpServletRequest request){
         note.setUser(userService.getByUsername(getUserName()));
+        note.setContent(content);
+        note.setId(id);
         service.update(note,request);
         model.addAttribute("message","Note is Updated Successfully");
         return "edit";
