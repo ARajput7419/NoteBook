@@ -87,6 +87,7 @@ function convertMessage(message){
 
     }
 
+   
 
     return new_message;
 
@@ -242,8 +243,8 @@ function chatClicked(event , email,chats){
 
         if(message == null){
             message = document.getElementById(`messageId_${single_chat['message_id']}`).innerText;
-            message = message.replace(/>/g,"&gt");
-            message = message.replace(/</g,"&lt");
+            message = message.replace(/>/g,"&gt;");
+            message = message.replace(/</g,"&lt;");
            
         }
 
@@ -331,6 +332,8 @@ function subscribe(username){
         let actual_message = JSON.parse(message.body);
         let sender = actual_message['sender'];
         let m = actual_message['message'];
+        m = m.replace(/>/g,"&gt;");
+        m = m.replace(/</g,"&lt;");
         let timestamp = actual_message['timestamp'];
         if(chats[sender] == null) chats[sender] = [];
         if(user_id.has(sender)){
@@ -411,6 +414,10 @@ function send(sender,receiver,message){
 
 
     if(receiver == sender) return;
+
+    message = message.replace(/>/g,"&gt;");
+
+    message = message.replace(/</g,"&lt;");
 
     let date = new Date();
     
