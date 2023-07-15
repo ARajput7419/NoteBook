@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col parent">
               <c:forEach var="note" items="${notes}">
                 <div class="card card-spacing notes-card">
                     <div class="card-body">
