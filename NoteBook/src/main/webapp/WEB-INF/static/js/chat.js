@@ -367,7 +367,7 @@ function subscribe(username){
             todelete.remove();
                
 
-                search_user.insertAdjacentHTML("afterend",`<li class="clearfix user_id" onclick="chatClicked(event,${sender},chats)">
+                search_user.insertAdjacentHTML("afterend",`<li class="clearfix user_id" onclick="chatClicked(event,'${sender}',chats)">
                             <div class="about">
                                 <div class="name " style="font-weight:bold;">${sender}</div>
                             </div>
